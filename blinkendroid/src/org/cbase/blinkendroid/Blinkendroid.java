@@ -65,7 +65,7 @@ public class Blinkendroid extends Activity {
 	exitButton = (Button) this.findViewById(R.id.exitButton);
 	exitButton.setOnClickListener(new OnClickListener() {
 	    public void onClick(View v) {
-		((PowerManager) getSystemService(POWER_SERVICE)).newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK, getString(R.string.app_name)).release();
+		wakeLock.release();
 		Log.i(this.getClass().getName(), "Exit Button pressed");
 		System.exit(0);
 	    }
