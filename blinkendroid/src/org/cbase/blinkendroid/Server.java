@@ -34,6 +34,11 @@ public class Server extends Thread{
 				Log.e(Blinkendroid.LOG_TAG, "Could not accept",e);
 			}
 		}
+		try {
+			serverSocket.close();
+		} catch (IOException e) {
+			Log.e(Blinkendroid.LOG_TAG, "Could not close",e);
+		}
 		Log.i(Blinkendroid.LOG_TAG,"Server Thread closed");
 	}
 

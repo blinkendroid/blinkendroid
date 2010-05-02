@@ -1,5 +1,7 @@
 package org.cbase.blinkendroid;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.Timer;
 
 import android.app.Activity;
@@ -16,6 +18,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -64,12 +67,15 @@ public class Blinkendroid extends Activity {
 	switchToMainButton = (Button) this
 		.findViewById(R.id.switchToMainButton);
 	switchToMainButton.setOnClickListener(new OnClickListener() {
+		    public void onClick(View v) {
+			switchToDebugView();
+		    }
+		});
 
-	    @Override
-	    public void onClick(View v) {
-		switchToDebugView();
-	    }
-	});
+
+	
+		// End initialize
+
 
     }
 
@@ -249,6 +255,39 @@ public class Blinkendroid extends Activity {
 	    }
 	});
 
+	counterTextView = (TextView) this.findViewById(R.id.CounterTextView);
+	sensorTextView = (TextView) this.findViewById(R.id.SensorsTextView);
+	
+	server	=	new Server(this);		
+	serverButton = (Button) this.findViewById(R.id.ServerButton);
+	serverButton.setOnClickListener(new OnClickListener() {
+		public void onClick(View v) {
+			if(server.running){
+				server.end();
+				serverButton.setText(R.string.serverbuttonstart);
+			}else{
+				server.start();
+				serverButton.setText(R.string.serverbuttonstop);
+			}
+		}
+	});
+	
+	
+	try {
+		InetAddress ownIP= InetAddress.getLocalHost();
+		((EditText)Blinkendroid.this.findViewById(R.id.ServerIPEditText)).setText(ownIP.getHostAddress());
+	} catch (UnknownHostException e) {
+		Log.e(Blinkendroid.LOG_TAG, "Could not get local ip",e);
+	}
+	
+	Button sendButton = (Button) this.findViewById(R.id.SendButton);
+	sendButton.setOnClickListener(new OnClickListener() {
+		public void onClick(View v) {
+			String ip=((EditText)Blinkendroid.this.findViewById(R.id.ServerIPEditText)).getEditableText().toString();
+			String chat=((EditText)Blinkendroid.this.findViewById(R.id.ChatEditText)).getEditableText().toString();
+			new Client(Blinkendroid.this,ip,chat).start();
+		}
+	});
 	counterTextView = (TextView) this.findViewById(R.id.CounterTextView);
 	sensorTextView = (TextView) this.findViewById(R.id.SensorsTextView);
 	// End initialize

@@ -25,13 +25,19 @@ public class ConnectionThread extends Thread {
                     new InputStreamReader(socket.getInputStream()));
 			PrintWriter out = new PrintWriter(
                     socket.getOutputStream(), true);
-			String inputLine, outputLine;
-			while ((inputLine = in.readLine()) != null) {	
-			    outputLine = processInput(inputLine);
-			    out.println(outputLine);
-			    if (outputLine.equals("Bye"))
-			        break;
-			}
+			String request 	=	 in.readLine();
+			Log.i(Blinkendroid.LOG_TAG, "Request: "+request);
+			out.println(processInput(request));
+			
+//			while ((inputLine = in.readLine()) != null) {	
+//			    outputLine = processInput(inputLine);
+//			    out.println(outputLine);
+//			    if (outputLine.equals("Bye"))
+//			        break;
+//			}			
+			out.close();
+			in.close();
+			socket.close();
 		} catch (IOException e) {
 			Log.e(Blinkendroid.LOG_TAG, "Could not get Streams",e);
 		}
