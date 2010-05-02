@@ -33,6 +33,7 @@ public class Client extends Thread {
 					socket.getInputStream()));
 			
 			out.write(chat+'\n');
+			out.flush();
 			String response	=	in.readLine();
 			Log.i(Blinkendroid.LOG_TAG, "Response: "+response);
 			new ToastPoster(blinkendroid,response,Toast.LENGTH_LONG);
