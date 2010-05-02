@@ -44,7 +44,6 @@ public class Blinkendroid extends Activity {
 	
 	exit = (Button) this.findViewById(R.id.exit);
 	exit.setOnClickListener(new OnClickListener() {
-	    @Override
 	    public void onClick(View v) {
 		System.exit(0);
 	    }
@@ -52,7 +51,6 @@ public class Blinkendroid extends Activity {
 	
 	vibrate = (Button) this.findViewById(R.id.vibrate);
 	vibrate.setOnClickListener(new OnClickListener() {
-	    @Override
 	    public void onClick(View v) {
 		vibrate();
 		setButtonClicked(true);

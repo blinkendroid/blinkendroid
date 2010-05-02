@@ -15,7 +15,7 @@ public class VibrationListener implements SensorEventListener {
     public VibrationListener(Blinkendroid bd) {
 	blinkendroid = bd;
     }
-    @Override
+
     public void onSensorChanged(SensorEvent event) {
 	data_x = event.values[SensorManager.DATA_X];
 	data_y = event.values[SensorManager.DATA_Y];
@@ -44,10 +44,8 @@ public class VibrationListener implements SensorEventListener {
 
     }
 
-    @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
 	// TODO Auto-generated method stub
-
     }
 
     public void reset() {
