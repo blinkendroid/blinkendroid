@@ -17,11 +17,23 @@ import android.widget.TextView;
 public class Blinkendroid extends Activity {
 
     private VibrationListener vibrationListener;
+    /*
+     * The views 
+     */
     private TextView sensorTextView;
     private TextView counterTextView;
+    /*
+     * The buttons
+     */
     private Button vibrate;
     private Button exit;
+    /*
+     * Our Vibrator
+     */
     private Vibrator vibrator;
+    /*
+     * Tells whether the button has been clicked
+     */
     private boolean buttonClicked = false;
     
     /** Called when the activity is first created. */
@@ -29,10 +41,9 @@ public class Blinkendroid extends Activity {
     public void onCreate(Bundle savedInstanceState) {
 	super.onCreate(savedInstanceState);
 	setContentView(R.layout.main);
-	// Get the button and set the listener
+	
 	exit = (Button) this.findViewById(R.id.exit);
 	exit.setOnClickListener(new OnClickListener() {
-	    
 	    @Override
 	    public void onClick(View v) {
 		System.exit(0);
@@ -41,7 +52,6 @@ public class Blinkendroid extends Activity {
 	
 	vibrate = (Button) this.findViewById(R.id.vibrate);
 	vibrate.setOnClickListener(new OnClickListener() {
-
 	    @Override
 	    public void onClick(View v) {
 		vibrate();
@@ -61,11 +71,13 @@ public class Blinkendroid extends Activity {
 	SensorManager sm = (SensorManager) getSystemService(SENSOR_SERVICE);
 	sm.unregisterListener(getVibrationListener());
 	vibrator  = (Vibrator) getSystemService(VIBRATOR_SERVICE);
+	
+	TaskPool tp = new TaskPool(this);
 	Timer t = new Timer();
-	t.schedule(new VibrationTask(500), 0);
-	t.schedule(new VibrationTask(500), 1000);
-	t.schedule(new VibrationTask(500), 2000);
-	t.schedule(new ReconnectTask(), 2600);
+	t.schedule(tp.createVibrationTask(500), 0);
+	t.schedule(tp.createVibrationTask(500), 1000);
+	t.schedule(tp.createVibrationTask(500), 2000);
+	t.schedule(tp.createReconnectTask(), 2600);
 	sensorTextView.setBackgroundColor(Color.RED);
     }
     /**
@@ -75,69 +87,45 @@ public class Blinkendroid extends Activity {
 	SensorManager sm = (SensorManager) getSystemService(SENSOR_SERVICE);
 	sm.registerListener(getVibrationListener(), sm.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), sm.SENSOR_DELAY_GAME);
     }
-    
-    private void vibrationDuration(long durationMS) {
+    /**
+     * Vibrates for a given time
+     * @param durationMS The time in milliseconds
+     */
+    public void vibrate(long durationMS) {
 	vibrator.vibrate(durationMS);
     }
-
+    /**
+     * Gets a {@link VibrationListener}
+     * @return see above
+     */
     private VibrationListener getVibrationListener() {
 	if (vibrationListener == null) {
 	    vibrationListener = new VibrationListener(this);
 	}
 	    return vibrationListener;
     }
-
     /**
      * @return the counterTextView
      */
     public TextView getCounterTextView() {
 	return counterTextView;
     }
-
     /**
      * @return the sensorTextView
      */
     public TextView getSensorTextView() {
 	return sensorTextView;
     }
-
     /**
      * @param buttonClicked the buttonClicked to set
      */
     public void setButtonClicked(boolean buttonClicked) {
 	this.buttonClicked = buttonClicked;
     }
-
     /**
      * @return the buttonClicked
      */
     public boolean isButtonClicked() {
 	return buttonClicked;
-    }
-
-    private class VibrationTask extends TimerTask {
-	private long vibrationDuration;
-	
-	public VibrationTask(long vibrationDuration) {
-	    this.vibrationDuration = vibrationDuration;
-	}
-	@Override
-	public void run() {
-	    vibrationDuration(vibrationDuration);
-	}
-	
-    }
-    private class ReconnectTask extends TimerTask {
-	
-	public ReconnectTask() {
-	}
-	@Override
-
-	public void run() {
-	getVibration();
-	sensorTextView.setBackgroundColor(Color.BLACK);
-
-	}
-	
     }
 }
