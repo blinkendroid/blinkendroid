@@ -9,4 +9,5 @@
 <string name="calibrating">Calibrating</string>
  <string name="serverbuttonstart">Start Server Thread</string>
   <string name="serverbuttonstop">Stop Server Thread</string>
+<string name="debugView">Debug View</string>
 </resources>
