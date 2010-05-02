@@ -7,11 +7,16 @@ import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.os.PowerManager;
 import android.os.Vibrator;
+import android.os.PowerManager.WakeLock;
+import android.telephony.TelephonyManager;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class Blinkendroid extends Activity {
 
@@ -24,42 +29,105 @@ public class Blinkendroid extends Activity {
     /*
      * The buttons
      */
-    private Button vibrate;
-    private Button exit;
+    private Button vibrateButton;
+    private Button exitButton;
+    private Button calibrateButton;
     /*
      * Our Vibrator
      */
     private Vibrator vibrator;
-    /*
-     * Tells whether the button has been clicked
+    /**
+     * Tells whether the vibrateButton has been clicked
      */
-    private boolean buttonClicked = false;
+    private boolean vibrateButtonClicked = false;
+    
+    private WakeLock wakeLock;
     
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
 	super.onCreate(savedInstanceState);
 	setContentView(R.layout.main);
-	
-	exit = (Button) this.findViewById(R.id.exit);
-	exit.setOnClickListener(new OnClickListener() {
+	//Initialize
+	wakeLock = ((PowerManager) getSystemService(POWER_SERVICE)).newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK, getString(R.string.app_name));
+	wakeLock.acquire();
+	calibrateButton = (Button) this.findViewById(R.id.calibrateButton);
+	calibrateButton.setOnClickListener(new OnClickListener() {
+	    @Override
 	    public void onClick(View v) {
+		Toast.makeText(getApplicationContext(), getString(R.string.calibrating), Toast.LENGTH_SHORT).show();
+		String imei = ((TelephonyManager) getSystemService(TELEPHONY_SERVICE)).getDeviceId();
+		Toast.makeText(getApplicationContext(), imei, Toast.LENGTH_LONG).show();
+		Log.i(this.getClass().getName(), "Calibrate Button pressed");
+	    }
+	});
+	
+	exitButton = (Button) this.findViewById(R.id.exitButton);
+	exitButton.setOnClickListener(new OnClickListener() {
+	    public void onClick(View v) {
+		((PowerManager) getSystemService(POWER_SERVICE)).newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK, getString(R.string.app_name)).release();
+		Log.i(this.getClass().getName(), "Exit Button pressed");
 		System.exit(0);
 	    }
 	});
 	
-	vibrate = (Button) this.findViewById(R.id.vibrate);
-	vibrate.setOnClickListener(new OnClickListener() {
+	vibrateButton = (Button) this.findViewById(R.id.vibrateButton);
+	vibrateButton.setOnClickListener(new OnClickListener() {
 	    public void onClick(View v) {
 		vibrate();
+		Log.i(this.getClass().getName(), "Vibrate Button pressed");
 		setButtonClicked(true);
 	    }
 	});
 	
 	counterTextView = (TextView) this.findViewById(R.id.CounterTextView);
 	sensorTextView = (TextView) this.findViewById(R.id.SensorsTextView);
+	//End initialize
+	
 	getVibration();
     }
+
+    
+    @Override
+    protected void onDestroy() {
+	Log.i(this.getClass().getName(), "onDestroy()");
+	wakeLock.release();
+	super.onDestroy();
+    }
+
+
+    @Override
+    protected void onPause() {
+	Log.i(this.getClass().getName(), "onPause()");
+	wakeLock.release();
+	super.onPause();
+    }
+
+
+    @Override
+    protected void onStop() {
+	wakeLock.release();
+	Log.i(this.getClass().getName(), "onStop()");
+	super.onStop();
+    }
+    
+
+
+    @Override
+    protected void onRestart() {
+	wakeLock.acquire();
+	Log.i(this.getClass().getName(), "onRestart()");
+	super.onRestart();
+    }
+
+
+    @Override
+    protected void onResume() {
+	wakeLock.acquire();
+	Log.i(this.getClass().getName(), "onResume()");
+	super.onResume();
+    }
+
 
     /**
      * Vibrates the device.
@@ -119,12 +187,12 @@ public class Blinkendroid extends Activity {
      * @param buttonClicked the buttonClicked to set
      */
     public void setButtonClicked(boolean buttonClicked) {
-	this.buttonClicked = buttonClicked;
+	this.vibrateButtonClicked = buttonClicked;
     }
     /**
      * @return the buttonClicked
      */
-    public boolean isButtonClicked() {
-	return buttonClicked;
+    public boolean isVibrateButtonClicked() {
+	return vibrateButtonClicked;
     }
 }
