@@ -1,7 +1,10 @@
 package org.cbase.blinkendroid;
 
 import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
 import java.net.UnknownHostException;
+import java.util.Enumeration;
 import java.util.Timer;
 
 import android.app.Activity;
@@ -273,13 +276,7 @@ public class Blinkendroid extends Activity {
 	});
 	
 	
-	try {
-		InetAddress ownIP= InetAddress.getLocalHost();
-		((EditText)Blinkendroid.this.findViewById(R.id.ServerIPEditText)).setText(ownIP.getHostAddress());
-	} catch (UnknownHostException e) {
-		Log.e(Blinkendroid.LOG_TAG, "Could not get local ip",e);
-	}
-	
+	((EditText)Blinkendroid.this.findViewById(R.id.ServerIPEditText)).setText(getLocalIpAddress());
 	Button sendButton = (Button) this.findViewById(R.id.SendButton);
 	sendButton.setOnClickListener(new OnClickListener() {
 		public void onClick(View v) {
@@ -293,5 +290,22 @@ public class Blinkendroid extends Activity {
 	// End initialize
 
 	getVibration();
+    }
+    
+    public String getLocalIpAddress() {
+        try {
+            for (Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces(); en.hasMoreElements();) {
+                NetworkInterface intf = en.nextElement();
+                for (Enumeration<InetAddress> enumIpAddr = intf.getInetAddresses(); enumIpAddr.hasMoreElements();) {
+                    InetAddress inetAddress = enumIpAddr.nextElement();
+                    if (!inetAddress.isLoopbackAddress()) {
+                        return inetAddress.getHostAddress().toString();
+                    }
+                }
+            }
+        } catch (SocketException ex) {
+            Log.e(LOG_TAG, ex.toString());
+        }
+        return null;
     }
 }
