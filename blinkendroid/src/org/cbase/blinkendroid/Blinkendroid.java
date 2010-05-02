@@ -65,7 +65,7 @@ public class Blinkendroid extends Activity {
 	t.schedule(new VibrationTask(500), 0);
 	t.schedule(new VibrationTask(500), 1000);
 	t.schedule(new VibrationTask(500), 2000);
-	t.schedule(new ReconnectTask(), 2500);
+	t.schedule(new ReconnectTask(), 2600);
 	sensorTextView.setBackgroundColor(Color.RED);
     }
     /**

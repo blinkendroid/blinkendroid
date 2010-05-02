@@ -1,11 +1,9 @@
 package org.cbase.blinkendroid;
 
-import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.test.IsolatedContext;
 
 public class VibrationListener implements SensorEventListener {
 
@@ -28,18 +26,22 @@ public class VibrationListener implements SensorEventListener {
 	if (acc_m < 9) {
 	    if (lastTimeOverThreshold == 0) {
 		lastTimeOverThreshold = System.currentTimeMillis();
-	    } else if (System.currentTimeMillis() - lastTimeOverThreshold >= 510) {
+	    } else if (System.currentTimeMillis() - lastTimeOverThreshold >= 550) {
 		lastTimeOverThreshold = System.currentTimeMillis();
 		counter++;
+		blinkendroid.getCounterTextView().setText(""+counter);
 	    }
 	}
 	if (counter == 3) {
 	    counter = 0;
 	    blinkendroid.vibrate();
+	    blinkendroid.getCounterTextView().setText(""+counter);
 	}
 	if (System.currentTimeMillis() - lastTimeOverThreshold >= 3000) {
 	    counter = 0;
+	    blinkendroid.getCounterTextView().setText(""+counter);
 	}
+
     }
 
     @Override
@@ -50,5 +52,6 @@ public class VibrationListener implements SensorEventListener {
 
     public void reset() {
 	counter = 0;
+	lastTimeOverThreshold = 0;
     }
 }
