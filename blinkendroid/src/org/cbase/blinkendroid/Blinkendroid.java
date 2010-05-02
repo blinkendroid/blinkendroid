@@ -1,7 +1,6 @@
 package org.cbase.blinkendroid;
 
 import java.util.Timer;
-import java.util.TimerTask;
 
 import android.app.Activity;
 import android.graphics.Color;
@@ -83,7 +82,9 @@ public class Blinkendroid extends Activity {
      */
     public void getVibration() {
 	SensorManager sm = (SensorManager) getSystemService(SENSOR_SERVICE);
-	sm.registerListener(getVibrationListener(), sm.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), sm.SENSOR_DELAY_GAME);
+	sm.registerListener(getVibrationListener(), sm
+		.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
+		SensorManager.SENSOR_DELAY_GAME);
     }
     /**
      * Vibrates for a given time
