@@ -3,4 +3,5 @@
     
     <string name="app_name">Blinkendroid</string>
 <string name="vibrate">Vibrate</string>
+<string name="exit">Commit Suicide</string>
 </resources>
