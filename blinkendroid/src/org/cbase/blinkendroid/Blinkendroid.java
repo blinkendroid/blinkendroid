@@ -65,7 +65,7 @@ public class Blinkendroid extends Activity {
 	exitButton = (Button) this.findViewById(R.id.exitButton);
 	exitButton.setOnClickListener(new OnClickListener() {
 	    public void onClick(View v) {
-		wakeLock.release();
+		releaseWakeLock();
 		Log.i(this.getClass().getName(), "Exit Button pressed");
 		System.exit(0);
 	    }
@@ -91,7 +91,7 @@ public class Blinkendroid extends Activity {
     @Override
     protected void onDestroy() {
 	Log.i(this.getClass().getName(), "onDestroy()");
-	wakeLock.release();
+	releaseWakeLock();
 	super.onDestroy();
     }
 
@@ -99,14 +99,14 @@ public class Blinkendroid extends Activity {
     @Override
     protected void onPause() {
 	Log.i(this.getClass().getName(), "onPause()");
-	wakeLock.release();
+	releaseWakeLock();
 	super.onPause();
     }
 
 
     @Override
     protected void onStop() {
-	wakeLock.release();
+	releaseWakeLock();
 	Log.i(this.getClass().getName(), "onStop()");
 	super.onStop();
     }
@@ -194,5 +194,10 @@ public class Blinkendroid extends Activity {
      */
     public boolean isVibrateButtonClicked() {
 	return vibrateButtonClicked;
+    }
+    
+    private void releaseWakeLock() {
+	if (wakeLock.isHeld())
+		wakeLock.release();
     }
 }
