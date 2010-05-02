@@ -1,6 +1,5 @@
 package org.cbase.blinkendroid;
 
-import java.util.Arrays;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -23,6 +22,7 @@ public class Blinkendroid extends Activity {
     private TextView counterTextView;
     private Button vibrate;
     private Vibrator vibrator;
+    private boolean buttonClicked = false;
     
     /** Called when the activity is first created. */
     @Override
@@ -36,6 +36,7 @@ public class Blinkendroid extends Activity {
 	    @Override
 	    public void onClick(View v) {
 		vibrate();
+		buttonClicked = true;
 	    }
 	});
 	
@@ -78,7 +79,6 @@ public class Blinkendroid extends Activity {
 		    if (Math.abs(event.values[2] - zOld)  > 0.3) {
 			if (lastTimeOverThreshold == 0) {
 			    lastTimeOverThreshold = System.currentTimeMillis();
-			    counter++;
 			    counterTextView.setText("" + counter);
 			} else if (System.currentTimeMillis() - lastTimeOverThreshold >= 750) {
 			    lastTimeOverThreshold = System.currentTimeMillis();
@@ -86,8 +86,14 @@ public class Blinkendroid extends Activity {
 			    counterTextView.setText("" + counter);
 			}
 		    }
+		    if (counter == 3) {
+			counter = 0;
+			buttonClicked = !buttonClicked;
+			if (buttonClicked == true) {
+			    vibrate();
+			}
+		    }
 		    zOld = event.values[2];
-//		    Log.i("Vibrate", Arrays.toString(event.values));
 		}
 
 		@Override
