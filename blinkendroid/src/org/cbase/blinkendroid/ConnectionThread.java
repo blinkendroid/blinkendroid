@@ -45,7 +45,7 @@ public class ConnectionThread extends Thread {
 
 	private String processInput(String inputLine) {
 		new ToastPoster(blinkendroid,":"+inputLine, Toast.LENGTH_SHORT);
-		return inputLine;
+		return new StringBuffer(inputLine).reverse().toString();
 	}
 
 
