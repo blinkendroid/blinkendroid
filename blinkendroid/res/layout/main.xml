@@ -5,8 +5,4 @@
   android:layout_height="wrap_content">
 <Button android:text="@string/debugView" android:id="@+id/switchToMainButton" android:layout_width="wrap_content" android:layout_height="wrap_content"></Button>
 
-<LinearLayout android:id="@+id/LinearLayout01" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal"><EditText android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/ServerIPEditText" android:text="@string/serverip"></EditText><EditText android:text="@+id/EditText01" android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/ChatEditText"></EditText>
-</LinearLayout>
-
-<Button android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/SendButton" android:text="@string/send"></Button>
 </LinearLayout>
