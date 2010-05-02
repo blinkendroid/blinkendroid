@@ -44,7 +44,7 @@ public class ConnectionThread extends Thread {
 	}
 
 	private String processInput(String inputLine) {
-		new ToastPoster(blinkendroid,":"+inputLine,Toast.LENGTH_SHORT);
+		new ToastPoster(blinkendroid,":"+inputLine, Toast.LENGTH_SHORT);
 		return inputLine;
 	}
 

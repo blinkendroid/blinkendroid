@@ -15,7 +15,7 @@ public class ToastPoster implements Runnable {
 	}
 
 	public void run() {
-		Toast.makeText(blinkendroid, message, length);
+		Toast.makeText(blinkendroid, message, length).show();
 	}
 
 }
