@@ -144,7 +144,6 @@ public class AudioReader
      * <p><b>Note:</b> this method is public because the Thread API
      * requires it.  Outside classes must not call this.
      */
-    @Override
     public void run() {
         short[] buffer;
         int index, readSize;

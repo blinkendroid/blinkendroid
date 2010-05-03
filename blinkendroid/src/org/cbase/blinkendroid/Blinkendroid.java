@@ -189,7 +189,6 @@ public class Blinkendroid extends Activity {
 				final String out = currentPower + "db";
 				//Log.d("REC", out);
 				listenHandler.post(new Runnable() {
-					@Override
 					public void run() {
 						listenTextView.setText(out);
 					}
@@ -200,7 +199,6 @@ public class Blinkendroid extends Activity {
 		
 		bListen.setOnClickListener(new OnClickListener() {
 			
-			@Override
 			public void onClick(View v) {
 				Button me = (Button)v;
 				if (!listening) {
