@@ -6,17 +6,24 @@ import java.net.SocketException;
 import java.util.Enumeration;
 import java.util.Timer;
 
+//import org.hermit.dsp.FFTTransformer;
+import org.hermit.dsp.SignalPower;
+
 import android.app.Activity;
 import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+
 import android.os.Handler;
 import android.os.PowerManager;
+
 import android.os.Vibrator;
+
 import android.os.PowerManager.WakeLock;
 import android.telephony.TelephonyManager;
 import android.util.Log;
+
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -26,13 +33,29 @@ import android.widget.Toast;
 
 public class Blinkendroid extends Activity {
 
-	public static final String LOG_TAG = "blinkendroids";
-	private VibrationListener vibrationListener;
+	 public static final String LOG_TAG = "blinkendroids";
+    
+    /*
+	 * Our Vibrator
+	 */
+    private Vibrator vibrator;
+    private VibrationListener vibrationListener;
+    
+    /**
+     * Communication
+     */
+    
+    private Server server;
+	private Handler handler;
+	
 	/*
 	 * The views
 	 */
-	private TextView sensorTextView;
+    
+    private TextView sensorTextView;
 	private TextView counterTextView;
+	private TextView listenTextView;
+	
 	/*
 	 * The buttons
 	 */
@@ -41,19 +64,24 @@ public class Blinkendroid extends Activity {
 	private Button calibrateButton;
 	private Button serverButton;
 	private Button switchToMainButton;
-	/*
-	 * Our Vibrator
-	 */
-	private Vibrator vibrator;
+	
 	/**
 	 * Tells whether the vibrateButton has been clicked
 	 */
+	private boolean buttonClicked = false;
 	private boolean vibrateButtonClicked = false;
-
+    
+	
 	private WakeLock wakeLock;
-
-	private Server server;
-	private Handler handler;
+	
+	/**
+	 * Audio members
+	 */
+	 private AudioReader audioReader;
+    private boolean listening = false;
+    protected Handler listenHandler;
+    final int sampleRate = 8000;
+	final int inputBlockSize = 256;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -73,7 +101,9 @@ public class Blinkendroid extends Activity {
 				switchToDebugView();
 			}
 		});
-
+		
+		
+		
 		handler = new Handler();
 
 		// End initialize
@@ -141,7 +171,49 @@ public class Blinkendroid extends Activity {
 				.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
 				SensorManager.SENSOR_DELAY_GAME);
 	}
-
+	
+	
+	public void initAudio() {
+		
+		listenTextView = (TextView) this.findViewById(R.id.TextView03);
+		Button bListen = (Button) this.findViewById(R.id.ListenButton);
+		listenHandler = new Handler();
+		this.audioReader = new AudioReader();	
+		final AudioReader.Listener audioReadListener = new AudioReader.Listener() {
+			public void onReadComplete(short[] buffer) {
+				double currentPower = SignalPower.calculatePowerDb(buffer, 0, buffer.length);
+				//final String out = writeBuffer(buffer);
+				final String out = currentPower + "db";
+				//Log.d("REC", out);
+				listenHandler.post(new Runnable() {
+					@Override
+					public void run() {
+						listenTextView.setText(out);
+					}
+					
+				});
+			}
+		};
+		
+		bListen.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				Button me = (Button)v;
+				if (!listening) {
+					listening = true;
+					me.setText("Stop");
+					audioReader.startReader(sampleRate, inputBlockSize, audioReadListener);
+				} else {
+					audioReader.stopReader();
+					listening = false;
+					me.setText("Listen");
+				}
+				
+			}
+			
+		});
+	}
 	/**
 	 * Vibrates for a given time
 	 * 
