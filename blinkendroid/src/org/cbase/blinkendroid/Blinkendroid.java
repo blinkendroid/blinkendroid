@@ -6,7 +6,6 @@ import java.net.SocketException;
 import java.util.Enumeration;
 import java.util.Timer;
 
-//import org.hermit.dsp.FFTTransformer;
 import org.hermit.dsp.SignalPower;
 
 import android.app.Activity;
@@ -14,20 +13,17 @@ import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.os.Bundle;
-
 import android.os.Handler;
 import android.os.PowerManager;
-
 import android.os.Vibrator;
-
 import android.os.PowerManager.WakeLock;
 import android.telephony.TelephonyManager;
 import android.util.Log;
-
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -80,7 +76,7 @@ public class Blinkendroid extends Activity {
 	 private AudioReader audioReader;
     private boolean listening = false;
     protected Handler listenHandler;
-    final int sampleRate = 8000;
+    final int sampleRate = 4000;
 	final int inputBlockSize = 256;
 
 	/** Called when the activity is first created. */
@@ -93,7 +89,7 @@ public class Blinkendroid extends Activity {
 				.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK,
 						getString(R.string.app_name));
 		wakeLock.acquire();
-
+		
 		switchToMainButton = (Button) this
 				.findViewById(R.id.switchToMainButton);
 		switchToMainButton.setOnClickListener(new OnClickListener() {
@@ -103,10 +99,10 @@ public class Blinkendroid extends Activity {
 		});
 		
 		
-		
 		handler = new Handler();
 		
 		initAudio();
+
 		// End initialize
 
 	}
@@ -185,14 +181,15 @@ public class Blinkendroid extends Activity {
 		final AudioReader.Listener audioReadListener = new AudioReader.Listener() {
 			public void onReadComplete(short[] buffer) {
 				double currentPower = SignalPower.calculatePowerDb(buffer, 0, buffer.length);
+				FrequencyView.buffer=buffer;
+				FrequencyView.power=(float)currentPower;
 				//final String out = writeBuffer(buffer);
 				final String out = currentPower + "db";
-				//Log.d("REC", out);
+//				Log.d(Blinkendroid.LOG_TAG, "#"+buffer.length+":"+Arrays.toString(buffer));
 				listenHandler.post(new Runnable() {
 					public void run() {
 						listenTextView.setText(out);
 					}
-					
 				});
 			}
 		};
@@ -394,4 +391,6 @@ public class Blinkendroid extends Activity {
 	    //TODO implement setting of the location (backend and gui)
 	    return 1;
 	}
+	
+	
 }
