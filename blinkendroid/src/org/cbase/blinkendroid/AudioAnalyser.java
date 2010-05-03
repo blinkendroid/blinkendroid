@@ -269,14 +269,6 @@ public class AudioAnalyser
                                                             spectrumHist,
                                                             spectrumIndex);
            //do something with spectrumData
-
     }
-    
-
-
-  
-    
-    
-
 }
 

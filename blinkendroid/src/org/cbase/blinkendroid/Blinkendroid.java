@@ -3,10 +3,13 @@ package org.cbase.blinkendroid;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
+import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.Timer;
 
+import org.hermit.dsp.FFTTransformer;
 import org.hermit.dsp.SignalPower;
+import org.hermit.dsp.Window;
 
 import android.app.Activity;
 import android.graphics.Color;
@@ -23,7 +26,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -76,9 +78,10 @@ public class Blinkendroid extends Activity {
 	 private AudioReader audioReader;
     private boolean listening = false;
     protected Handler listenHandler;
-    final int sampleRate = 4000;
+    final int sampleRate = 8000;
 	final int inputBlockSize = 256;
-
+    private FFTTransformer spectrumAnalyser;
+    
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -178,20 +181,30 @@ public class Blinkendroid extends Activity {
 		Button bListen = (Button) this.findViewById(R.id.ListenButton);
 		listenHandler = new Handler();
 		this.audioReader = new AudioReader();	
+		this.spectrumAnalyser = new FFTTransformer(inputBlockSize, Window.Function.BLACKMAN_HARRIS);
+		FrequencyView.spectrumData = new float[inputBlockSize / 2];
+		Arrays.fill(FrequencyView.spectrumData, 0);
 		final AudioReader.Listener audioReadListener = new AudioReader.Listener() {
+			
 			public void onReadComplete(short[] buffer) {
 				double currentPower = SignalPower.calculatePowerDb(buffer, 0, buffer.length);
 				FrequencyView.buffer=buffer;
 				FrequencyView.power=(float)currentPower;
+				
+				 spectrumAnalyser.setInput(buffer, buffer.length - inputBlockSize, inputBlockSize);
+				 spectrumAnalyser.transform();
+				 spectrumAnalyser.getResults(FrequencyView.spectrumData);
+				 
 				//final String out = writeBuffer(buffer);
 				final String out = currentPower + "db";
-//				Log.d(Blinkendroid.LOG_TAG, "#"+buffer.length+":"+Arrays.toString(buffer));
+//				Log.d(Blinkendroid.LOG_TAG, Arrays.toString(FrequencyView.spectrumData));
 				listenHandler.post(new Runnable() {
 					public void run() {
 						listenTextView.setText(out);
 					}
 				});
 			}
+			
 		};
 		
 		bListen.setOnClickListener(new OnClickListener() {

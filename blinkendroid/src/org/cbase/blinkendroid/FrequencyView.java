@@ -10,16 +10,17 @@ import android.view.View;
 public class FrequencyView extends View {
    
 	private Paint paint;
+	private Paint paint2;
 	public static short[] buffer;
+	public static float[] spectrumData;
 	public static float power;
 	private float f;
     public FrequencyView(Context context, AttributeSet attrs) {
         super(context, attrs);
     	paint = new Paint();
-//    	paint.setAntiAlias(true);
-//    	paint.setTextSize(40);
+    	paint2 = new Paint();
     	paint.setColor(Color.WHITE);
-//        setPadding(3, 3, 3, 3);
+    	paint2.setColor(Color.RED);
     }
 
 
@@ -32,6 +33,12 @@ public class FrequencyView extends View {
 			f=(65-power)*16;
 			for (int i = 0; i < buffer.length; i++) {
 				canvas.drawPoint(i, (buffer[i]/power)+128, paint);
+			}
+		}
+		if(null!=spectrumData)
+		{
+			for (int i = 0; i < spectrumData.length; i++) {
+				canvas.drawLine(i*2, 256, i*2, 256-spectrumData[i]*5000, paint2);
 			}
 		}
 	}
