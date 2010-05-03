@@ -7,8 +7,6 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.StringTokenizer;
 
-import org.cbase.blinkendroid.enums.TelnetCommand;
-
 import android.util.Log;
 import android.widget.Toast;
 
@@ -48,18 +46,18 @@ public class ConnectionThread extends Thread {
 	private String processInput(String inputLine) {
 		new ToastPoster(blinkendroid, inputLine, Toast.LENGTH_SHORT);
 		//Here are the commands to send or get data from the device:
-		if (inputLine.equals(TelnetCommand.getImei.getCommand())) {
+		if (inputLine.equals("getImei")) {
 		    return blinkendroid.getImei();
 			//Further getter examples
-		} else if (inputLine.equals(TelnetCommand.getLocationX.getCommand())) {
+		} else if (inputLine.equals("getLocationX")) {
 		    return Integer.toString(blinkendroid.getLocationX());
-		} else if (inputLine.equals(TelnetCommand.getLocationY.getCommand())) {
+		} else if (inputLine.equals("getLocationY")) {
 		    return Integer.toString(blinkendroid.getLocationY()); 
-		} else if (inputLine.equals(TelnetCommand.getLocationInMatrix.getCommand())) {
+		} else if (inputLine.equals("getLocationInMatrix")) {
 		    return blinkendroid.getLocationX() + "/" + blinkendroid.getLocationY();
 		    
 		    //Example for a setter:
-		} else if (inputLine.startsWith(TelnetCommand.setMatrixSize.getCommand())) {
+		} else if (inputLine.startsWith("setMatrixSize")) {
 		    StringTokenizer tokenizer = new StringTokenizer(inputLine, " ");
 		    if (tokenizer.countTokens() == 3) {
 			return "Matrix size set to " + tokenizer.nextToken() + " " + tokenizer.nextToken();
