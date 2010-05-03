@@ -105,7 +105,8 @@ public class Blinkendroid extends Activity {
 		
 		
 		handler = new Handler();
-
+		
+		initAudio();
 		// End initialize
 
 	}
@@ -172,7 +173,9 @@ public class Blinkendroid extends Activity {
 				SensorManager.SENSOR_DELAY_GAME);
 	}
 	
-	
+	/**
+	 * Audio capture initialization
+	 */
 	public void initAudio() {
 		
 		listenTextView = (TextView) this.findViewById(R.id.TextView03);
