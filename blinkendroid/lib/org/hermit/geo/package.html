@@ -1,0 +1,68 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+<body bgcolor="white">
+
+<p>A library of various geodetic utilities for handling positions,
+directions and distances over the surface of the Earth, with a choice
+of algorithms from the fast and simple Haversine formula,
+to the super-accurate Vincenty formula.</p>
+
+<p>Usage is pretty simple.  Two rules to remember:</p>
+
+<ul>
+<li>angles are in radians except where stated.
+<li>the order of parameters is always <b>latitude, longitude</b>.
+</ul>
+
+<p>For example, positions on the Earth are represented by the
+{@link org.hermit.geo.Position} class.  You can create a Position
+in either of these ways:</p>
+
+<pre>
+    pos1 = new Position(latRadians, lonRadians);
+    pos2 = Position.fromDegrees(latDegrees, lonDegrees);
+</pre>
+
+<p>You can then easily calculate the distance between Positions:</p>
+
+<pre>
+    Distance dist = pos1.distance(pos2);
+</pre>
+
+<p>Abstract representations are used to avoid issues of units, as, for
+example, with the {@link org.hermit.geo.Distance} class used above.
+Having got a Distance,
+you can, when you need to, get its value in whatever units you like
+using provided accessors.</p>
+
+<p>Multiple algorithms for calculating distances etc. are supported.  The
+simplest, the Haversine formula, assumes a spherical Earth; it is fast
+and easy to use, but has an error of about 0.5%.  The class
+{@link org.hermit.geo.GeoCalculator} allows you to set what algorithm is in use.  Note
+that the more complex calculators are based on an ellipsoidal Earth; since
+multiple ellipsoid approximations are (or have been) in use internationally,
+you need to say which one you want to use.  For example:</p>
+
+<pre>
+    GeoCalculator.setAlgorithm(GeoCalculator.Algorithm.VINCENTY,
+                               GeoConstants.Ellipsoid.AIRY1858);
+</pre>
+
+<p>You can, if you wish, use the individual calculator classes directly;
+this is not the canonical model, but may be useful if you wish to work
+with several different calculators.</p>
+
+<p>The {@link org.hermit.geo.PointOfInterest} class provides (somewhat)
+interesting textual
+descriptions of points on the Earth's surface.  For example:</p>
+
+<pre>
+    currentLocMsg = PointOfInterest.describePosition(currentPos);
+      --> "The Southern Tropics, 3.9 nm north of The Tropic of Capricorn"
+</pre>
+
+<p>See <a href="http://code.google.com/p/moonblink/wiki/OnWatch">the
+On Watch application</a> for an example use of this package.</p>
+
+</body>
+</html>

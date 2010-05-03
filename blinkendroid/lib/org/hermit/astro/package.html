@@ -1,0 +1,46 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+<body bgcolor="white">
+
+<p>A library of astronomical calculations, providing positions, rise
+and set times, magnitudes, and other information for the Sun, Moon
+and planets.  The code is based on "Astronomical
+Algorithms", by Jean Meeus, ISBN-10: 0-943396-61-1.  Implemented
+directly in Java by Ian Cameron Smith.</p>
+
+<p>The key class is {@link org.hermit.astro.Observation}.  It's used like this:
+
+<ul>
+<li>An application first creates an {@link org.hermit.astro.Observation} object using
+    one of its constructors.</li>
+<li>The application uses the set methods of {@link org.hermit.astro.Observation} to
+    configure the position and date/time of the desired data, and any
+    other factors as desired.</li>
+<li>The application calls
+    {@link org.hermit.astro.Observation#getBody(Body.Name which)} to
+    get each of the astronomical bodies for which data is required.  The
+    methods {@link org.hermit.astro.Observation#getSun()},
+    {@link org.hermit.astro.Observation#getMoon()} and
+    {@link org.hermit.astro.Observation#getPlanet(Body.Name which)} are
+    convenience methods which return a {@link org.hermit.astro.Sun},
+    {@link org.hermit.astro.Moon} or {@link org.hermit.astro.Planet}
+    object; these are subclasses of {@link org.hermit.astro.Body}.</li>
+<li>Finally, the application calls
+    {@link org.hermit.astro.Observation#get(OField key)} to
+    get computed global data about the observation, such as the current value
+    for nutation; and/or {@link org.hermit.astro.Body#get(Field key)} to get
+    computed data on a specific body, such as it's azimuth or magnitude.</li>
+</ul>
+
+<p>The {@link org.hermit.astro.Observation} and
+{@link org.hermit.astro.Body} computes the requested data on
+demand.  However, the data is cached, so that if it is referred to from
+multiple places (which is often true in the internal calculations), it is
+only calculated once.  Changing the circumstances of the observation
+(position, time, etc.) automatically clears all cached data.</p>
+
+<p>See <a href="http://code.google.com/p/moonblink/wiki/OnWatch">the
+On Watch application</a> for an example of how it can be used.</p>
+
+</body>
+</html>
