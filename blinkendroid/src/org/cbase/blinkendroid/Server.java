@@ -4,13 +4,12 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-import android.os.Handler;
 import android.util.Log;
 
 public class Server extends Thread{
-	boolean running=false;
+	private boolean running=false;
 	private Blinkendroid blinkendroid;
-	public Server( Blinkendroid blinkendroid) {
+	public Server(Blinkendroid blinkendroid) {
 		this.blinkendroid =blinkendroid;
 	}
 
@@ -44,6 +43,11 @@ public class Server extends Thread{
 
 	public void end(){
 		running=false;
+		Log.i(Blinkendroid.LOG_TAG, "Server Thread ended");
 		interrupt();
+	}
+	
+	public boolean isRunning() {
+	    return running;
 	}
 }

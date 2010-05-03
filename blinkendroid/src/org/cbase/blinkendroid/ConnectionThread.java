@@ -6,12 +6,11 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 
-import android.os.Handler;
 import android.util.Log;
 import android.widget.Toast;
 
 public class ConnectionThread extends Thread {
-	Socket socket;
+	private Socket socket;
 	private Blinkendroid blinkendroid;
 	public ConnectionThread(Blinkendroid blinkendroid, Socket clientSocket) {
 		socket	=	clientSocket;
@@ -44,8 +43,18 @@ public class ConnectionThread extends Thread {
 	}
 
 	private String processInput(String inputLine) {
-		new ToastPoster(blinkendroid,":"+inputLine, Toast.LENGTH_SHORT);
-		return new StringBuffer(inputLine).reverse().toString();
+		new ToastPoster(blinkendroid, inputLine, Toast.LENGTH_SHORT);
+		if (inputLine.equals("getImei")) {
+		    return blinkendroid.getImei();
+		} else if (inputLine.equals("getLocationX")) {
+		    return Integer.toString(blinkendroid.getLocationX());
+		} else if (inputLine.equals("getLocationY")) {
+		    return Integer.toString(blinkendroid.getLocationY()); 
+		} else if (inputLine.equals("getLocationInMatrix")) {
+		    return blinkendroid.getLocationX() + "/" + blinkendroid.getLocationY();
+		} else {
+		    return new StringBuffer(inputLine).reverse().toString();
+		}
 	}
 
 

@@ -3,7 +3,6 @@ package org.cbase.blinkendroid;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
-import java.net.UnknownHostException;
 import java.util.Enumeration;
 import java.util.Timer;
 
@@ -215,11 +214,6 @@ public class Blinkendroid extends Activity {
 				Toast.makeText(getApplicationContext(),
 						getString(R.string.calibrating), Toast.LENGTH_SHORT)
 						.show();
-				String imei = ((TelephonyManager) getSystemService(TELEPHONY_SERVICE))
-						.getDeviceId();
-				Toast
-						.makeText(getApplicationContext(), imei,
-								Toast.LENGTH_LONG).show();
 				Log.i(this.getClass().getName(), "Calibrate Button pressed");
 			}
 		});
@@ -246,7 +240,7 @@ public class Blinkendroid extends Activity {
 		serverButton = (Button) this.findViewById(R.id.ServerButton);
 		serverButton.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				if (server.running) {
+				if (server.isRunning()) {
 					server.end();
 					serverButton.setText(R.string.serverbuttonstart);
 				} else {
@@ -258,20 +252,6 @@ public class Blinkendroid extends Activity {
 
 		counterTextView = (TextView) this.findViewById(R.id.CounterTextView);
 		sensorTextView = (TextView) this.findViewById(R.id.SensorsTextView);
-
-		server = new Server(this);
-		serverButton = (Button) this.findViewById(R.id.ServerButton);
-		serverButton.setOnClickListener(new OnClickListener() {
-			public void onClick(View v) {
-				if (server.running) {
-					server.end();
-					serverButton.setText(R.string.serverbuttonstart);
-				} else {
-					server.start();
-					serverButton.setText(R.string.serverbuttonstop);
-				}
-			}
-		});
 
 		((EditText) Blinkendroid.this.findViewById(R.id.ServerIPEditText))
 				.setText(getLocalIpAddress());
@@ -284,16 +264,18 @@ public class Blinkendroid extends Activity {
 				String chat = ((EditText) Blinkendroid.this
 						.findViewById(R.id.ChatEditText)).getEditableText()
 						.toString();
-				new Client(Blinkendroid.this, ip, chat).start();
+				new Client(Blinkendroid.this, ip, "IMEI: " + getImei()).start();
 			}
 		});
-		counterTextView = (TextView) this.findViewById(R.id.CounterTextView);
-		sensorTextView = (TextView) this.findViewById(R.id.SensorsTextView);
 		// End initialize
 
 		getVibration();
 	}
 
+	/**
+	 * Gets the IPAdress of the local device
+	 * @return The IPAdress or null if none was found
+	 */
 	public String getLocalIpAddress() {
 		try {
 			for (Enumeration<NetworkInterface> en = NetworkInterface
@@ -311,5 +293,32 @@ public class Blinkendroid extends Activity {
 			Log.e(LOG_TAG, ex.toString());
 		}
 		return null;
+	}
+	
+	/**
+	 * Gets the IMEI of the running device
+	 * @return the IMEI
+	 */
+	public String getImei() {
+		return ((TelephonyManager) getSystemService(TELEPHONY_SERVICE))
+		.getDeviceId();
+	}
+	
+	/**
+	 * Gets the location of a device on the x ordinate in a matrix
+	 * @return
+	 */
+	public int getLocationX() {
+	    //TODO implement setting of the location (backend and gui)
+	    return 1;
+	}
+	
+	/**
+	 * Gets the location of a device on the y ordinate in a matrix
+	 * @return
+	 */
+	public int getLocationY() {
+	    //TODO implement setting of the location (backend and gui)
+	    return 1;
 	}
 }
