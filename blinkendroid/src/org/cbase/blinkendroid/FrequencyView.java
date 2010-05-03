@@ -21,13 +21,14 @@ public class FrequencyView extends View {
     	paint2 = new Paint();
     	paint.setColor(Color.WHITE);
     	paint2.setColor(Color.RED);
+    	paint2.setTextSize(16);
     }
 
 
 	@Override
 	protected void onDraw(Canvas canvas) {
 //		super.onDraw(canvas);
-		canvas.drawColor(Color.BLUE);
+//		canvas.drawColor(Color.BLUE);
 		if(null!=buffer)
 		{
 			f=(65-power)*16;
@@ -37,9 +38,17 @@ public class FrequencyView extends View {
 		}
 		if(null!=spectrumData)
 		{
+			float max=0;
+			int maxIndex=0;
 			for (int i = 0; i < spectrumData.length; i++) {
+				if(spectrumData[i]>max){
+					max=spectrumData[i];
+					maxIndex=i;
+				}
 				canvas.drawLine(i*2, 256, i*2, 256-spectrumData[i]*5000, paint2);
 			}
+			String freq	=	Integer.toString(4000/128*maxIndex)+"Hz";
+			canvas.drawText(freq, 10,30, paint2);
 		}
 	}
 
