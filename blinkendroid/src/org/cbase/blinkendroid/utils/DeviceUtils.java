@@ -1,4 +1,4 @@
-package org.cbase.blinkendroid.view;
+package org.cbase.blinkendroid.utils;
 
 import android.app.Activity;
 import android.telephony.TelephonyManager;

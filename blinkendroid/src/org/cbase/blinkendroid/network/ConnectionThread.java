@@ -8,8 +8,8 @@ import java.net.Socket;
 import java.util.StringTokenizer;
 
 import org.cbase.blinkendroid.Blinkendroid;
-import org.cbase.blinkendroid.ToastPoster;
-import org.cbase.blinkendroid.view.DeviceUtils;
+import org.cbase.blinkendroid.utils.DeviceUtils;
+import org.cbase.blinkendroid.utils.ToastPoster;
 
 
 

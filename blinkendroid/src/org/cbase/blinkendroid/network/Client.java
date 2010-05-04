@@ -8,7 +8,7 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 
 import org.cbase.blinkendroid.Blinkendroid;
-import org.cbase.blinkendroid.ToastPoster;
+import org.cbase.blinkendroid.utils.ToastPoster;
 
 
 
