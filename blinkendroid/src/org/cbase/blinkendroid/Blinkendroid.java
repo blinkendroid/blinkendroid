@@ -1,16 +1,14 @@
 package org.cbase.blinkendroid;
 
-import java.net.InetAddress;
-import java.net.NetworkInterface;
-import java.net.SocketException;
 import java.util.Arrays;
-import java.util.Enumeration;
 import java.util.Timer;
 
 import org.cbase.blinkendroid.audio.AudioReader;
 import org.cbase.blinkendroid.listener.VibrationListener;
 import org.cbase.blinkendroid.network.Client;
 import org.cbase.blinkendroid.network.Server;
+import org.cbase.blinkendroid.utils.NetworkUtils;
+import org.cbase.blinkendroid.view.DeviceUtils;
 import org.cbase.blinkendroid.view.FrequencyView;
 import org.hermit.dsp.FFTTransformer;
 import org.hermit.dsp.SignalPower;
@@ -46,17 +44,15 @@ public class Blinkendroid extends Activity {
     private Vibrator vibrator;
     private VibrationListener vibrationListener;
 
-    /**
+    /*
      * Communication
      */
-
     private Server server;
     private Handler handler;
 
     /*
      * The views
      */
-
     private TextView sensorTextView;
     private TextView counterTextView;
     private TextView listenTextView;
@@ -121,7 +117,6 @@ public class Blinkendroid extends Activity {
 	handler = new Handler();
 
 	initAudio();
-
 	// End initialize
 
     }
@@ -365,7 +360,7 @@ public class Blinkendroid extends Activity {
 	sensorTextView = (TextView) this.findViewById(R.id.SensorsTextView);
 
 	((EditText) Blinkendroid.this.findViewById(R.id.ServerIPEditText))
-		.setText(getLocalIpAddress());
+		.setText(NetworkUtils.getLocalIpAddress());
 	Button sendButton = (Button) this.findViewById(R.id.SendButton);
 	sendButton.setOnClickListener(new OnClickListener() {
 	    public void onClick(View v) {
@@ -375,48 +370,14 @@ public class Blinkendroid extends Activity {
 		String chat = ((EditText) Blinkendroid.this
 			.findViewById(R.id.ChatEditText)).getEditableText()
 			.toString();
-		new Client(Blinkendroid.this, ip, "IMEI: " + getImei()).start();
+		new Client(Blinkendroid.this, ip, "IMEI: " + DeviceUtils.getImei(getParent())).start();
 	    }
 	});
 	// End initialize
 
 	getVibration();
     }
-
-    /**
-     * Gets the IPAdress of the local device
-     * 
-     * @return The IPAdress or null if none was found
-     */
-    public String getLocalIpAddress() {
-	try {
-	    for (Enumeration<NetworkInterface> en = NetworkInterface
-		    .getNetworkInterfaces(); en.hasMoreElements();) {
-		NetworkInterface intf = en.nextElement();
-		for (Enumeration<InetAddress> enumIpAddr = intf
-			.getInetAddresses(); enumIpAddr.hasMoreElements();) {
-		    InetAddress inetAddress = enumIpAddr.nextElement();
-		    if (!inetAddress.isLoopbackAddress()) {
-			return inetAddress.getHostAddress().toString();
-		    }
-		}
-	    }
-	} catch (SocketException ex) {
-	    Log.e(LOG_TAG, ex.toString());
-	}
-	return null;
-    }
-
-    /**
-     * Gets the IMEI of the running device
-     * 
-     * @return the IMEI
-     */
-    public String getImei() {
-	return ((TelephonyManager) getSystemService(TELEPHONY_SERVICE))
-		.getDeviceId();
-    }
-
+    
     /**
      * Gets the location of a device on the x ordinate in a matrix
      * 
@@ -436,5 +397,4 @@ public class Blinkendroid extends Activity {
 	// TODO implement setting of the location (backend and gui)
 	return 1;
     }
-
 }

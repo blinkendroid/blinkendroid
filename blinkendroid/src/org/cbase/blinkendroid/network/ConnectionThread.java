@@ -9,6 +9,7 @@ import java.util.StringTokenizer;
 
 import org.cbase.blinkendroid.Blinkendroid;
 import org.cbase.blinkendroid.ToastPoster;
+import org.cbase.blinkendroid.view.DeviceUtils;
 
 
 
@@ -52,7 +53,7 @@ public class ConnectionThread extends Thread {
 		new ToastPoster(blinkendroid, inputLine, Toast.LENGTH_SHORT);
 		//Here are the commands to send or get data from the device:
 		if (inputLine.equals("getImei")) {
-		    return blinkendroid.getImei();
+		    return DeviceUtils.getImei(blinkendroid);
 			//Further getter examples
 		} else if (inputLine.equals("getLocationX")) {
 		    return Integer.toString(blinkendroid.getLocationX());
