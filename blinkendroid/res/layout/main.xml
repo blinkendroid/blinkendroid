@@ -2,18 +2,30 @@
 <LinearLayout
   xmlns:android="http://schemas.android.com/apk/res/android"
   android:id="@+id/MainLinearLayout"
-  android:orientation="vertical" android:layout_height="wrap_content" android:layout_width="wrap_content">
-<org.cbase.blinkendroid.FrequencyView
+  android:orientation="vertical" 
+  android:layout_height="wrap_content" 
+  android:layout_width="wrap_content">
+	<LinearLayout android:id="@+id/LinearLayout01" 
+			android:layout_width="wrap_content" 
+			android:layout_height="wrap_content">
+		<Button android:text="@string/debugView" 
+				android:id="@+id/switchToMainButton" 
+				android:layout_width="wrap_content" 
+				android:layout_height="wrap_content">
+		</Button>
+		<Button android:layout_width="wrap_content" 
+				android:layout_height="wrap_content" 
+				android:text="Listen" 
+				android:id="@+id/ListenButton">
+		</Button>
+		<TextView android:id="@+id/TextView03" 
+				android:layout_width="wrap_content" 
+				android:layout_height="wrap_content"
+				 android:text="not started yet">
+		</TextView>
+	</LinearLayout>
+  	<org.cbase.blinkendroid.FrequencyView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
-</org.cbase.blinkendroid.FrequencyView>
-<LinearLayout android:id="@+id/LinearLayout01" android:layout_width="wrap_content" android:layout_height="wrap_content"><Button android:text="@string/debugView" android:id="@+id/switchToMainButton" android:layout_width="wrap_content" android:layout_height="wrap_content"></Button><Button android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Listen" android:id="@+id/ListenButton"></Button><TextView android:id="@+id/TextView03" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="not started yet"></TextView>
-</LinearLayout>
-
-
-
-
-
-
-
+	</org.cbase.blinkendroid.FrequencyView>
 </LinearLayout>

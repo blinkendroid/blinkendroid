@@ -22,7 +22,9 @@ import android.os.Vibrator;
 import android.os.PowerManager.WakeLock;
 import android.telephony.TelephonyManager;
 import android.util.Log;
+import android.view.Display;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
@@ -82,11 +84,21 @@ public class Blinkendroid extends Activity {
 	final int inputBlockSize = 256;
     private FFTTransformer spectrumAnalyser;
 	int counter=0;
+
+	public static int screenWidth;
+
+	public static int	screenHeight;
 	
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		requestWindowFeature(android.view.Window.FEATURE_NO_TITLE);
+		WindowManager w = getWindowManager(); 
+    Display d = w.getDefaultDisplay(); 
+    screenWidth = d.getWidth(); 
+    screenHeight = d.getHeight();
+    
 		setContentView(R.layout.main);
 		// Initialize
 		wakeLock = ((PowerManager) getSystemService(POWER_SERVICE))
