@@ -1,8 +1,12 @@
-package org.cbase.blinkendroid;
+package org.cbase.blinkendroid.network;
 
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+
+import org.cbase.blinkendroid.Blinkendroid;
+
+
 
 import android.util.Log;
 

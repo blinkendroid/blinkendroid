@@ -1,4 +1,4 @@
-package org.cbase.blinkendroid;
+package org.cbase.blinkendroid.audio;
 
 /**
  * org.hermit.android.instrument: graphical instruments for Android.

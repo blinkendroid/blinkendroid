@@ -19,7 +19,7 @@
 
 
 //package org.hermit.android.io;
-package org.cbase.blinkendroid;
+package org.cbase.blinkendroid.audio;
 
 import android.media.AudioFormat;
 import android.media.AudioRecord;

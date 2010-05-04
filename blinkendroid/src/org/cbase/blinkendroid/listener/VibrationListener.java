@@ -1,4 +1,7 @@
-package org.cbase.blinkendroid;
+package org.cbase.blinkendroid.listener;
+
+
+import org.cbase.blinkendroid.Blinkendroid;
 
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;

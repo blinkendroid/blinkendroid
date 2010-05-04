@@ -1,4 +1,8 @@
-package org.cbase.blinkendroid;
+package org.cbase.blinkendroid.view;
+
+
+
+import org.cbase.blinkendroid.Blinkendroid;
 
 import android.content.Context;
 import android.graphics.Canvas;

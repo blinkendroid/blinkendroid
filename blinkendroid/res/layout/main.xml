@@ -24,8 +24,8 @@
 				 android:text="not started yet">
 		</TextView>
 	</LinearLayout>
-  	<org.cbase.blinkendroid.FrequencyView
+  	<org.cbase.blinkendroid.view.FrequencyView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
-	</org.cbase.blinkendroid.FrequencyView>
+	</org.cbase.blinkendroid.view.FrequencyView>
 </LinearLayout>
