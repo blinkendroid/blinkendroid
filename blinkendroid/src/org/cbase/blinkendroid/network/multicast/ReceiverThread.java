@@ -7,38 +7,35 @@ import java.net.MulticastSocket;
 import android.util.Log;
 
 /**
- * A multicast sender thread WARNING: NSFW yet
+ * A multicast Reiciever Thread WARNING: NSFW yet
  * 
  */
-public class SenderThread extends Thread {
+public class ReceiverThread extends Thread {
 
-    private String message;
     private InetAddress group;
-
-    public SenderThread(InetAddress grp, String msg) {
-	message = msg;
+    public ReceiverThread(InetAddress grp) {
 	group = grp;
     }
 
     @Override
     public void run() {
 	try {
-	    int i = 0;
 	    MulticastSocket s = new MulticastSocket(6789);
 	    s.joinGroup(group);
+	    byte[] buf;
 
 	    while (true) {
-		String msg = message + " " + i;
 
-		DatagramPacket hi = new DatagramPacket(msg.getBytes(), msg
-			.length(), group, 6789);
-		s.send(hi);
-		i++;
+		// get their responses!
+		buf = new byte[500];
+		DatagramPacket recv = new DatagramPacket(buf, buf.length);
+		s.receive(recv);
+		Log.i("foo", new String(recv.getData()));
+		// OK, I'm done talking - leave the group...
 		Thread.currentThread().sleep(1000);
 	    }
 	} catch (Exception e) {
 	    Log.e("foo", "", e);
 	}
     }
-
 }
