@@ -24,7 +24,6 @@ import android.os.Handler;
 import android.os.PowerManager;
 import android.os.Vibrator;
 import android.os.PowerManager.WakeLock;
-import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.Display;
 import android.view.View;
@@ -60,7 +59,6 @@ public class OldBlinkendroid extends Activity {
      * The buttons
      */
     private Button vibrateButton;
-    private Button exitButton;
     private Button calibrateButton;
     private Button serverButton;
     private Button switchToMainButton;
@@ -321,15 +319,6 @@ public class OldBlinkendroid extends Activity {
 			getString(R.string.calibrating), Toast.LENGTH_SHORT)
 			.show();
 		Log.i(this.getClass().getName(), "Calibrate Button pressed");
-	    }
-	});
-
-	exitButton = (Button) this.findViewById(R.id.exitButton);
-	exitButton.setOnClickListener(new OnClickListener() {
-	    public void onClick(View v) {
-		releaseWakeLock();
-		Log.i(this.getClass().getName(), "Exit Button pressed");
-		System.exit(0);
 	    }
 	});
 
