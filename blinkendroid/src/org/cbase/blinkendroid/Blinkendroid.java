@@ -17,6 +17,7 @@ public class Blinkendroid extends TabActivity {
     private static final String TAG_OLD = "old";
     private static final String TAG_FREQUENCY = "frequency";
     private static final String TAG_DEBUG = "debug";
+    private static final String TAG_IDENTIFY = "identify";
 
     private boolean fullscreen = false;
 
@@ -41,6 +42,10 @@ public class Blinkendroid extends TabActivity {
 	tabHost.addTab(tabHost.newTabSpec(TAG_DEBUG).setIndicator("debug",
 		res.getDrawable(R.drawable.blinkendroid)).setContent(
 		new Intent(this, DebugActivity.class)));
+
+	tabHost.addTab(tabHost.newTabSpec(TAG_IDENTIFY).setIndicator(
+		"identify", res.getDrawable(R.drawable.blinkendroid))
+		.setContent(new Intent(this, IdentifyActivity.class)));
     }
 
     @Override

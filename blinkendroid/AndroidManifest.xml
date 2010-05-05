@@ -18,6 +18,8 @@
 
 		<activity android:name=".DebugActivity" />
 
+		<activity android:name=".IdentifyActivity" />
+
 	</application>
 
 	<uses-sdk android:minSdkVersion="3" />
