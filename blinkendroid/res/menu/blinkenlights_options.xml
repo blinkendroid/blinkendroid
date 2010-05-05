@@ -2,4 +2,6 @@
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 	<item android:id="@+id/blinkendroid_options_exit" android:icon="@drawable/icon" android:title="Force Exit" />
+	<item android:id="@+id/blinkendroid_options_enter_fullscreen" android:icon="@drawable/icon" android:title="Fullscreen" />
+	<item android:id="@+id/blinkendroid_options_exit_fullscreen" android:icon="@drawable/icon" android:title="Exit Fullscreen" />
 </menu>

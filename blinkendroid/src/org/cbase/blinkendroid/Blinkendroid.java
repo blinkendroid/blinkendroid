@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.WindowManager;
 import android.widget.TabHost;
 
 public class Blinkendroid extends TabActivity {
@@ -14,6 +16,8 @@ public class Blinkendroid extends TabActivity {
     private static final String TAG_OLD = "old";
     private static final String TAG_FREQUENCY = "frequency";
     private static final String TAG_DEBUG = "debug";
+
+    private boolean fullscreen = false;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -45,6 +49,16 @@ public class Blinkendroid extends TabActivity {
     }
 
     @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+
+	menu.findItem(R.id.blinkendroid_options_enter_fullscreen).setVisible(
+		!fullscreen);
+	menu.findItem(R.id.blinkendroid_options_exit_fullscreen).setVisible(
+		fullscreen);
+	return true;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
 	switch (item.getItemId()) {
@@ -53,6 +67,18 @@ public class Blinkendroid extends TabActivity {
 	    // releaseWakeLock();
 	    Log.i(this.getClass().getName(), "Exit Button pressed");
 	    System.exit(0);
+	    return true;
+
+	case R.id.blinkendroid_options_enter_fullscreen:
+	    getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+	    getTabWidget().setVisibility(View.GONE);
+	    fullscreen = true;
+	    return true;
+
+	case R.id.blinkendroid_options_exit_fullscreen:
+	    getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+	    getTabWidget().setVisibility(View.VISIBLE);
+	    fullscreen = false;
 	    return true;
 	}
 
