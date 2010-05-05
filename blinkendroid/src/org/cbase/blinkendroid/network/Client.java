@@ -7,51 +7,47 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
-import org.cbase.blinkendroid.Blinkendroid;
+import org.cbase.blinkendroid.OldBlinkendroid;
 import org.cbase.blinkendroid.utils.ToastPoster;
-
-
 
 import android.util.Log;
 import android.widget.Toast;
 
-
 public class Client extends Thread {
-	private Blinkendroid blinkendroid;
-	private String ip;
-	private String chat;
+    private OldBlinkendroid blinkendroid;
+    private String ip;
+    private String chat;
 
+    public Client(OldBlinkendroid blinkendroid, String ip, String chat) {
+	this.blinkendroid = blinkendroid;
+	this.ip = ip;
+	this.chat = chat;
+    }
 
-	public Client(Blinkendroid blinkendroid, String ip, String chat) {
-		this.blinkendroid =blinkendroid;
-		this.ip=ip;
-		this.chat=chat;
+    @Override
+    public void run() {
+	Socket socket;
+	try {
+	    socket = new Socket(ip, 4444);
+	    PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+	    BufferedReader in = new BufferedReader(new InputStreamReader(socket
+		    .getInputStream()));
+
+	    out.write(chat + '\n');
+	    out.flush();
+	    String response = in.readLine();
+	    Log.i(OldBlinkendroid.LOG_TAG, "Response: " + response);
+	    new ToastPoster(blinkendroid, response, Toast.LENGTH_LONG);
+	    out.close();
+	    in.close();
+	    socket.close();
+	} catch (UnknownHostException e) {
+	    // TODO Auto-generated catch block
+	    e.printStackTrace();
+	} catch (IOException e) {
+	    // TODO Auto-generated catch block
+	    e.printStackTrace();
 	}
-
-	@Override
-	public void run() {
-		Socket socket;
-		try {
-			socket = new Socket(ip, 4444);
-			PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-			BufferedReader in = new BufferedReader(new InputStreamReader(
-					socket.getInputStream()));
-			
-			out.write(chat+'\n');
-			out.flush();
-			String response	=	in.readLine();
-			Log.i(Blinkendroid.LOG_TAG, "Response: "+response);
-			new ToastPoster(blinkendroid,response,Toast.LENGTH_LONG);
-			out.close();
-			in.close();
-			socket.close();
-		} catch (UnknownHostException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
+    }
 
 }

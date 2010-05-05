@@ -5,7 +5,7 @@ import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.util.Enumeration;
 
-import org.cbase.blinkendroid.Blinkendroid;
+import org.cbase.blinkendroid.OldBlinkendroid;
 
 import android.util.Log;
 
@@ -33,7 +33,7 @@ public class NetworkUtils {
 		}
 	    }
 	} catch (SocketException ex) {
-	    Log.e(Blinkendroid.LOG_TAG, ex.toString());
+	    Log.e(OldBlinkendroid.LOG_TAG, ex.toString());
 	}
 	return null;
     }

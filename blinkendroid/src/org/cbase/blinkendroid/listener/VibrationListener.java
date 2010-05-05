@@ -1,7 +1,7 @@
 package org.cbase.blinkendroid.listener;
 
 
-import org.cbase.blinkendroid.Blinkendroid;
+import org.cbase.blinkendroid.OldBlinkendroid;
 
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -13,9 +13,9 @@ public class VibrationListener implements SensorEventListener {
     private long lastTimeOverThreshold = 0;
     private int counter = 0;
     private float data_x, data_y, data_z, acc_m;
-    private Blinkendroid blinkendroid;
+    private OldBlinkendroid blinkendroid;
     
-    public VibrationListener(Blinkendroid bd) {
+    public VibrationListener(OldBlinkendroid bd) {
 	blinkendroid = bd;
     }
 

@@ -3,6 +3,7 @@ package org.cbase.blinkendroid.utils;
 import java.util.TimerTask;
 
 import org.cbase.blinkendroid.Blinkendroid;
+import org.cbase.blinkendroid.OldBlinkendroid;
 
 import android.graphics.Color;
 
@@ -17,12 +18,12 @@ public class TaskPool {
     /**
      * The running {@link Blinkendroid}.
      */
-    private Blinkendroid blinkendroid;
+    private OldBlinkendroid blinkendroid;
     /**
      * Creates a {@link TaskPool} for a {@link Blinkendroid}.
      * @param bd The Blinkendroid that the TaskPool is created for.
      */
-    public TaskPool(Blinkendroid bd) {
+    public TaskPool(OldBlinkendroid bd) {
 	blinkendroid = bd;
     }
 

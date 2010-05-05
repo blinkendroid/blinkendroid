@@ -7,7 +7,7 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.StringTokenizer;
 
-import org.cbase.blinkendroid.Blinkendroid;
+import org.cbase.blinkendroid.OldBlinkendroid;
 import org.cbase.blinkendroid.utils.DeviceUtils;
 import org.cbase.blinkendroid.utils.ToastPoster;
 
@@ -18,8 +18,8 @@ import android.widget.Toast;
 
 public class ConnectionThread extends Thread {
 	private Socket socket;
-	private Blinkendroid blinkendroid;
-	public ConnectionThread(Blinkendroid blinkendroid, Socket clientSocket) {
+	private OldBlinkendroid blinkendroid;
+	public ConnectionThread(OldBlinkendroid blinkendroid, Socket clientSocket) {
 		socket	=	clientSocket;
 		this.blinkendroid =	blinkendroid;
 	}
@@ -32,7 +32,7 @@ public class ConnectionThread extends Thread {
 			PrintWriter out = new PrintWriter(
                     socket.getOutputStream(), true);
 			String request 	=	 in.readLine();
-			Log.i(Blinkendroid.LOG_TAG, "Request: "+request);
+			Log.i(OldBlinkendroid.LOG_TAG, "Request: "+request);
 			out.println(processInput(request));
 			
 //			while ((inputLine = in.readLine()) != null) {	
@@ -45,7 +45,7 @@ public class ConnectionThread extends Thread {
 			in.close();
 			socket.close();
 		} catch (IOException e) {
-			Log.e(Blinkendroid.LOG_TAG, "Could not get Streams",e);
+			Log.e(OldBlinkendroid.LOG_TAG, "Could not get Streams",e);
 		}
 	}
 

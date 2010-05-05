@@ -1,6 +1,7 @@
 package org.cbase.blinkendroid.utils;
 
 import org.cbase.blinkendroid.Blinkendroid;
+import org.cbase.blinkendroid.OldBlinkendroid;
 
 import android.widget.Toast;
 
@@ -12,7 +13,7 @@ public class ToastPoster implements Runnable {
     /**
      * The running blinkendroid.
      */
-    private Blinkendroid blinkendroid;
+    private OldBlinkendroid blinkendroid;
     /**
      * The message to Toast.
      */
@@ -28,7 +29,7 @@ public class ToastPoster implements Runnable {
      * @param message The message to Toast.
      * @param length Visibility length. Usually Toast.LENGTH_LONG or Toast.LENGTH_SHORT
      */
-    public ToastPoster(Blinkendroid blinkendroid, String message, int length) {
+    public ToastPoster(OldBlinkendroid blinkendroid, String message, int length) {
 	this.blinkendroid = blinkendroid;
 	this.message = message;
 	this.length = length;
