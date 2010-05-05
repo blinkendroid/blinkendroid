@@ -352,6 +352,7 @@ public class Blinkendroid extends Activity {
 		    server.end();
 		    serverButton.setText(R.string.serverbuttonstart);
 		} else {
+			server = new Server(Blinkendroid.this);
 		    server.start();
 		    serverButton.setText(R.string.serverbuttonstop);
 		}
