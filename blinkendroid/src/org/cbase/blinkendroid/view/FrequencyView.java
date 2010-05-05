@@ -1,5 +1,6 @@
 package org.cbase.blinkendroid.view;
 
+import org.cbase.blinkendroid.Constants;
 import org.cbase.blinkendroid.OldBlinkendroid;
 
 import android.content.Context;
@@ -28,7 +29,7 @@ public class FrequencyView extends View {
 	paint2.setColor(Color.BLACK);
 	paint2.setTextSize(16);
 
-	Log.d(OldBlinkendroid.LOG_TAG, "FrequencyView: "
+	Log.d(Constants.LOG_TAG, "FrequencyView: "
 		+ (OldBlinkendroid.screenWidth - 10) + ":"
 		+ (OldBlinkendroid.screenHeight - 200));
     }

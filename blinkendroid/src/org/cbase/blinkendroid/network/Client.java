@@ -7,6 +7,7 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
+import org.cbase.blinkendroid.Constants;
 import org.cbase.blinkendroid.OldBlinkendroid;
 import org.cbase.blinkendroid.utils.ToastPoster;
 
@@ -36,7 +37,7 @@ public class Client extends Thread {
 	    out.write(chat + '\n');
 	    out.flush();
 	    String response = in.readLine();
-	    Log.i(OldBlinkendroid.LOG_TAG, "Response: " + response);
+	    Log.i(Constants.LOG_TAG, "Response: " + response);
 	    new ToastPoster(blinkendroid, response, Toast.LENGTH_LONG);
 	    out.close();
 	    in.close();

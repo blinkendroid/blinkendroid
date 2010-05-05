@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+import org.cbase.blinkendroid.Constants;
 import org.cbase.blinkendroid.OldBlinkendroid;
 
 
@@ -23,31 +24,31 @@ public class Server extends Thread{
 		try {
 			serverSocket = new ServerSocket(4444);
 		} catch (IOException e) {
-			Log.e(OldBlinkendroid.LOG_TAG, "Could not create Socket",e);
+			Log.e(Constants.LOG_TAG, "Could not create Socket",e);
 			return;
 		}
 		running=true;
-		Log.i(OldBlinkendroid.LOG_TAG,"Server Thread started");
+		Log.i(Constants.LOG_TAG,"Server Thread started");
 		while(running){
 			Socket clientSocket;
 			try {
 				clientSocket = serverSocket.accept();
 				new ConnectionThread(blinkendroid, clientSocket).start();	
 			} catch (IOException e) {
-				Log.e(OldBlinkendroid.LOG_TAG, "Could not accept",e);
+				Log.e(Constants.LOG_TAG, "Could not accept",e);
 			}
 		}
 		try {
 			serverSocket.close();
 		} catch (IOException e) {
-			Log.e(OldBlinkendroid.LOG_TAG, "Could not close",e);
+			Log.e(Constants.LOG_TAG, "Could not close",e);
 		}
-		Log.i(OldBlinkendroid.LOG_TAG,"Server Thread closed");
+		Log.i(Constants.LOG_TAG,"Server Thread closed");
 	}
 
 	public void end(){
 		running=false;
-		Log.i(OldBlinkendroid.LOG_TAG, "Server Thread ended");
+		Log.i(Constants.LOG_TAG, "Server Thread ended");
 		interrupt();
 	}
 	

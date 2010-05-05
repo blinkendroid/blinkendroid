@@ -37,8 +37,6 @@ import android.widget.Toast;
 
 public class OldBlinkendroid extends Activity {
 
-    public static final String LOG_TAG = "blinkendroids";
-
     /*
      * Our Vibrator
      */
