@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TabHost;
 
@@ -23,6 +24,7 @@ public class Blinkendroid extends TabActivity {
     protected void onCreate(final Bundle savedInstanceState) {
 	super.onCreate(savedInstanceState);
 
+	requestWindowFeature(Window.FEATURE_NO_TITLE);
 	setContentView(R.layout.blinkendroid);
 
 	final TabHost tabHost = getTabHost();
