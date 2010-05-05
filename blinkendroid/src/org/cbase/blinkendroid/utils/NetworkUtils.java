@@ -13,7 +13,7 @@ import android.util.Log;
  * Utilities for networking related methods.
  */
 public class NetworkUtils {
-    
+
     /**
      * Gets the IPAdress of the local device
      * 

@@ -20,9 +20,9 @@ import android.widget.Toast;
 public class ConnectionThread extends Thread {
 	private Socket socket;
 	private OldBlinkendroid blinkendroid;
-	public ConnectionThread(OldBlinkendroid blinkendroid, Socket clientSocket) {
+	public ConnectionThread(OldBlinkendroid oldBlinkendroid, Socket clientSocket) {
 		socket	=	clientSocket;
-		this.blinkendroid =	blinkendroid;
+		this.blinkendroid =	oldBlinkendroid;
 	}
 
 	@Override

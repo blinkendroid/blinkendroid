@@ -169,7 +169,7 @@ public class OldBlinkendroid extends Activity {
 	t.schedule(tp.createReconnectTask(), 2600);
 	sensorTextView.setBackgroundColor(Color.RED);
     }
-
+    
     /**
      * Gets the vibration from another source.
      */
