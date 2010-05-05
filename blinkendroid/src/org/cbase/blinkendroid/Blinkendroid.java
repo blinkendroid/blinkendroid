@@ -200,6 +200,7 @@ public class Blinkendroid extends Activity {
 
 	final AudioReader.Listener audioReadListener = new AudioReader.Listener() {
 
+	    @Override
 	    public void onReadComplete(short[] buffer) {
 		counter++;
 		FrequencyView.buffer = buffer;

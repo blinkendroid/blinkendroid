@@ -34,7 +34,6 @@ public class ToastPoster implements Runnable {
 	this.length = length;
 	blinkendroid.getHandler().post(this);
     }
-    @Override
     public void run() {
 	Toast.makeText(blinkendroid, message, length).show();
     }
