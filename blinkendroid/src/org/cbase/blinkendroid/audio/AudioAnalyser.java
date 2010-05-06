@@ -1,21 +1,6 @@
 /*
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
-
-package org.cbase.blinkendroid.audio;
-
-/**
+ * TODO prüfen, ob wir diese Datei auf GPLv3 upgraden können
+ * 
  * org.hermit.android.instrument: graphical instruments for Android.
  * <br>Copyright 2009 Ian Cameron Smith
  * 
@@ -31,6 +16,8 @@ package org.cbase.blinkendroid.audio;
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  */
+
+package org.cbase.blinkendroid.audio;
 
 import org.hermit.dsp.FFTTransformer;
 import org.hermit.dsp.SignalPower;
