@@ -39,8 +39,6 @@ public class Blinkendroid extends TabActivity {
     private static final String TAG_DEBUG = "debug";
     private static final String TAG_IDENTIFY = "identify";
 
-    private boolean fullscreen = false;
-
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
 	super.onCreate(savedInstanceState);
@@ -78,6 +76,8 @@ public class Blinkendroid extends TabActivity {
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
 
+	final boolean fullscreen = getTabWidget().getVisibility() == View.GONE;
+
 	menu.findItem(R.id.blinkendroid_options_enter_fullscreen).setVisible(
 		!fullscreen);
 	menu.findItem(R.id.blinkendroid_options_exit_fullscreen).setVisible(
@@ -99,13 +99,11 @@ public class Blinkendroid extends TabActivity {
 	case R.id.blinkendroid_options_enter_fullscreen:
 	    getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 	    getTabWidget().setVisibility(View.GONE);
-	    fullscreen = true;
 	    return true;
 
 	case R.id.blinkendroid_options_exit_fullscreen:
 	    getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 	    getTabWidget().setVisibility(View.VISIBLE);
-	    fullscreen = false;
 	    return true;
 	}
 
