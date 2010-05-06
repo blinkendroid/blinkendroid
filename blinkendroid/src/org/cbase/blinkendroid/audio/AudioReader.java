@@ -1,4 +1,6 @@
-/**
+/*
+ * TODO prüfen, ob wir diese Datei auf GPLv3 upgraden können
+ * 
  * org.hermit.android.io: Android utilities for accessing peripherals.
  * 
  * These classes provide some basic utilities for accessing the audio
