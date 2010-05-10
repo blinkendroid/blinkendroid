@@ -1,5 +1,7 @@
 package org.cbase.blinkendroid;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,8 +48,7 @@ public class IRActivity extends Activity {
 	shootBtn = (Button) this.findViewById(R.id.shootBtn);
 	imgView = (ImageView) this.findViewById(R.id.ImageView01);
 
-	Bitmap origImage = BitmapFactory.decodeResource(getResources(),
-		R.drawable.blinkendroid2);
+	Bitmap origImage = BitmapFactory.decodeFile("/sdcard/data/blinkendroid/testImg.jpg");
 
 	image = BitmapUtils.scaleBitmap(origImage, 640, 480);
 	imgView.setImageBitmap(image);
@@ -70,7 +71,6 @@ public class IRActivity extends Activity {
     }
 
     private void shootBtnClicked() {
-	setContentView(R.layout.camera);
 	Log.d(Constants.LOG_TAG, getLocalClassName() + " shootBtnClicked");
     }
 

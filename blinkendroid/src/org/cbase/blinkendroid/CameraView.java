@@ -66,7 +66,6 @@ public class CameraView extends Activity implements SurfaceHolder.Callback,
 		camera.startPreview();
 
 		setResult(FOTO_MODE, mIntent);
-		finish();
 
 	    }
 	}
