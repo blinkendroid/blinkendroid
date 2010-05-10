@@ -38,7 +38,8 @@ public class Blinkendroid extends TabActivity {
     private static final String TAG_FREQUENCY = "frequency";
     private static final String TAG_DEBUG = "debug";
     private static final String TAG_IDENTIFY = "identify";
-    private static final String TAG_IR = "IR";
+    private static final String TAG_IR = "ir";
+    private static final String TAG_CAMERA = "camera";
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -69,12 +70,16 @@ public class Blinkendroid extends TabActivity {
 	tabHost.addTab(tabHost.newTabSpec(TAG_IR).setIndicator(
 			"irview", res.getDrawable(R.drawable.blinkendroid))
 			.setContent(new Intent(this, IRActivity.class)));
+	
+	tabHost.addTab(tabHost.newTabSpec(TAG_CAMERA).setIndicator(
+		"camera", res.getDrawable(R.drawable.blinkendroid))
+		.setContent(new Intent(this, CameraView.class)));
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
-	getMenuInflater().inflate(R.menu.blinkenlights_options, menu);
+	getMenuInflater().inflate(R.menu.blinkendroid_options, menu);
 	return true;
     }
 
