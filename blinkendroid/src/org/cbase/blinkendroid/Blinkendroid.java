@@ -38,6 +38,7 @@ public class Blinkendroid extends TabActivity {
     private static final String TAG_FREQUENCY = "frequency";
     private static final String TAG_DEBUG = "debug";
     private static final String TAG_IDENTIFY = "identify";
+    private static final String TAG_IR = "IR";
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -64,6 +65,10 @@ public class Blinkendroid extends TabActivity {
 	tabHost.addTab(tabHost.newTabSpec(TAG_IDENTIFY).setIndicator(
 		"identify", res.getDrawable(R.drawable.blinkendroid))
 		.setContent(new Intent(this, IdentifyActivity.class)));
+	
+	tabHost.addTab(tabHost.newTabSpec(TAG_IR).setIndicator(
+			"irview", res.getDrawable(R.drawable.blinkendroid))
+			.setContent(new Intent(this, IRActivity.class)));
     }
 
     @Override

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout android:orientation="vertical"
+	android:layout_width="wrap_content"
+	android:layout_height="wrap_content"
+	xmlns:android="http://schemas.android.com/apk/res/android">
+	<LinearLayout android:orientation="horizontal"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content">
+		<EditText android:text="Color" android:id="@+id/EditText01"
+			android:layout_width="wrap_content" android:layout_height="wrap_content"
+			android:autoText="false" android:singleLine="true" android:minWidth="60pt" android:maxWidth="60pt">
+		</EditText>
+		<Button android:text="Calculate" android:id="@+id/calculateBtn"
+			android:layout_width="wrap_content" android:layout_height="wrap_content"
+			>
+		</Button>
+		<Button android:text="Shoot" android:id="@+id/shootBtn"
+			android:layout_width="wrap_content" android:layout_height="wrap_content"
+			>
+		</Button>
+	</LinearLayout>
+	<LinearLayout android:orientation="vertical"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content">
+		<SeekBar android:id="@+id/SeekBar01" android:layout_width="wrap_content" android:minWidth="200pt"
+            android:layout_height="wrap_content">
+        </SeekBar>
+		<ImageView android:id="@+id/ImageView01"
+			android:layout_width="wrap_content" android:layout_height="wrap_content">
+		</ImageView>
+	</LinearLayout>
+</LinearLayout>
