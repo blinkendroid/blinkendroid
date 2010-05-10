@@ -18,10 +18,16 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.view.View.OnClickListener;
 
+/**
+ * An activity that is able to preview an image from the device's camera and take a photo.
+ * @author ben
+ *
+ */
 public class CameraView extends Activity implements SurfaceHolder.Callback,
 	OnClickListener {
+    
     static final int FOTO_MODE = 0;
-    Camera mCamera;
+    Camera camera;
     boolean mPreviewRunning = false;
     private Context mContext = this;
 
@@ -56,9 +62,8 @@ public class CameraView extends Activity implements SurfaceHolder.Callback,
 
 		Intent mIntent = new Intent();
 
-		FileUtils.storeByteImage(mContext, imageData, 50,
-			new java.sql.Timestamp(System.currentTimeMillis()).toLocaleString());
-		mCamera.startPreview();
+		FileUtils.storeByteImage(mContext, imageData, 50, "testImg");
+		camera.startPreview();
 
 		setResult(FOTO_MODE, mIntent);
 		finish();
@@ -68,7 +73,7 @@ public class CameraView extends Activity implements SurfaceHolder.Callback,
     };
 
     protected void onResume() {
-	Log.e(Constants.LOG_TAG, getLocalClassName() + "onResume");
+	Log.d(Constants.LOG_TAG, getLocalClassName() + "onResume");
 	super.onResume();
     }
 
@@ -77,42 +82,42 @@ public class CameraView extends Activity implements SurfaceHolder.Callback,
     }
 
     protected void onStop() {
-	Log.e(Constants.LOG_TAG, getLocalClassName() + "onStop");
+	Log.d(Constants.LOG_TAG, getLocalClassName() + "onStop");
 	super.onStop();
     }
 
     public void surfaceCreated(SurfaceHolder holder) {
-	Log.e(Constants.LOG_TAG, getLocalClassName() + "surfaceCreated");
-	mCamera = Camera.open();
+	Log.d(Constants.LOG_TAG, getLocalClassName() + "surfaceCreated");
+	camera = Camera.open();
 
     }
 
     public void surfaceChanged(SurfaceHolder holder, int format, int w, int h) {
-	Log.e(Constants.LOG_TAG, getLocalClassName() + "surfaceChanged");
+	Log.d(Constants.LOG_TAG, getLocalClassName() + "surfaceChanged");
 
 	// XXX stopPreview() will crash if preview is not running
 	if (mPreviewRunning) {
-	    mCamera.stopPreview();
+	    camera.stopPreview();
 	}
 
-	Camera.Parameters p = mCamera.getParameters();
-	p.setPreviewSize(w, h);
-	mCamera.setParameters(p);
+	Camera.Parameters p = camera.getParameters();
+//	p.setPreviewSize(w, h);
+	camera.setParameters(p);
 	try {
-	    mCamera.setPreviewDisplay(holder);
+	    camera.setPreviewDisplay(holder);
 	} catch (IOException e) {
 	    Log.e(Constants.LOG_TAG, getLocalClassName() + e);
 	    e.printStackTrace();
 	}
-	mCamera.startPreview();
+	camera.startPreview();
 	mPreviewRunning = true;
     }
 
     public void surfaceDestroyed(SurfaceHolder holder) {
-	Log.e(Constants.LOG_TAG, getLocalClassName() + "surfaceDestroyed");
-	mCamera.stopPreview();
+	Log.d(Constants.LOG_TAG, getLocalClassName() + "surfaceDestroyed");
+	camera.stopPreview();
 	mPreviewRunning = false;
-	mCamera.release();
+	camera.release();
     }
 
     private SurfaceView mSurfaceView;
@@ -120,7 +125,7 @@ public class CameraView extends Activity implements SurfaceHolder.Callback,
 
     public void onClick(View arg0) {
 
-	mCamera.takePicture(null, mPictureCallback, mPictureCallback);
+	camera.takePicture(null, mPictureCallback, mPictureCallback);
 
     }
 
