@@ -12,7 +12,7 @@ import android.util.Log;
 /**
  * This class represents a cluster of Pixels and implements a simple algorithm
  * for finding the densest/biggest cluster
- * 
+ *
  * @author dima
  */
 public class SimpleCluster extends ArrayList<Pixel> {
@@ -65,9 +65,13 @@ public class SimpleCluster extends ArrayList<Pixel> {
      * but would fail miserably with edge detection
      * 
      * @param points
-     * @return cluster
+     * @return cluster or null if none were found
      */
     public static SimpleCluster findBiggestCluster(ArrayList<Pixel> points) {
+	if(points == null || points.size() == 0) {
+		return null;
+	}
+
 	double[] distances = new double[points.size()];
 	Pixel centroid = calculateCentroid(points);
 	double meanDistance = calculateDistances(centroid, points, distances);
@@ -150,9 +154,9 @@ public class SimpleCluster extends ArrayList<Pixel> {
      * @return mean distance
      */
     private static double calculateDistances(Pixel centroid, ArrayList<Pixel> points, double[] distances) {
-		long distanceSum = 0;		
+		long distanceSum = 0;
 		int pointsSize = points.size();
-		
+
 		for(int i = 0; i < pointsSize; i++) {
 			double dist = centroid.getDistance(points.get(i));
 			distanceSum += dist;
@@ -174,10 +178,15 @@ public class SimpleCluster extends ArrayList<Pixel> {
      * 
      * @param clusters
      *            list of clusters
-     * @return densest cluster
+     * @return densest cluster or null if null or empty list was passed
      */
     public static SimpleCluster findDensestCluster(
 	    ArrayList<SimpleCluster> clusters) {
+
+	if(clusters == null || clusters.size() == 0) {
+		return null;
+	}
+
 	return Collections.max(clusters, new Comparator<SimpleCluster>() {
 
 	    @Override
