@@ -1,37 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <manifest xmlns:android="http://schemas.android.com/apk/res/android" android:versionCode="1"
 	android:versionName="1.0" package="org.cbase.blinkendroid">
 
 	<application android:icon="@drawable/icon" android:label="@string/app_name" android:debuggable="false">
-
 		<activity android:name=".Blinkendroid" android:label="@string/app_name" android:screenOrientation="portrait">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN" />
 				<category android:name="android.intent.category.LAUNCHER" />
 			</intent-filter>
 		</activity>
-
 		<activity android:name=".OldBlinkendroid" />
-
 		<activity android:name=".FrequencyActivity" />
-
 		<activity android:name=".DebugActivity" />
-
 		<activity android:name=".IdentifyActivity" />
-		
+		<activity android:name=".CameraView" />
 		<activity android:name=".IRActivity" />
-
-	<activity android:name="CameraView" android:screenOrientation="portrait"></activity>
 </application>
-
 	<uses-sdk android:minSdkVersion="3" />
 	<uses-permission android:name="android.permission.VIBRATE" />
 	<uses-permission android:name="android.permission.READ_PHONE_STATE" />
 	<uses-permission android:name="android.permission.WAKE_LOCK" />
 	<uses-permission android:name="android.permission.INTERNET" />
 	<uses-permission android:name="android.permission.RECORD_AUDIO" />
-
-<uses-permission android:name="android.permission.CAMERA"></uses-permission>
+	<uses-permission android:name="android.permission.CAMERA"></uses-permission>
 </manifest>
  

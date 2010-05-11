@@ -1,7 +1,5 @@
 package org.cbase.blinkendroid;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,6 +34,7 @@ public class IRActivity extends Activity {
     private Button calculateBtn;
     private Button shootBtn;
     private ImageView imgView;
+    
     private Bitmap image;
 
     @Override
@@ -48,11 +47,8 @@ public class IRActivity extends Activity {
 	shootBtn = (Button) this.findViewById(R.id.shootBtn);
 	imgView = (ImageView) this.findViewById(R.id.ImageView01);
 
-	Bitmap origImage = BitmapFactory.decodeFile("/sdcard/data/blinkendroid/testImg.jpg");
-
-	image = BitmapUtils.scaleBitmap(origImage, 640, 480);
-	imgView.setImageBitmap(image);
-
+	loadImage();
+	
 	shootBtn.setOnClickListener(new OnClickListener() {
 
 	    @Override
@@ -69,7 +65,23 @@ public class IRActivity extends Activity {
 	});
 
     }
+    @Override
+    protected void onRestart() {
+	loadImage();
+	super.onRestart();
+    }
+    @Override
+    protected void onResume() {
+	loadImage();
+	super.onResume();
+    }
 
+    private void loadImage() {
+	Bitmap origImage = BitmapFactory.decodeFile("/sdcard/data/blinkendroid/testImg.jpg");
+	image = BitmapUtils.scaleBitmap(origImage, 640, 480);
+	imgView.setImageBitmap(image);
+    }
+    
     private void shootBtnClicked() {
 	Log.d(Constants.LOG_TAG, getLocalClassName() + " shootBtnClicked");
     }
@@ -110,11 +122,12 @@ public class IRActivity extends Activity {
 
 	// a little bit of feedback
 	Context context = getApplicationContext();
-	CharSequence text = "Duration " + (endTime / 1000000000) + "s";
+	CharSequence text = "Duration " + (endTime / 10000000) + "ms";
 	int duration = Toast.LENGTH_SHORT;
 
 	Toast toast = Toast.makeText(context, text, duration);
 	toast.show();
+	
     }
 
     /**
@@ -144,8 +157,9 @@ public class IRActivity extends Activity {
      */
     private static void drawClusters(List<SimpleCluster> clusters,
 	    Canvas canvas, Paint paint) {
+	Rectangle bounds;
 	for (SimpleCluster sc : clusters) {
-	    Rectangle bounds = sc.getBounds();
+	    bounds = sc.getBounds();
 
 	    paint.setColor(Color.argb(230, 0, 252, 249));
 

@@ -43,6 +43,7 @@ public class CameraView extends Activity implements SurfaceHolder.Callback,
 	getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
 		WindowManager.LayoutParams.FLAG_FULLSCREEN);
 	setContentView(R.layout.camera);
+	
 	mSurfaceView = (SurfaceView) findViewById(R.id.surface_camera);
 	mSurfaceView.setOnClickListener(this);
 	mSurfaceHolder = mSurfaceView.getHolder();
@@ -62,9 +63,8 @@ public class CameraView extends Activity implements SurfaceHolder.Callback,
 
 		Intent mIntent = new Intent();
 
-		FileUtils.storeByteImage(mContext, imageData, 50, "testImg");
+		FileUtils.storeByteImage(mContext, imageData, 15, "testImg");
 		camera.startPreview();
-
 		setResult(FOTO_MODE, mIntent);
 
 	    }
@@ -123,9 +123,7 @@ public class CameraView extends Activity implements SurfaceHolder.Callback,
     private SurfaceHolder mSurfaceHolder;
 
     public void onClick(View arg0) {
-
 	camera.takePicture(null, mPictureCallback, mPictureCallback);
-
     }
 
 }
