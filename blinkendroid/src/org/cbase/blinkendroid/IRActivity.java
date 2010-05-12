@@ -21,8 +21,12 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.SeekBar;
+import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.SeekBar.OnSeekBarChangeListener;
 
 /**
  * Activity for the image recognition part - more of a testbed now ;)
@@ -34,8 +38,10 @@ public class IRActivity extends Activity {
     private Button calculateBtn;
     private Button shootBtn;
     private ImageView imgView;
-    
+
     private Bitmap image;
+    private TextView editText;
+    private SeekBar seekBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,45 +49,53 @@ public class IRActivity extends Activity {
 
 	setContentView(R.layout.irview);
 
+	// please clean up ;)
+	System.gc();
+
+	// Initializing our view components
 	calculateBtn = (Button) this.findViewById(R.id.calculateBtn);
 	shootBtn = (Button) this.findViewById(R.id.shootBtn);
 	imgView = (ImageView) this.findViewById(R.id.ImageView01);
 
+	editText = (EditText) this.findViewById(R.id.colorKeyEditText);
+	editText.setText("#ff0000");
+
+	seekBar = (SeekBar) this.findViewById(R.id.colorKeySeekBar);
+	seekBar.setMax(200);
+
+	seekBar.setOnSeekBarChangeListener(new ThresholdSeekBarListener());
+	shootBtn.setOnClickListener(new ShootButtonListener());
+	calculateBtn.setOnClickListener(new ClaculateButtonListener());
+
 	loadImage();
-	
-	shootBtn.setOnClickListener(new OnClickListener() {
-
-	    @Override
-	    public void onClick(View v) {
-		shootBtnClicked();
-	    }
-	});
-
-	calculateBtn.setOnClickListener(new OnClickListener() {
-	    @Override
-	    public void onClick(View v) {
-		calculationBtnClicked();
-	    }
-	});
-
     }
+
+    private void loadImage() {
+	if (image != null) {
+	    image.recycle();
+
+	}
+
+	BitmapFactory.Options opts = new BitmapFactory.Options();
+	opts.inSampleSize = 10;
+	Bitmap origImage = BitmapFactory.decodeFile(
+		"/sdcard/data/blinkendroid/testImg.jpg", opts);
+	image = BitmapUtils.scaleBitmap(origImage, 640, 480);
+	imgView.setImageBitmap(image);
+    }
+
     @Override
     protected void onRestart() {
 	loadImage();
 	super.onRestart();
     }
+
     @Override
     protected void onResume() {
 	loadImage();
 	super.onResume();
     }
 
-    private void loadImage() {
-	Bitmap origImage = BitmapFactory.decodeFile("/sdcard/data/blinkendroid/testImg.jpg");
-	image = BitmapUtils.scaleBitmap(origImage, 640, 480);
-	imgView.setImageBitmap(image);
-    }
-    
     private void shootBtnClicked() {
 	Log.d(Constants.LOG_TAG, getLocalClassName() + " shootBtnClicked");
     }
@@ -97,14 +111,21 @@ public class IRActivity extends Activity {
 	image.getPixels(pixels, 0, width, 0, 0, width, height);
 
 	// Doing our parsing stuff
-	// TODO: Read color and threshold from EditView
+	int threshold = seekBar.getProgress();
+	int keyColor = Color.parseColor(editText.getText().toString());
+
 	ColorKeyRasterParser rParser = new ColorKeyRasterParser(pixels, width,
-		height, Color.WHITE, 30);
+		height, keyColor, threshold);
 	ArrayList<Pixel> borders = rParser.detectEdges();
-	SimpleCluster biggestCluster = SimpleCluster
-		.findBiggestCluster(borders);
+
+	SimpleCluster biggestCluster;
+	biggestCluster = SimpleCluster.findBiggestCluster(borders);
 
 	long endTime = System.nanoTime() - startTime;
+
+	if (biggestCluster == null) {
+	    return;
+	}
 
 	Bitmap resultImg = image.copy(image.getConfig(), true);
 
@@ -120,14 +141,16 @@ public class IRActivity extends Activity {
 
 	imgView.setImageBitmap(resultImg);
 
-	// a little bit of feedback
+	showToastNotification("Duration " + (endTime / 1000000) + "ms");
+
+    }
+
+    private void showToastNotification(String string) {
 	Context context = getApplicationContext();
-	CharSequence text = "Duration " + (endTime / 10000000) + "ms";
 	int duration = Toast.LENGTH_SHORT;
 
-	Toast toast = Toast.makeText(context, text, duration);
+	Toast toast = Toast.makeText(context, string, duration);
 	toast.show();
-	
     }
 
     /**
@@ -166,6 +189,7 @@ public class IRActivity extends Activity {
 	    canvas.drawLine(bounds.getX(), bounds.getY(), bounds.getX()
 		    + bounds.getWidth(), bounds.getY() + bounds.getHeight(),
 		    paint);
+
 	    canvas.drawLine(bounds.getX(), bounds.getY() + bounds.getHeight(),
 		    bounds.getX() + bounds.getWidth(), bounds.getY(), paint);
 
@@ -174,5 +198,44 @@ public class IRActivity extends Activity {
 		    bounds.getY() + (bounds.getHeight() / 2), paint);
 	}
 
+    }
+
+    /**
+     * Handler for SeekBar events
+     * 
+     * @author dima
+     */
+    private class ThresholdSeekBarListener implements OnSeekBarChangeListener {
+
+	@Override
+	public void onProgressChanged(SeekBar seekBar, int progress,
+		boolean fromUser) {
+	}
+
+	@Override
+	public void onStartTrackingTouch(SeekBar seekBar) {
+	}
+
+	@Override
+	/**
+	 * Displays seekbars progress value
+	 */
+	public void onStopTrackingTouch(SeekBar seekBar) {
+	    showToastNotification(Integer.toString(seekBar.getProgress()));
+	}
+    }
+
+    private class ShootButtonListener implements OnClickListener {
+	@Override
+	public void onClick(View v) {
+	    shootBtnClicked();
+	}
+    }
+
+    private class ClaculateButtonListener implements OnClickListener {
+	@Override
+	public void onClick(View v) {
+	    calculationBtnClicked();
+	}
     }
 }
