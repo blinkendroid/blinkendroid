@@ -207,16 +207,13 @@ public class IRActivity extends Activity {
      */
     private class ThresholdSeekBarListener implements OnSeekBarChangeListener {
 
-	@Override
 	public void onProgressChanged(SeekBar seekBar, int progress,
 		boolean fromUser) {
 	}
 
-	@Override
 	public void onStartTrackingTouch(SeekBar seekBar) {
 	}
 
-	@Override
 	/**
 	 * Displays seekbars progress value
 	 */
@@ -226,14 +223,14 @@ public class IRActivity extends Activity {
     }
 
     private class ShootButtonListener implements OnClickListener {
-	@Override
+
 	public void onClick(View v) {
 	    shootBtnClicked();
 	}
     }
 
     private class ClaculateButtonListener implements OnClickListener {
-	@Override
+
 	public void onClick(View v) {
 	    calculationBtnClicked();
 	}

@@ -20,7 +20,6 @@ public class Rectangle {
 		
 		Collections.sort(points, new Comparator<Pixel>() {
 
-			@Override
 			public int compare(Pixel o1, Pixel o2) {
 				if(o1.getX() < o2.getX()) {
 					return -1;
@@ -39,7 +38,6 @@ public class Rectangle {
 
 		Collections.sort(points, new Comparator<Pixel>() {
 
-			@Override
 			public int compare(Pixel o1, Pixel o2) {
 				if(o1.getY() < o2.getY()) {
 					return -1;

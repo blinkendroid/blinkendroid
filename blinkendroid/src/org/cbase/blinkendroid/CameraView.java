@@ -31,6 +31,7 @@ public class CameraView extends Activity implements SurfaceHolder.Callback,
     boolean mPreviewRunning = false;
     private Context mContext = this;
 
+    @Override
     public void onCreate(Bundle icicle) {
 	super.onCreate(icicle);
 
@@ -71,15 +72,18 @@ public class CameraView extends Activity implements SurfaceHolder.Callback,
 	}
     };
 
+    @Override
     protected void onResume() {
 	Log.d(Constants.LOG_TAG, getLocalClassName() + "onResume");
 	super.onResume();
     }
 
+    @Override
     protected void onSaveInstanceState(Bundle outState) {
 	super.onSaveInstanceState(outState);
     }
 
+    @Override
     protected void onStop() {
 	Log.d(Constants.LOG_TAG, getLocalClassName() + "onStop");
 	super.onStop();

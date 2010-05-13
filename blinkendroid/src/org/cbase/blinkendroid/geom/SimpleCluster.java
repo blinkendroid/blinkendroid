@@ -189,7 +189,6 @@ public class SimpleCluster extends ArrayList<Pixel> {
 
 	return Collections.max(clusters, new Comparator<SimpleCluster>() {
 
-	    @Override
 	    public int compare(SimpleCluster o1, SimpleCluster o2) {
 		if (o1.getDensity() > o2.getDensity()) {
 		    return 1;
