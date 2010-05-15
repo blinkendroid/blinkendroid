@@ -34,6 +34,7 @@ import android.widget.TabHost;
  */
 public class Blinkendroid extends TabActivity {
 
+    private static final String TAG_PLAYER = "player";
     private static final String TAG_OLD = "old";
     private static final String TAG_FREQUENCY = "frequency";
     private static final String TAG_DEBUG = "debug";
@@ -51,6 +52,10 @@ public class Blinkendroid extends TabActivity {
 	final TabHost tabHost = getTabHost();
 	final Resources res = getResources();
 
+	tabHost.addTab(tabHost.newTabSpec(TAG_PLAYER).setIndicator(TAG_PLAYER,
+			res.getDrawable(R.drawable.player)).setContent(
+			new Intent(this, Player.class)));
+	
 	tabHost.addTab(tabHost.newTabSpec(TAG_OLD).setIndicator("old",
 		res.getDrawable(R.drawable.blinkendroid)).setContent(
 		new Intent(this, OldBlinkendroid.class)));
