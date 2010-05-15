@@ -32,6 +32,9 @@ public class PlayerView extends View {
 	private Paint paint2;
 	private int width;
 	private int height;
+	private int frame;
+	public long lastFrameShowed=0;
+	public long lastFrame=0;
 	private int matrix[][]=null;
 	
 
@@ -70,12 +73,18 @@ public class PlayerView extends View {
 			}
 			y+=pheight+3;
 		}
+		if(0==lastFrameShowed){
+			lastFrameShowed=System.currentTimeMillis();
+			lastFrame=frame;
+		}
 	}
 
-	public void setMatrix(int[][] matrix, int width, int height) {
+	public void setMatrix(int[][] matrix, int width, int height, int frame) {
 		this.matrix=matrix;
 		this.width=width;
 		this.height=height;
+		this.frame=frame;
+		this.lastFrameShowed=0;
 	}
 
 	/**
