@@ -22,7 +22,9 @@ import java.net.InetAddress;
 import java.net.MulticastSocket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 
 import org.cbase.blinkendroid.Constants;
 
@@ -37,7 +39,7 @@ public class ReceiverThread extends Thread {
     private boolean running = true;
 
     private HashMap<InetAddress, String> servers = new HashMap<InetAddress, String>();
-    private ArrayList<IServerHandler> handlers = new ArrayList<IServerHandler>();
+    private List<IServerHandler> handlers = Collections.synchronizedList(new ArrayList<IServerHandler>());
 
     /**
      * Creates a {@link ReceiverThread}
@@ -50,8 +52,10 @@ public class ReceiverThread extends Thread {
 	    e.printStackTrace();
 	}
     }
+
     /**
      * Adds a handler to the {@link ReceiverThread}.
+     * 
      * @param handler
      */
     public void addHandler(IServerHandler handler) {
@@ -61,9 +65,10 @@ public class ReceiverThread extends Thread {
     public void removeHandler(IServerHandler handler) {
 	handlers.remove(handler);
     }
-    
+
     /**
      * Notifies the registered handlers
+     * 
      * @param serverName
      * @param serverIp
      */
@@ -103,15 +108,24 @@ public class ReceiverThread extends Thread {
 		}
 
 		Log.i(Constants.LOG_TAG, receivedData.toString() + " "
-			+ recv.getAddress());
+			+ recv.getAddress() + " Thread: "
+			+ Thread.currentThread().getId());
 	    }
+	    Log.i(Constants.LOG_TAG,
+		    "Finished receiving multicast packets. Thread: "
+			    + Thread.currentThread().getId());
 	} catch (Exception e) {
-	    Log.e("foo", "", e);
+	    Log.e(Constants.LOG_TAG, "", e);
 	}
     }
-    
+
     public void shutdown() {
+	Log.d(Constants.LOG_TAG, "starting shutdown");
+	
+	handlers.clear();
 	running = false;
 	interrupt();
+	
+	Log.d(Constants.LOG_TAG, "shutdown complete");
     }
 }
