@@ -25,8 +25,6 @@ public class Player extends Activity {
 
 	playerView = new PlayerView(this);
 	setContentView(playerView);
-
-	blinkendroidClient.setPlayerThread(pThread);
     }
 
     @Override
@@ -43,6 +41,8 @@ public class Player extends Activity {
 
 	PlayerThread pThread = new PlayerThread(playerView, blm);
 	pThread.start();
+
+	blinkendroidClient.setPlayerThread(pThread);
     }
 
     @Override

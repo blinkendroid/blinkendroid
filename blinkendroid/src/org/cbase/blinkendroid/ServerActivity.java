@@ -53,7 +53,7 @@ public class ServerActivity extends Activity {
 		senderThread.shutdown();
 		senderThread = null;
 
-		blinkendroidServer.end();
+		blinkendroidServer.shutdown();
 		blinkendroidServer = null;
 
 		startButton.setEnabled(true);
@@ -85,7 +85,7 @@ public class ServerActivity extends Activity {
 	}
 
 	if (blinkendroidServer != null) {
-	    blinkendroidServer.end();
+	    blinkendroidServer.shutdown();
 	    blinkendroidServer = null;
 	}
 
