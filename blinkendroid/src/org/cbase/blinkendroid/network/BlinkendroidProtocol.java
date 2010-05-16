@@ -13,26 +13,23 @@ import org.cbase.blinkendroid.Constants;
 import android.util.Log;
 
 public class BlinkendroidProtocol {
+	public final static String PROTOCOL_PLAYER="P";
+	public final static String PROTOCOL_INIT="I";
 	PrintWriter out;
 	BufferedReader in;
-	PlayerProtocolHandler playerProtocolHandler;
 	GlobalTimerThread globalTimerThread;
 
-	private final HashMap<BlinkendroidProtocolCommands, ICommandHandler> handlers = 
-	    new HashMap<BlinkendroidProtocolCommands, ICommandHandler>();
+	private final HashMap<String, ICommandHandler> handlers = 
+	    new HashMap<String, ICommandHandler>();
 		
-	public void registerHandler(BlinkendroidProtocolCommands command, ICommandHandler handler) {
-	    handlers.put(command, handler);
+	public void registerHandler(String proto, ICommandHandler handler) {
+	    handlers.put(proto, handler);
 	}
 
 	public BlinkendroidProtocol(OutputStream out, InputStream is){
 		this.out=new PrintWriter(out, true);
 		this.in=new BufferedReader( new InputStreamReader(is));
 		new InputThread().start();
-	}
-
-	public void addPlayerProtocolHandler(PlayerProtocolHandler protocolHandler){
-		this.playerProtocolHandler=protocolHandler;
 	}
 	
 	public void startTimerThread(){
@@ -60,9 +57,9 @@ public class BlinkendroidProtocol {
 			try {
 				while ((inputLine = in.readLine()) != null) {
 					String proto = inputLine.substring(0, 1);
-					BlinkendroidProtocolCommands command = BlinkendroidProtocolCommands.valueOf(proto);
-					ICommandHandler handler	=	handlers.get(command);
-					handler.handle(inputLine.getBytes());
+					ICommandHandler handler	=	handlers.get(proto);
+					if(null!=handler)
+						handler.handle(inputLine.getBytes());
 				}
 			} catch (NumberFormatException e) {
 				// TODO Auto-generated catch block

@@ -30,6 +30,6 @@ public class Player extends Activity {
 		pThread.start();
 		
 		blinkendroidClient.setPlayerThread(pThread);
-
+		blinkendroidClient.getProtocol().startTimerThread();
 	}
 }

@@ -59,7 +59,7 @@ public class BLM {
 			matrix = new int[height][width];
 			int row=0;
 			duration=Integer.parseInt(parser.getAttributeValue(null, BMLParser.DURATION));
-			Log.i("BMLParser", "parsed frame with duration "+duration);
+//			Log.i("BMLParser", "parsed frame with duration "+duration);
 			int eventType = parser.next();
         	String name = null;
 			while (true){

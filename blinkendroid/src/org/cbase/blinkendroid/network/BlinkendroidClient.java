@@ -15,7 +15,7 @@ public class BlinkendroidClient {
 	}
 
 	public void setPlayerThread(PlayerThread playerThread) {
-		protocol.addPlayerProtocolHandler(playerThread);
+		protocol.registerHandler(BlinkendroidProtocol.PROTOCOL_PLAYER, playerThread.getPlayerProtocolHandler());
 		this.playerThread = playerThread;
 	}
 
