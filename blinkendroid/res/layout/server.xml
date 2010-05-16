@@ -3,7 +3,16 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="fill_parent"
 	android:layout_height="fill_parent" android:orientation="vertical">
 
-	<EditText android:id="@+id/server_name" android:singleLine="true" android:capitalize="words" android:textSize="36dp" android:hint="server name"
-		android:layout_width="fill_parent" android:layout_height="wrap_content" />
+	<EditText android:id="@+id/server_name" android:singleLine="true" android:capitalize="words" android:textSize="36dp"
+		android:hint="server name" android:layout_width="fill_parent" android:layout_height="wrap_content" />
+
+	<Button android:id="@+id/server_start" android:text="Start" android:layout_width="fill_parent"
+		android:layout_height="wrap_content" />
+
+	<Button android:id="@+id/server_stop" android:text="Stop" android:layout_width="fill_parent"
+		android:layout_height="wrap_content" android:enabled="false" />
+
+	<Button android:id="@+id/server_client" android:text="Start client" android:layout_width="fill_parent"
+		android:layout_height="wrap_content" android:enabled="false" />
 
 </LinearLayout>

@@ -5,14 +5,16 @@ import org.cbase.blinkendroid.network.multicast.SenderThread;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.view.KeyEvent;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.TextView;
-import android.widget.TextView.OnEditorActionListener;
 
 public class ServerActivity extends Activity {
 
     private SenderThread senderThread;
     private BlinkendroidServer blinkendroidServer;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -20,16 +22,41 @@ public class ServerActivity extends Activity {
 
 	setContentView(R.layout.server);
 
-	TextView serverNameView = (TextView) findViewById(R.id.server_name);
-	serverNameView.setOnEditorActionListener(new OnEditorActionListener() {
+	final TextView serverNameView = (TextView) findViewById(R.id.server_name);
+	final Button startButton = (Button) findViewById(R.id.server_start);
+	final Button stopButton = (Button) findViewById(R.id.server_stop);
+	final Button clientButton = (Button) findViewById(R.id.server_client);
 
-	    public boolean onEditorAction(TextView v, int actionId,
-		    KeyEvent event) {
-		senderThread = new SenderThread(v.getText().toString());
+	startButton.setOnClickListener(new OnClickListener() {
+
+	    public void onClick(View v) {
+
+		senderThread = new SenderThread(serverNameView.getText()
+			.toString());
 		senderThread.start();
+
 		blinkendroidServer = new BlinkendroidServer(4444);
 		blinkendroidServer.start();
-		return true;
+
+		startButton.setEnabled(false);
+		stopButton.setEnabled(true);
+		clientButton.setEnabled(true);
+	    }
+	});
+
+	stopButton.setOnClickListener(new OnClickListener() {
+
+	    public void onClick(View v) {
+
+		senderThread.shutdown();
+		senderThread = null;
+
+		blinkendroidServer.end();
+		blinkendroidServer = null;
+
+		startButton.setEnabled(true);
+		stopButton.setEnabled(false);
+		clientButton.setEnabled(false);
 	    }
 	});
     }
@@ -42,9 +69,11 @@ public class ServerActivity extends Activity {
 	    senderThread = null;
 	}
 
-	if(blinkendroidServer != null){
+	if (blinkendroidServer != null) {
 	    blinkendroidServer.end();
+	    blinkendroidServer = null;
 	}
+
 	super.onDestroy();
     }
 }
