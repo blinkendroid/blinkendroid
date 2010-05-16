@@ -1,5 +1,8 @@
 package org.cbase.blinkendroid;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
@@ -15,6 +18,8 @@ import android.widget.AdapterView.OnItemClickListener;
 
 public class LoginActivity extends Activity {
 
+    final List<String> serverList = new ArrayList<String>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -22,48 +27,23 @@ public class LoginActivity extends Activity {
 
 	setContentView(R.layout.login);
 
-	final Button startServer = (Button) findViewById(R.id.login_start_server);
-	startServer.setOnClickListener(new OnClickListener() {
+	final ServerListAdapter serverListAdapter = new ServerListAdapter(
+		serverList);
+
+	final Button startServerButton = (Button) findViewById(R.id.login_start_server);
+	startServerButton.setOnClickListener(new OnClickListener() {
 
 	    public void onClick(View v) {
 		Toast.makeText(getBaseContext(), "not yet", Toast.LENGTH_SHORT)
 			.show();
+		serverList.add("" + Math.random());
+		serverListAdapter.notifyDataSetChanged();
 	    }
 	});
 
-	final ListView serverList = (ListView) findViewById(R.id.login_server_list);
-	serverList.setAdapter(new BaseAdapter() {
-
-	    public View getView(int position, View row, ViewGroup parent) {
-
-		if (row == null)
-		    row = getLayoutInflater().inflate(
-			    android.R.layout.two_line_list_item, null);
-
-		((TextView) row.findViewById(android.R.id.text1))
-			.setText("name");
-
-		((TextView) row.findViewById(android.R.id.text2)).setText("ip");
-
-		return row;
-	    }
-
-	    public long getItemId(int position) {
-		// TODO Auto-generated method stub
-		return 0;
-	    }
-
-	    public Object getItem(int position) {
-		// TODO Auto-generated method stub
-		return null;
-	    }
-
-	    public int getCount() {
-		// TODO Auto-generated method stub
-		return 1;
-	    }
-	});
-	serverList.setOnItemClickListener(new OnItemClickListener() {
+	final ListView serverListView = (ListView) findViewById(R.id.login_server_list);
+	serverListView.setAdapter(serverListAdapter);
+	serverListView.setOnItemClickListener(new OnItemClickListener() {
 
 	    public void onItemClick(AdapterView<?> parent, View v,
 		    int position, long id) {
@@ -71,5 +51,42 @@ public class LoginActivity extends Activity {
 			.show();
 	    }
 	});
+    }
+
+    private class ServerListAdapter extends BaseAdapter {
+
+	private final List<String> serverList;
+
+	public ServerListAdapter(List<String> serverList) {
+	    this.serverList = serverList;
+	}
+
+	public View getView(int position, View row, ViewGroup parent) {
+
+	    if (row == null)
+		row = getLayoutInflater().inflate(
+			android.R.layout.two_line_list_item, null);
+
+	    final String s = serverList.get(position);
+
+	    ((TextView) row.findViewById(android.R.id.text1)).setText("name "
+		    + s);
+
+	    ((TextView) row.findViewById(android.R.id.text2)).setText("ip");
+
+	    return row;
+	}
+
+	public long getItemId(int position) {
+	    return position;
+	}
+
+	public Object getItem(int position) {
+	    return serverList.get(position);
+	}
+
+	public int getCount() {
+	    return serverList.size();
+	}
     }
 }
