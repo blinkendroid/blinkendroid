@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
+import android.opengl.Visibility;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,11 +27,12 @@ public class LoginActivity extends Activity {
 	super.onCreate(savedInstanceState);
 
 	setContentView(R.layout.login);
+	final Button startServerButton = (Button) findViewById(R.id.login_start_server);
+	final ListView serverListView = (ListView) findViewById(R.id.login_server_list);
 
 	final ServerListAdapter serverListAdapter = new ServerListAdapter(
 		serverList);
 
-	final Button startServerButton = (Button) findViewById(R.id.login_start_server);
 	startServerButton.setOnClickListener(new OnClickListener() {
 
 	    public void onClick(View v) {
@@ -38,10 +40,10 @@ public class LoginActivity extends Activity {
 			.show();
 		serverList.add("" + Math.random());
 		serverListAdapter.notifyDataSetChanged();
+		serverListView.setVisibility(View.VISIBLE);
 	    }
 	});
 
-	final ListView serverListView = (ListView) findViewById(R.id.login_server_list);
 	serverListView.setAdapter(serverListAdapter);
 	serverListView.setOnItemClickListener(new OnItemClickListener() {
 
