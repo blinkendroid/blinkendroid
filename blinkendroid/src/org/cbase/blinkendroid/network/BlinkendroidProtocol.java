@@ -20,22 +20,24 @@ public class BlinkendroidProtocol {
 	private boolean server;
 	PrintWriter out;
 	BufferedReader in;
+	Socket socket;
 	GlobalTimerThread globalTimerThread;
 
 	private final HashMap<String, ICommandHandler> handlers = 
 	    new HashMap<String, ICommandHandler>();
 
 	public BlinkendroidProtocol(Socket socket, boolean server){
+		this.socket=socket;
 		try {
 			this.out=new PrintWriter(socket.getOutputStream(), true);
-
-		this.in=new BufferedReader( new InputStreamReader(socket.getInputStream()));
+			this.in=new BufferedReader( new InputStreamReader(socket.getInputStream()));
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.exit(42);
 		}
 		this.server=server;
-		new InputThread().start();
+//		if(!server)
+			new InputThread().start();
 	}
 	
 	public void registerHandler(String proto, ICommandHandler handler) {
@@ -58,10 +60,12 @@ public class BlinkendroidProtocol {
 		out.close();
 		try {
 			in.close();
+			socket.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
 	}
 	private class InputThread extends Thread {
 //		private boolean running = true;

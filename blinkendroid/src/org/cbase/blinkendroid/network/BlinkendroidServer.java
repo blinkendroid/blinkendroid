@@ -22,14 +22,15 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 import org.cbase.blinkendroid.Constants;
-import org.cbase.blinkendroid.player.PlayerThread;
 
 import android.util.Log;
 
 public class BlinkendroidServer extends Thread{
 	private boolean running=false;
 	private BlinkendroidProtocol blinkendroidProtocol;
-	public BlinkendroidServer() {
+	private int port=4444;
+	public BlinkendroidServer(int port) {
+		this.port=4444;
 	}
 
 
@@ -37,7 +38,7 @@ public class BlinkendroidServer extends Thread{
 	public void run() {
 		ServerSocket serverSocket;
 		try {
-			serverSocket = new ServerSocket(4444);
+			serverSocket = new ServerSocket(port);
 		} catch (IOException e) {
 			Log.e(Constants.LOG_TAG, "Could not create Socket",e);
 			return;
