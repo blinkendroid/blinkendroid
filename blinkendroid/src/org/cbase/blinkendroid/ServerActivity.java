@@ -2,8 +2,10 @@ package org.cbase.blinkendroid;
 
 import org.cbase.blinkendroid.network.BlinkendroidServer;
 import org.cbase.blinkendroid.network.multicast.SenderThread;
+import org.cbase.blinkendroid.utils.NetworkUtils;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -57,6 +59,19 @@ public class ServerActivity extends Activity {
 		startButton.setEnabled(true);
 		stopButton.setEnabled(false);
 		clientButton.setEnabled(false);
+	    }
+	});
+
+	clientButton.setOnClickListener(new OnClickListener() {
+
+	    public void onClick(View v) {
+
+		final Intent intent = new Intent(ServerActivity.this,
+			Player.class);
+		intent.putExtra(Player.INTENT_EXTRA_IP, NetworkUtils
+			.getLocalIpAddress());
+		intent.putExtra(Player.INTENT_EXTRA_PORT, 4444);
+		startActivity(intent);
 	    }
 	});
     }
