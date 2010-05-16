@@ -6,7 +6,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintWriter;
-import java.net.Socket;
+import java.util.HashMap;
 
 import org.cbase.blinkendroid.Constants;
 
@@ -17,6 +17,14 @@ public class BlinkendroidProtocol {
 	BufferedReader in;
 	PlayerProtocolHandler playerProtocolHandler;
 	GlobalTimerThread globalTimerThread;
+	
+	private final HashMap<BlinkendroidProtocolCommands, ICommandHandler> handlers = 
+	    new HashMap<BlinkendroidProtocolCommands, ICommandHandler>();
+		
+	public void registerHandler(BlinkendroidProtocolCommands command, ICommandHandler handler) {
+	    handlers.put(command, handler);
+	}
+	
 	public BlinkendroidProtocol(OutputStream out, InputStream is){
 		this.out=new PrintWriter(out, true);
 		this.in=new BufferedReader( new InputStreamReader(is));
