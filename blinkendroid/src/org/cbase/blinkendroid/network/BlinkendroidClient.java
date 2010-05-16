@@ -36,4 +36,8 @@ public class BlinkendroidClient {
 		}
 	}
 
+	public BlinkendroidProtocol getProtocol() {
+		return protocol;
+	}
+
 }
