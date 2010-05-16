@@ -41,20 +41,6 @@ public class LoginActivity extends Activity {
 	final Button startServerButton = (Button) findViewById(R.id.login_start_server);
 	serverListView = (ListView) findViewById(R.id.login_server_list);
 
-	receiverThread = new ReceiverThread();
-	receiverThread.addHandler(new IServerHandler() {
-	    public void foundServer(String serverName, String serverIp) {
-		Log.d(Constants.LOG_TAG, "=== " + serverName + " " + serverIp);
-		final ListEntry entry = new ListEntry();
-		entry.name = serverName;
-		entry.ip = serverIp;
-		serverList.add(entry);
-		serverListAdapter.notifyDataSetChanged();
-		serverListView.setVisibility(View.VISIBLE);
-	    }
-	});
-	receiverThread.start();
-
 	serverListAdapter = new ServerListAdapter(serverList);
 
 	startServerButton.setOnClickListener(new OnClickListener() {
@@ -78,6 +64,37 @@ public class LoginActivity extends Activity {
 		startActivity(intent);
 	    }
 	});
+    }
+
+    @Override
+    protected void onResume() {
+
+	super.onResume();
+
+	receiverThread = new ReceiverThread();
+	receiverThread.addHandler(new IServerHandler() {
+	    public void foundServer(String serverName, String serverIp) {
+		Log.d(Constants.LOG_TAG, "=== " + serverName + " " + serverIp);
+		final ListEntry entry = new ListEntry();
+		entry.name = serverName;
+		entry.ip = serverIp;
+		serverList.add(entry);
+		serverListAdapter.notifyDataSetChanged();
+		serverListView.setVisibility(View.VISIBLE);
+	    }
+	});
+	receiverThread.start();
+    }
+
+    @Override
+    protected void onPause() {
+
+	if (receiverThread != null) {
+	    receiverThread.interrupt();
+	    receiverThread = null;
+	}
+
+	super.onPause();
     }
 
     private class ServerListAdapter extends BaseAdapter {
