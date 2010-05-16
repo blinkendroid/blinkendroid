@@ -73,14 +73,22 @@ public class LoginActivity extends Activity {
 
 	receiverThread = new ReceiverThread();
 	receiverThread.addHandler(new IServerHandler() {
-	    public void foundServer(String serverName, String serverIp) {
-		Log.d(Constants.LOG_TAG, "=== " + serverName + " " + serverIp);
-		final ListEntry entry = new ListEntry();
-		entry.name = serverName;
-		entry.ip = serverIp;
-		serverList.add(entry);
-		serverListAdapter.notifyDataSetChanged();
-		serverListView.setVisibility(View.VISIBLE);
+	    public void foundServer(final String serverName,
+		    final String serverIp) {
+		runOnUiThread(new Runnable() {
+		    public void run() {
+			Log.d(Constants.LOG_TAG, "=== " + serverName + " "
+				+ serverIp);
+
+			final ListEntry entry = new ListEntry();
+			entry.name = serverName;
+			entry.ip = serverIp;
+
+			serverList.add(entry);
+			serverListAdapter.notifyDataSetChanged();
+			serverListView.setVisibility(View.VISIBLE);
+		    }
+		});
 	    }
 	});
 	receiverThread.start();
