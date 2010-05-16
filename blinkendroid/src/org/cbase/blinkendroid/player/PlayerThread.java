@@ -86,6 +86,11 @@ public class PlayerThread extends Thread {
 		}
 	}
 	
+	public void shutdown(){
+	    playing=false;
+	    interrupt();
+	}
+	
 	public ICommandHandler getPlayerProtocolHandler() {
 		// TODO Auto-generated method stub
 		return null;
