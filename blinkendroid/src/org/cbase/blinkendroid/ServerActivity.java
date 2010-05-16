@@ -29,7 +29,6 @@ public class ServerActivity extends Activity {
 		senderThread.start();
 		blinkendroidServer = new BlinkendroidServer(4444);
 		blinkendroidServer.start();
-		blinkendroidServer.getProtocol().startTimerThread();
 		return true;
 	    }
 	});
@@ -44,7 +43,6 @@ public class ServerActivity extends Activity {
 	}
 
 	if(blinkendroidServer != null){
-	    blinkendroidServer.getProtocol().stopTimerThread();
 	    blinkendroidServer.end();
 	}
 	super.onDestroy();
