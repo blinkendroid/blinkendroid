@@ -20,11 +20,9 @@ package org.cbase.blinkendroid;
 import java.util.Arrays;
 import java.util.Timer;
 
+import org.cbase.blinkendroid.audio.AndroidAudioDevice;
 import org.cbase.blinkendroid.audio.AudioReader;
 import org.cbase.blinkendroid.listener.VibrationListener;
-import org.cbase.blinkendroid.network.Client;
-import org.cbase.blinkendroid.network.Server;
-import org.cbase.blinkendroid.utils.DeviceUtils;
 import org.cbase.blinkendroid.utils.NetworkUtils;
 import org.cbase.blinkendroid.utils.TaskPool;
 import org.cbase.blinkendroid.view.FrequencyView;
@@ -62,7 +60,7 @@ public class OldBlinkendroid extends Activity {
     /*
      * Communication
      */
-    private Server server;
+//    private Server server;
     private Handler handler;
 
     /*
@@ -250,9 +248,12 @@ public class OldBlinkendroid extends Activity {
 		if (!listening) {
 		    listening = true;
 		    me.setText("Stop");
+
+		    
+		    startsound();
 		    audioReader.startReader(sampleRate, inputBlockSize,
-			    audioReadListener);
-		} else {
+				    audioReadListener);
+		    } else {
 		    audioReader.stopReader();
 		    listening = false;
 		    me.setText("Listen");
@@ -262,7 +263,36 @@ public class OldBlinkendroid extends Activity {
 
 	});
     }
+    public void startsound(){
+    	new Thread( new Runnable( ) 
+        {
+           public void run( )
+           {        		
+             
+              AndroidAudioDevice device = new AndroidAudioDevice( );
+              float samples[] = new float[1024];
 
+              while( true )
+              {
+            	  float frequency = FrequencyView.frequency;
+            	  if(frequency<1000)
+            		  frequency=1000;
+
+            	  if(frequency>2000)
+            		  frequency=1000;
+                  float increment = (float)(2*Math.PI) * frequency / 8000; // angular increment for each sample
+                  float angle = 0;
+                 for( int i = 0; i < samples.length; i++ )
+                 {
+                    samples[i] = (float)Math.sin( angle );
+                    angle += increment;
+                 }
+
+                 device.writeSamples( samples );
+              }        	
+           }
+        } ).start();
+    }
     /**
      * Vibrates for a given time
      * 
@@ -348,20 +378,20 @@ public class OldBlinkendroid extends Activity {
 	    }
 	});
 
-	server = new Server(this);
-	serverButton = (Button) this.findViewById(R.id.ServerButton);
-	serverButton.setOnClickListener(new OnClickListener() {
-	    public void onClick(View v) {
-		if (server.isRunning()) {
-		    server.end();
-		    serverButton.setText(R.string.serverbuttonstart);
-		} else {
-			server = new Server(OldBlinkendroid.this);
-		    server.start();
-		    serverButton.setText(R.string.serverbuttonstop);
-		}
-	    }
-	});
+//	server = new Server(this);
+//	serverButton = (Button) this.findViewById(R.id.ServerButton);
+//	serverButton.setOnClickListener(new OnClickListener() {
+//	    public void onClick(View v) {
+//		if (server.isRunning()) {
+//		    server.end();
+//		    serverButton.setText(R.string.serverbuttonstart);
+//		} else {
+//			server = new Server(OldBlinkendroid.this);
+//		    server.start();
+//		    serverButton.setText(R.string.serverbuttonstop);
+//		}
+//	    }
+//	});
 
 	counterTextView = (TextView) this.findViewById(R.id.CounterTextView);
 	sensorTextView = (TextView) this.findViewById(R.id.SensorsTextView);
@@ -377,7 +407,7 @@ public class OldBlinkendroid extends Activity {
 		String chat = ((EditText) OldBlinkendroid.this
 			.findViewById(R.id.ChatEditText)).getEditableText()
 			.toString();
-		new Client(OldBlinkendroid.this, ip, "IMEI: " + DeviceUtils.getImei(getParent())).start();
+//		new Client(OldBlinkendroid.this, ip, "IMEI: " + DeviceUtils.getImei(getParent())).start();
 	    }
 	});
 	// End initialize

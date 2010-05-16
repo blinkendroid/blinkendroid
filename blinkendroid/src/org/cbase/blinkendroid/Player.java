@@ -1,9 +1,9 @@
 package org.cbase.blinkendroid;
 
-import org.cbase.blinkendroid.player.BlinkendroidServer;
+import org.cbase.blinkendroid.network.BlinkendroidClient;
+import org.cbase.blinkendroid.network.BlinkendroidServer;
 import org.cbase.blinkendroid.player.PlayerThread;
 import org.cbase.blinkendroid.player.PlayerView;
-import org.cbase.blinkendroid.player.BlinkendroidClient;
 import org.cbase.blinkendroid.player.bml.BLM;
 import org.cbase.blinkendroid.player.bml.BMLParser;
 import org.cbase.blinkendroid.utils.NetworkUtils;

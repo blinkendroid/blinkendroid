@@ -1,12 +1,13 @@
 package org.cbase.blinkendroid.player;
 
 import org.cbase.blinkendroid.Constants;
+import org.cbase.blinkendroid.network.PlayerProtocolHandler;
 import org.cbase.blinkendroid.player.bml.BLM;
 import org.cbase.blinkendroid.player.bml.BLM.Frame;
 
 import android.util.Log;
 
-public class PlayerThread extends Thread implements BlinkendroidProtocolHandler{
+public class PlayerThread extends Thread implements PlayerProtocolHandler{
 	boolean playing=true;
 	PlayerView playerView;
 	long globalTime;

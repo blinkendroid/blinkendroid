@@ -22,19 +22,19 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 import org.cbase.blinkendroid.Constants;
-import org.cbase.blinkendroid.OldBlinkendroid;
-
-
+import org.cbase.blinkendroid.player.PlayerThread;
 
 import android.util.Log;
 
-public class Server extends Thread{
+public class BlinkendroidServer extends Thread{
 	private boolean running=false;
-	private OldBlinkendroid blinkendroid;
-	public Server(OldBlinkendroid blinkendroid) {
-		this.blinkendroid =blinkendroid;
+	private PlayerThread playerThread;
+	public BlinkendroidServer() {
 	}
 
+	public void setPlayerThread(PlayerThread playerThread){
+		this.playerThread =playerThread;
+	}
 	@Override
 	public void run() {
 		ServerSocket serverSocket;
@@ -45,12 +45,12 @@ public class Server extends Thread{
 			return;
 		}
 		running=true;
-		Log.i(Constants.LOG_TAG,"Server Thread started");
+		Log.i(Constants.LOG_TAG,"TimeServer Thread started");
 		while(running){
 			Socket clientSocket;
 			try {
 				clientSocket = serverSocket.accept();
-				new ConnectionThread(blinkendroid, clientSocket).start();	
+				new BlinkendroidProtocol(clientSocket.getOutputStream(),clientSocket.getInputStream());	
 			} catch (IOException e) {
 				Log.e(Constants.LOG_TAG, "Could not accept",e);
 			}
@@ -60,12 +60,12 @@ public class Server extends Thread{
 		} catch (IOException e) {
 			Log.e(Constants.LOG_TAG, "Could not close",e);
 		}
-		Log.i(Constants.LOG_TAG,"Server Thread closed");
+		Log.i(Constants.LOG_TAG,"TimeServerServer Thread closed");
 	}
 
 	public void end(){
 		running=false;
-		Log.i(Constants.LOG_TAG, "Server Thread ended");
+		Log.i(Constants.LOG_TAG, "TimeServerServer Thread ended");
 		interrupt();
 	}
 	
