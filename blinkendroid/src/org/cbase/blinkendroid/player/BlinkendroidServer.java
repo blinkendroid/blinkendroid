@@ -25,13 +25,15 @@ import org.cbase.blinkendroid.Constants;
 
 import android.util.Log;
 
-public class TimeServer extends Thread{
+public class BlinkendroidServer extends Thread{
 	private boolean running=false;
 	private PlayerThread playerThread;
-	public TimeServer(PlayerThread playerThread) {
-		this.playerThread =playerThread;
+	public BlinkendroidServer() {
 	}
 
+	public void setPlayerThread(PlayerThread playerThread){
+		this.playerThread =playerThread;
+	}
 	@Override
 	public void run() {
 		ServerSocket serverSocket;
@@ -47,7 +49,7 @@ public class TimeServer extends Thread{
 			Socket clientSocket;
 			try {
 				clientSocket = serverSocket.accept();
-				new TimeConnectionThread(playerThread, clientSocket).start();	
+				new BlinkendroidProtocol(clientSocket.getOutputStream(),clientSocket.getInputStream());	
 			} catch (IOException e) {
 				Log.e(Constants.LOG_TAG, "Could not accept",e);
 			}

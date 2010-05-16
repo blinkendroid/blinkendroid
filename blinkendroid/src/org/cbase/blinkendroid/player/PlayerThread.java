@@ -6,18 +6,15 @@ import org.cbase.blinkendroid.player.bml.BLM.Frame;
 
 import android.util.Log;
 
-public class PlayerThread extends Thread{
+public class PlayerThread extends Thread implements BlinkendroidProtocolHandler{
 	boolean playing=true;
 	PlayerView playerView;
-	TimeServer timeServer;
 	long globalTime;
 	boolean restart=false;
 	BLM	blm;
 	public PlayerThread(PlayerView playerView, BLM blm) {
 		this.playerView=playerView;
 		this.blm=blm;
-		this.timeServer=new TimeServer(this);
-		this.timeServer.start();
 	}
 	public void setGlobalTime(long globalTime) {
 		Log.i(Constants.LOG_TAG,"setGlobalTime("+globalTime+") diff "+(this.globalTime-globalTime));

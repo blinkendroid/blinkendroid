@@ -1,8 +1,9 @@
 package org.cbase.blinkendroid;
 
+import org.cbase.blinkendroid.player.BlinkendroidServer;
 import org.cbase.blinkendroid.player.PlayerThread;
 import org.cbase.blinkendroid.player.PlayerView;
-import org.cbase.blinkendroid.player.TimeClient;
+import org.cbase.blinkendroid.player.BlinkendroidClient;
 import org.cbase.blinkendroid.player.bml.BLM;
 import org.cbase.blinkendroid.player.bml.BMLParser;
 import org.cbase.blinkendroid.utils.NetworkUtils;
@@ -17,8 +18,18 @@ public class Player extends Activity {
 		super.onCreate(savedInstanceState);
 		playerView	=	new PlayerView(this);
 		setContentView(playerView);
+		
+		BlinkendroidServer	blinkendroidServer	=	new BlinkendroidServer();
+		blinkendroidServer.start();
+
+		BlinkendroidClient blinkendroidClient 	=	new BlinkendroidClient(/*"10.0.2.2"*/NetworkUtils.getLocalIpAddress());
+		blinkendroidClient.connect();
+		
 		BLM	blm	=	new  BMLParser(this).parseBLM();
-		new PlayerThread(playerView,blm).start();
-		new TimeClient(/*"10.0.2.2"*/NetworkUtils.getLocalIpAddress()).start();
+		PlayerThread pThread	=	new PlayerThread(playerView,blm);
+		pThread.start();
+		
+		blinkendroidClient.setPlayerThread(pThread);
+
 	}
 }
