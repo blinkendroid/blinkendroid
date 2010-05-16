@@ -18,36 +18,32 @@ public class Player extends Activity {
 
     private PlayerView playerView;
     BlinkendroidServer blinkendroidServer;
-    
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 	super.onCreate(savedInstanceState);
 	playerView = new PlayerView(this);
 	setContentView(playerView);
 
-	BlinkendroidServer blinkendroidServer = new BlinkendroidServer(4444);
-	blinkendroidServer.start();
-
 	BlinkendroidClient blinkendroidClient = new BlinkendroidClient(
-			getIntent().getStringExtra(INTENT_EXTRA_IP), getIntent()
-				.getIntExtra(INTENT_EXTRA_PORT, 4444));
-		blinkendroidClient.connect();
-		
-		BLM	blm	=	new  BMLParser(this).parseBLM(R.raw.anapaula);
-		PlayerThread pThread	=	new PlayerThread(playerView,blm);
-		pThread.start();
-		
-		blinkendroidClient.setPlayerThread(pThread);
-		
-		blinkendroidServer.getProtocol().startTimerThread();
-	}
-	
-	@Override
-	protected void onStop() {
-		super.onStop();
-		blinkendroidServer.getProtocol().stopTimerThread();
-		blinkendroidServer.end();
-	}
-	
-	
+		getIntent().getStringExtra(INTENT_EXTRA_IP), getIntent()
+			.getIntExtra(INTENT_EXTRA_PORT, 4444));
+	blinkendroidClient.connect();
+
+	BLM blm = new BMLParser(this).parseBLM(R.raw.anapaula);
+	PlayerThread pThread = new PlayerThread(playerView, blm);
+	pThread.start();
+
+	blinkendroidClient.setPlayerThread(pThread);
+
+	blinkendroidServer.getProtocol().startTimerThread();
+    }
+
+    @Override
+    protected void onStop() {
+	super.onStop();
+	blinkendroidServer.getProtocol().stopTimerThread();
+	blinkendroidServer.end();
+    }
+
 }

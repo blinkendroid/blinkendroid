@@ -1,5 +1,6 @@
 package org.cbase.blinkendroid;
 
+import org.cbase.blinkendroid.network.BlinkendroidServer;
 import org.cbase.blinkendroid.network.multicast.SenderThread;
 
 import android.app.Activity;
@@ -11,7 +12,7 @@ import android.widget.TextView.OnEditorActionListener;
 public class ServerActivity extends Activity {
 
     private SenderThread senderThread;
-
+    private BlinkendroidServer blinkendroidServer;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -26,6 +27,9 @@ public class ServerActivity extends Activity {
 		    KeyEvent event) {
 		senderThread = new SenderThread(v.getText().toString());
 		senderThread.start();
+		blinkendroidServer = new BlinkendroidServer(4444);
+		blinkendroidServer.start();
+		blinkendroidServer.getProtocol().startTimerThread();
 		return true;
 	    }
 	});
@@ -39,6 +43,10 @@ public class ServerActivity extends Activity {
 	    senderThread = null;
 	}
 
+	if(blinkendroidServer != null){
+	    blinkendroidServer.getProtocol().stopTimerThread();
+	    blinkendroidServer.end();
+	}
 	super.onDestroy();
     }
 }
