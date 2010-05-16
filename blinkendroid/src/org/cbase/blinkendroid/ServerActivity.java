@@ -38,7 +38,7 @@ public class ServerActivity extends Activity {
     protected void onDestroy() {
 
 	if (senderThread != null) {
-	    senderThread.interrupt();
+	    senderThread.shutdown();
 	    senderThread = null;
 	}
 

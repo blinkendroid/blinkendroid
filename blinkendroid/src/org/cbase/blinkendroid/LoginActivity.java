@@ -60,7 +60,7 @@ public class LoginActivity extends Activity {
 		final Intent intent = new Intent(LoginActivity.this,
 			Player.class);
 		intent.putExtra(Player.INTENT_EXTRA_IP, entry.ip);
-		intent.putExtra(Player.INTENT_EXTRA_PORT, 4444); // TODO
+		intent.putExtra(Player.INTENT_EXTRA_PORT, 4444);
 		startActivity(intent);
 	    }
 	});
@@ -98,7 +98,7 @@ public class LoginActivity extends Activity {
     protected void onPause() {
 
 	if (receiverThread != null) {
-	    receiverThread.interrupt();
+	    receiverThread.shutdown();
 	    receiverThread = null;
 	}
 
