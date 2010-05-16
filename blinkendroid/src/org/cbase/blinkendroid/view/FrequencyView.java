@@ -35,6 +35,7 @@ public class FrequencyView extends View {
     public static short[] buffer;
     public static float[] spectrumData;
     public static float power;
+    public static int frequency=440;
     private float f;
     private int maxIndex;
 
@@ -73,7 +74,8 @@ public class FrequencyView extends View {
 		canvas.drawLine(i * 2, 256, i * 2,
 			256 - spectrumData[i] * 10000, paint2);
 	    }
-	    String freq = Integer.toString(4000 / 128 * maxIndex) + "Hz";
+	    frequency=4000 / 128 * maxIndex;
+	    String freq = Integer.toString(frequency) + "Hz";
 	    canvas.drawText(freq, 10, 30, paint2);
 	}
     }
