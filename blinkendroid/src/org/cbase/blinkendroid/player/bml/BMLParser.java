@@ -21,10 +21,10 @@ public class BMLParser {
 		this.player=player;
 	}
 
-	public BLM parseBLM(){
+	public BLM parseBLM(int res){
 		XmlPullParser parser = Xml.newPullParser();
         try {
-        	parser.setInput(player.getResources().openRawResource(R.raw.allyourbase),"utf-8");
+        	parser.setInput(player.getResources().openRawResource(res),"utf-8");
         	 int eventType = parser.getEventType();
         	 BLM blm=null;
              while (eventType != XmlPullParser.END_DOCUMENT){

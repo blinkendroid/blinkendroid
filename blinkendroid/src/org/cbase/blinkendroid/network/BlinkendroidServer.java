@@ -28,13 +28,10 @@ import android.util.Log;
 
 public class BlinkendroidServer extends Thread{
 	private boolean running=false;
-	private PlayerThread playerThread;
 	public BlinkendroidServer() {
 	}
 
-	public void setPlayerThread(PlayerThread playerThread){
-		this.playerThread =playerThread;
-	}
+
 	@Override
 	public void run() {
 		ServerSocket serverSocket;
@@ -45,14 +42,14 @@ public class BlinkendroidServer extends Thread{
 			return;
 		}
 		running=true;
-		Log.i(Constants.LOG_TAG,"TimeServer Thread started");
+		Log.i(Constants.LOG_TAG,"BlinkendroidServer Thread started");
 		while(running){
 			Socket clientSocket;
 			try {
 				clientSocket = serverSocket.accept();
-				new BlinkendroidProtocol(clientSocket.getOutputStream(),clientSocket.getInputStream());	
+				new BlinkendroidProtocol(clientSocket.getOutputStream(),clientSocket.getInputStream(),true);	
 			} catch (IOException e) {
-				Log.e(Constants.LOG_TAG, "Could not accept",e);
+				Log.e(Constants.LOG_TAG, "BlinkendroidServer Could not accept",e);
 			}
 		}
 		try {
@@ -60,7 +57,7 @@ public class BlinkendroidServer extends Thread{
 		} catch (IOException e) {
 			Log.e(Constants.LOG_TAG, "Could not close",e);
 		}
-		Log.i(Constants.LOG_TAG,"TimeServerServer Thread closed");
+		Log.i(Constants.LOG_TAG,"BlinkendroidServer Thread closed");
 	}
 
 	public void end(){

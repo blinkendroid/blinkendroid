@@ -25,7 +25,7 @@ public class BlinkendroidClient {
 			Thread.sleep(5000);
 			socket = new Socket(ip, 4444);// 5556);
 			protocol = new BlinkendroidProtocol(socket.getOutputStream(),
-					socket.getInputStream());
+					socket.getInputStream(),false);
 			socket.close();
 		} catch (UnknownHostException e) {
 			// TODO Auto-generated catch block

@@ -25,7 +25,7 @@ public class Player extends Activity {
 		BlinkendroidClient blinkendroidClient 	=	new BlinkendroidClient(/*"10.0.2.2"*/NetworkUtils.getLocalIpAddress());
 		blinkendroidClient.connect();
 		
-		BLM	blm	=	new  BMLParser(this).parseBLM();
+		BLM	blm	=	new  BMLParser(this).parseBLM(R.raw.anapaula);
 		PlayerThread pThread	=	new PlayerThread(playerView,blm);
 		pThread.start();
 		

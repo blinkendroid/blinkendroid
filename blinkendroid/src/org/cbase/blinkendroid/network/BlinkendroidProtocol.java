@@ -15,21 +15,26 @@ import android.util.Log;
 public class BlinkendroidProtocol {
 	public final static String PROTOCOL_PLAYER="P";
 	public final static String PROTOCOL_INIT="I";
+
+	public final static String COMMAND_PLAYER_TIME="T";
+
+	private boolean server;
 	PrintWriter out;
 	BufferedReader in;
 	GlobalTimerThread globalTimerThread;
 
 	private final HashMap<String, ICommandHandler> handlers = 
 	    new HashMap<String, ICommandHandler>();
-		
-	public void registerHandler(String proto, ICommandHandler handler) {
-	    handlers.put(proto, handler);
-	}
 
-	public BlinkendroidProtocol(OutputStream out, InputStream is){
+	public BlinkendroidProtocol(OutputStream out, InputStream is, boolean server){
 		this.out=new PrintWriter(out, true);
 		this.in=new BufferedReader( new InputStreamReader(is));
+		this.server=server;
 		new InputThread().start();
+	}
+	
+	public void registerHandler(String proto, ICommandHandler handler) {
+	    handlers.put(proto, handler);
 	}
 	
 	public void startTimerThread(){
@@ -52,14 +57,14 @@ public class BlinkendroidProtocol {
 
 		@Override
 		public void run() {
-			Log.i(Constants.LOG_TAG, "InputThread started");
+			Log.i(Constants.LOG_TAG, "InputThread started "+(server?"server":"client"));
 			String inputLine;
 			try {
 				while ((inputLine = in.readLine()) != null) {
 					String proto = inputLine.substring(0, 1);
 					ICommandHandler handler	=	handlers.get(proto);
 					if(null!=handler)
-						handler.handle(inputLine.getBytes());
+						handler.handle(inputLine.substring(1).getBytes());
 				}
 			} catch (NumberFormatException e) {
 				// TODO Auto-generated catch block
@@ -67,7 +72,8 @@ public class BlinkendroidProtocol {
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			}			
+			}	
+			Log.i(Constants.LOG_TAG, "InputThread ended!!!!!!! " +(server?"server":"client") );
 		}
 	}
 	
@@ -84,7 +90,7 @@ public class BlinkendroidProtocol {
 				}
 				long t = System.currentTimeMillis();
 				Log.i(Constants.LOG_TAG, "GlobalTimerThread ping " + t);
-				out.write(Long.toString(t) + '\n');
+				out.write(PROTOCOL_PLAYER+COMMAND_PLAYER_TIME+Long.toString(t) + '\n');
 				out.flush();
 			}
 		}
