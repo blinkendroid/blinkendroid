@@ -34,7 +34,7 @@ public class Player extends Activity {
 
 	blinkendroidClient = new BlinkendroidClient(getIntent().getStringExtra(
 		INTENT_EXTRA_IP), getIntent().getIntExtra(INTENT_EXTRA_PORT,
-		4444));
+		Constants.SERVER_PORT));
 	blinkendroidClient.connect();
 
 	final BLM blm = new BMLParser(this).parseBLM(R.raw.anapaula);

@@ -29,11 +29,11 @@ import android.util.Log;
 
 public class BlinkendroidServer extends Thread {
     private boolean running = false;
-    private int port = 4444;
+    private int port = -1;
     Map<String, BlinkendroidProtocol> clients;
 
     public BlinkendroidServer(int port) {
-	this.port = 4444;
+	this.port = port;
 	clients = new HashMap<String, BlinkendroidProtocol>();
     }
 

@@ -8,6 +8,7 @@ import org.cbase.blinkendroid.network.multicast.ReceiverThread;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -60,7 +61,7 @@ public class LoginActivity extends Activity {
 		final Intent intent = new Intent(LoginActivity.this,
 			Player.class);
 		intent.putExtra(Player.INTENT_EXTRA_IP, entry.ip);
-		intent.putExtra(Player.INTENT_EXTRA_PORT, 4444);
+		intent.putExtra(Player.INTENT_EXTRA_PORT, Constants.SERVER_PORT);
 		startActivity(intent);
 	    }
 	});

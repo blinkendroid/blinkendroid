@@ -37,7 +37,8 @@ public class ServerActivity extends Activity {
 			.toString());
 		senderThread.start();
 
-		blinkendroidServer = new BlinkendroidServer(4444);
+		blinkendroidServer = new BlinkendroidServer(
+			Constants.SERVER_PORT);
 		blinkendroidServer.start();
 
 		startButton.setEnabled(false);
@@ -70,7 +71,9 @@ public class ServerActivity extends Activity {
 			Player.class);
 		intent.putExtra(Player.INTENT_EXTRA_IP, NetworkUtils
 			.getLocalIpAddress());
-		intent.putExtra(Player.INTENT_EXTRA_PORT, 4444);
+		intent
+			.putExtra(Player.INTENT_EXTRA_PORT,
+				Constants.SERVER_PORT);
 		startActivity(intent);
 	    }
 	});
