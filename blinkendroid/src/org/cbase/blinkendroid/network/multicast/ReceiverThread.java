@@ -29,8 +29,7 @@ import org.cbase.blinkendroid.Constants;
 import android.util.Log;
 
 /**
- * A multicast Reciever Thread WARNING: NSFW yet
- * 
+ * Receives Server announcements
  */
 public class ReceiverThread extends Thread {
 
@@ -40,6 +39,9 @@ public class ReceiverThread extends Thread {
     private HashMap<InetAddress, String> servers = new HashMap<InetAddress, String>();
     private ArrayList<IServerHandler> handlers = new ArrayList<IServerHandler>();
 
+    /**
+     * Creates a {@link ReceiverThread}
+     */
     public ReceiverThread() {
 	try {
 	    group = InetAddress.getByName(Constants.MULTICAST_GROUP);
@@ -48,7 +50,10 @@ public class ReceiverThread extends Thread {
 	    e.printStackTrace();
 	}
     }
-
+    /**
+     * Adds a handler to the {@link ReceiverThread}.
+     * @param handler
+     */
     public void addHandler(IServerHandler handler) {
 	handlers.add(handler);
     }
@@ -56,8 +61,13 @@ public class ReceiverThread extends Thread {
     public void removeHandler(IServerHandler handler) {
 	handlers.remove(handler);
     }
-
-    public void notifyHandlers(String serverName, String serverIp) {
+    
+    /**
+     * Notifies the registered handlers
+     * @param serverName
+     * @param serverIp
+     */
+    private void notifyHandlers(String serverName, String serverIp) {
 	for (IServerHandler h : handlers) {
 	    h.foundServer(serverName, serverIp);
 	}
@@ -76,7 +86,7 @@ public class ReceiverThread extends Thread {
 		buf = new byte[500];
 		DatagramPacket recv = new DatagramPacket(buf, buf.length);
 		s.receive(recv);
-		Log.d(Constants.LOG_TAG, "received something via mulitcast");
+		Log.d(Constants.LOG_TAG, "received something via multicast");
 		String[] receivedData = new String(recv.getData()).split(" ");
 
 		if (receivedData.length != 3

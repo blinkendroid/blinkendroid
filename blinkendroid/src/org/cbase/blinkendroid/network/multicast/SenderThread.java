@@ -28,13 +28,16 @@ import android.util.Log;
 
 /**
  * A multicast sender that sends a server name to blinkendroid clients.
- * 
  */
 public class SenderThread extends Thread {
 
     private String message;
     private InetAddress group;
 
+    /**
+     * Creates a new {@link SenderThread}
+     * @param serverName The server's name.
+     */
     public SenderThread(String serverName) {
 	message = Constants.SERVER_MULTICAST_COMMAND + " " + serverName + " ";
 	try {
