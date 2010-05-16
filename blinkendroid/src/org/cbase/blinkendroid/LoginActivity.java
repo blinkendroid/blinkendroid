@@ -59,8 +59,8 @@ public class LoginActivity extends Activity {
 		final ListEntry entry = serverList.get(position);
 		final Intent intent = new Intent(LoginActivity.this,
 			Player.class);
-		intent.putExtra("ip", entry.ip);
-		intent.putExtra("port", 6789); // TODO
+		intent.putExtra(Player.INTENT_EXTRA_IP, entry.ip);
+		intent.putExtra(Player.INTENT_EXTRA_PORT, 4444); // TODO
 		startActivity(intent);
 	    }
 	});
