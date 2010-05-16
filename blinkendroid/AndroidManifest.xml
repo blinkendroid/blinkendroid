@@ -3,14 +3,15 @@
 	android:versionName="1.0" package="org.cbase.blinkendroid">
 
 	<application android:icon="@drawable/icon" android:label="@string/app_name" android:debuggable="false">
-		<activity android:name=".LoginActivity" android:screenOrientation="portrait">
+		<activity android:name=".LoginActivity">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN" />
 				<category android:name="android.intent.category.LAUNCHER" />
 			</intent-filter>
 		</activity>
+		<activity android:name=".ServerActivity" />
 		<activity android:name=".Blinkendroid" android:label="@string/app_name" android:screenOrientation="portrait" />
-		<activity android:name=".Player" />
+		<activity android:name=".Player" android:screenOrientation="portrait" />
 		<activity android:name=".OldBlinkendroid" />
 		<activity android:name=".FrequencyActivity" />
 		<activity android:name=".DebugActivity" />

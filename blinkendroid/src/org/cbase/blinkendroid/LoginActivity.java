@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
-import android.opengl.Visibility;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,12 +14,13 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 
 public class LoginActivity extends Activity {
 
-    final List<String> serverList = new ArrayList<String>();
+    private final List<String> serverList = new ArrayList<String>();
+    private ServerListAdapter serverListAdapter;
+    private ListView serverListView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,19 +29,15 @@ public class LoginActivity extends Activity {
 
 	setContentView(R.layout.login);
 	final Button startServerButton = (Button) findViewById(R.id.login_start_server);
-	final ListView serverListView = (ListView) findViewById(R.id.login_server_list);
+	serverListView = (ListView) findViewById(R.id.login_server_list);
 
-	final ServerListAdapter serverListAdapter = new ServerListAdapter(
-		serverList);
+	serverListAdapter = new ServerListAdapter(serverList);
 
 	startServerButton.setOnClickListener(new OnClickListener() {
 
 	    public void onClick(View v) {
-		Toast.makeText(getBaseContext(), "not yet", Toast.LENGTH_SHORT)
-			.show();
-		serverList.add("" + Math.random());
-		serverListAdapter.notifyDataSetChanged();
-		serverListView.setVisibility(View.VISIBLE);
+		startActivity(new Intent(LoginActivity.this,
+			ServerActivity.class));
 	    }
 	});
 
@@ -49,8 +46,7 @@ public class LoginActivity extends Activity {
 
 	    public void onItemClick(AdapterView<?> parent, View v,
 		    int position, long id) {
-		Toast.makeText(getBaseContext(), "not yet", Toast.LENGTH_SHORT)
-			.show();
+		startActivity(new Intent(LoginActivity.this, Player.class));
 	    }
 	});
     }
@@ -90,5 +86,15 @@ public class LoginActivity extends Activity {
 	public int getCount() {
 	    return serverList.size();
 	}
+    }
+
+    @Override
+    public boolean onSearchRequested() {
+
+	serverList.add("" + Math.random());
+	serverListAdapter.notifyDataSetChanged();
+	serverListView.setVisibility(View.VISIBLE);
+
+	return false;
     }
 }
