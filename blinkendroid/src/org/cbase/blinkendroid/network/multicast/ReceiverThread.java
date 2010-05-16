@@ -21,6 +21,8 @@ import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.cbase.blinkendroid.Constants;
 
@@ -33,31 +35,66 @@ import android.util.Log;
 public class ReceiverThread extends Thread {
 
     private InetAddress group;
-    public ReceiverThread(InetAddress grp) {
-	    try {
-		group = InetAddress.getByName("224.0.0.1");
-	    } catch (UnknownHostException e) {
-		Log.e(Constants.LOG_TAG, e.getMessage());
-		e.printStackTrace();
-	    }
+    private boolean running = true;
+
+    private HashMap<InetAddress, String> servers = new HashMap<InetAddress, String>();
+    private ArrayList<IServerHandler> handlers = new ArrayList<IServerHandler>();
+
+    public ReceiverThread() {
+	try {
+	    group = InetAddress.getByName(Constants.MULTICAST_GROUP);
+	} catch (UnknownHostException e) {
+	    Log.e(Constants.LOG_TAG, e.getMessage());
+	    e.printStackTrace();
+	}
+    }
+
+    public void addHandler(IServerHandler handler) {
+	handlers.add(handler);
+    }
+
+    public void removeHandler(IServerHandler handler) {
+	handlers.remove(handler);
+    }
+
+    public void notifyHandlers(String serverName, String serverIp) {
+	for (IServerHandler h : handlers) {
+	    h.foundServer(serverName, serverIp);
+	}
     }
 
     @Override
     public void run() {
 	try {
-	    MulticastSocket s = new MulticastSocket(6789);
+	    MulticastSocket s = new MulticastSocket(
+		    Constants.MULTICAST_SERVER_PORT);
 	    s.joinGroup(group);
 	    byte[] buf;
 
-	    while (true) {
+	    while (running) {
 
-		// get their responses!
 		buf = new byte[500];
 		DatagramPacket recv = new DatagramPacket(buf, buf.length);
 		s.receive(recv);
-		Log.i(Constants.LOG_TAG, new String(recv.getData()));
-		// OK, I'm done talking - leave the group...
-		Thread.currentThread().sleep(5000);
+		String[] receivedData = new String(recv.getData()).split(" ");
+
+		if (receivedData.length != 2
+			|| !receivedData[0]
+				.equals(Constants.SERVER_MULTICAST_COMMAND)) {
+		    continue;
+		}
+		InetAddress address = recv.getAddress();
+		String serverName = receivedData[1];
+
+		if (!servers.containsKey(address)) {
+		    servers.put(address, serverName);
+		    notifyHandlers(serverName, address.getHostAddress());
+		}
+
+		Log.i(Constants.LOG_TAG, receivedData.toString() + " "
+			+ recv.getAddress());
+		Thread.currentThread().sleep(2500);
+
 	    }
 	} catch (Exception e) {
 	    Log.e("foo", "", e);

@@ -27,7 +27,7 @@ import org.cbase.blinkendroid.Constants;
 import android.util.Log;
 
 /**
- * A multicast sender thread WARNING: NSFW yet
+ * A multicast sender that sends a server name to blinkendroid clients.
  * 
  */
 public class SenderThread extends Thread {
@@ -35,30 +35,31 @@ public class SenderThread extends Thread {
     private String message;
     private InetAddress group;
 
-    public SenderThread(String msg) {
-	message = msg;
+    public SenderThread(String serverName) {
+	message = Constants.SERVER_MULTICAST_COMMAND + " " + serverName;
 	try {
-	    group = InetAddress.getByName("224.0.0.1");
+	    group = InetAddress.getByName(Constants.MULTICAST_GROUP);
 	} catch (UnknownHostException e) {
 	    Log.e(Constants.LOG_TAG, e.getMessage());
 	    e.printStackTrace();
 	}
     }
+    
+
 
     @Override
     public void run() {
 	try {
-	    int i = 0;
-	    MulticastSocket s = new MulticastSocket(6789);
+	    MulticastSocket s = new MulticastSocket(
+		    Constants.MULTICAST_SERVER_PORT);
 	    s.joinGroup(group);
 
 	    while (true) {
-		String msg = message + " " + i;
+		DatagramPacket initPacket = new DatagramPacket(message
+			.getBytes(), message.length(), group,
+			Constants.MULTICAST_SERVER_PORT);
+		s.send(initPacket);
 
-		DatagramPacket hi = new DatagramPacket(msg.getBytes(), msg
-			.length(), group, 6789);
-		s.send(hi);
-		i++;
 		Thread.currentThread().sleep(5000);
 	    }
 	} catch (Exception e) {

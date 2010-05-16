@@ -18,12 +18,10 @@
 package org.cbase.blinkendroid.player;
 
 import org.cbase.blinkendroid.Player;
-import org.cbase.blinkendroid.player.bml.BMLParser;
 
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.util.Log;
 import android.view.View;
 
 public class PlayerView extends View {
