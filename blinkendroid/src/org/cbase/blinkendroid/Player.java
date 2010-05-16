@@ -17,7 +17,6 @@ public class Player extends Activity {
     public static final String INTENT_EXTRA_PORT = "port";
 
     private PlayerView playerView;
-    BlinkendroidServer blinkendroidServer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,14 +35,11 @@ public class Player extends Activity {
 
 	blinkendroidClient.setPlayerThread(pThread);
 
-	blinkendroidServer.getProtocol().startTimerThread();
     }
 
     @Override
     protected void onStop() {
 	super.onStop();
-	blinkendroidServer.getProtocol().stopTimerThread();
-	blinkendroidServer.end();
     }
 
 }
