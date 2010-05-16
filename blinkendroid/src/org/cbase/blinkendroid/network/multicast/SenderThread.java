@@ -33,6 +33,7 @@ public class SenderThread extends Thread {
 
     private String message;
     private InetAddress group;
+    private boolean running = true;
 
     /**
      * Creates a new {@link SenderThread}
@@ -57,7 +58,7 @@ public class SenderThread extends Thread {
 		    Constants.MULTICAST_SERVER_PORT);
 	    s.joinGroup(group);
 
-	    while (true) {
+	    while (running) {
 		DatagramPacket initPacket = new DatagramPacket(message
 			.getBytes(), message.length(), group,
 			Constants.MULTICAST_SERVER_PORT);
@@ -69,6 +70,11 @@ public class SenderThread extends Thread {
 	} catch (Exception e) {
 	    Log.e(Constants.LOG_TAG, "Problem: ", e);
 	}
+    }
+    
+    public void shutdown() {
+	running = false;
+	interrupt();
     }
 
 }
