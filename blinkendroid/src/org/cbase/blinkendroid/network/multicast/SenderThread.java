@@ -67,7 +67,7 @@ public class SenderThread extends Thread {
 		Thread.currentThread().sleep(5000);
 	    }
 	} catch (Exception e) {
-	    Log.e(Constants.LOG_TAG, e.getMessage());
+	    Log.e(Constants.LOG_TAG, "Problem: ", e);
 	}
     }
 
