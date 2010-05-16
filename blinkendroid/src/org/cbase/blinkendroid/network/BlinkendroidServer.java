@@ -48,6 +48,7 @@ public class BlinkendroidServer extends Thread{
 		while(running){
 			try {
 				Socket clientSocket = serverSocket.accept();
+				Log.i(Constants.LOG_TAG,"BlinkendroidServer got connection "+clientSocket.getRemoteSocketAddress().toString());
 				blinkendroidProtocol	=	new BlinkendroidProtocol(clientSocket,true);
 				if(null!=blinkendroidProtocol)
 				    blinkendroidProtocol.startTimerThread();
