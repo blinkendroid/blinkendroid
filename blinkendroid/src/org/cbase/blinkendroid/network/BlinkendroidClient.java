@@ -3,7 +3,10 @@ package org.cbase.blinkendroid.network;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
+import org.cbase.blinkendroid.Constants;
 import org.cbase.blinkendroid.player.PlayerThread;
+
+import android.util.Log;
 
 public class BlinkendroidClient {
 
@@ -20,7 +23,8 @@ public class BlinkendroidClient {
 	public void connect() {
 		try {
 			Thread.sleep(5000);
-			Socket socket = new Socket(ip, port);// 5556);
+			Log.i(Constants.LOG_TAG,"connect to server: "+ip+":"+port);
+			Socket socket = new Socket(ip, port);
 			protocol = new BlinkendroidProtocol(socket,false);
 		} catch (UnknownHostException e) {
 			// TODO Auto-generated catch block
