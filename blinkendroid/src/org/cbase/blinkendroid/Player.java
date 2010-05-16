@@ -37,7 +37,7 @@ public class Player extends Activity {
 		Constants.SERVER_PORT));
 	blinkendroidClient.connect();
 
-	final BLM blm = new BMLParser(this).parseBLM(R.raw.anapaula);
+	final BLM blm = new BMLParser(this).parseBLM(R.raw.allyourbase);
 
 	PlayerThread pThread = new PlayerThread(playerView, blm);
 	pThread.start();
