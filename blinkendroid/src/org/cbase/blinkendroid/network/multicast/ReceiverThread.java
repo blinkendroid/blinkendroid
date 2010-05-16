@@ -99,4 +99,9 @@ public class ReceiverThread extends Thread {
 	    Log.e("foo", "", e);
 	}
     }
+    
+    public void shutdown() {
+	running = false;
+	interrupt();
+    }
 }
