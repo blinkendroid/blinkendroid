@@ -17,14 +17,14 @@ public class BlinkendroidProtocol {
 	BufferedReader in;
 	PlayerProtocolHandler playerProtocolHandler;
 	GlobalTimerThread globalTimerThread;
-	
+
 	private final HashMap<BlinkendroidProtocolCommands, ICommandHandler> handlers = 
 	    new HashMap<BlinkendroidProtocolCommands, ICommandHandler>();
 		
 	public void registerHandler(BlinkendroidProtocolCommands command, ICommandHandler handler) {
 	    handlers.put(command, handler);
 	}
-	
+
 	public BlinkendroidProtocol(OutputStream out, InputStream is){
 		this.out=new PrintWriter(out, true);
 		this.in=new BufferedReader( new InputStreamReader(is));
@@ -59,14 +59,10 @@ public class BlinkendroidProtocol {
 			String inputLine;
 			try {
 				while ((inputLine = in.readLine()) != null) {
-					if(inputLine.startsWith("P")){
-					   long globalTime	=	Long.parseLong(inputLine);
-					   if(null!=playerProtocolHandler)	
-						   playerProtocolHandler.setGlobalTime(globalTime);
-						
-					}else if(inputLine.startsWith("I")){
-						
-					}
+					String proto = inputLine.substring(0, 1);
+					BlinkendroidProtocolCommands command = BlinkendroidProtocolCommands.valueOf(proto);
+					ICommandHandler handler	=	handlers.get(command);
+					handler.handle(inputLine.getBytes());
 				}
 			} catch (NumberFormatException e) {
 				// TODO Auto-generated catch block
