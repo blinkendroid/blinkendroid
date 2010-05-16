@@ -36,7 +36,7 @@ public class SenderThread extends Thread {
     private InetAddress group;
 
     public SenderThread(String serverName) {
-	message = Constants.SERVER_MULTICAST_COMMAND + " " + serverName;
+	message = Constants.SERVER_MULTICAST_COMMAND + " " + serverName + " ";
 	try {
 	    group = InetAddress.getByName(Constants.MULTICAST_GROUP);
 	} catch (UnknownHostException e) {
@@ -60,10 +60,11 @@ public class SenderThread extends Thread {
 			Constants.MULTICAST_SERVER_PORT);
 		s.send(initPacket);
 
+		Log.i(Constants.LOG_TAG, "Multicasting: " + message);
 		Thread.currentThread().sleep(5000);
 	    }
 	} catch (Exception e) {
-	    Log.e("foo", "", e);
+	    Log.e(Constants.LOG_TAG, e.getMessage());
 	}
     }
 

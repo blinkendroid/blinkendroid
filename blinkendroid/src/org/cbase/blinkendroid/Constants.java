@@ -17,10 +17,6 @@
 
 package org.cbase.blinkendroid;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-
-import android.util.Log;
 
 /**
  * @author Andreas Schildbach

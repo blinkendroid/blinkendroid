@@ -29,7 +29,7 @@ import org.cbase.blinkendroid.Constants;
 import android.util.Log;
 
 /**
- * A multicast Reiciever Thread WARNING: NSFW yet
+ * A multicast Reciever Thread WARNING: NSFW yet
  * 
  */
 public class ReceiverThread extends Thread {
@@ -76,9 +76,10 @@ public class ReceiverThread extends Thread {
 		buf = new byte[500];
 		DatagramPacket recv = new DatagramPacket(buf, buf.length);
 		s.receive(recv);
+		Log.d(Constants.LOG_TAG, "received something via mulitcast");
 		String[] receivedData = new String(recv.getData()).split(" ");
 
-		if (receivedData.length != 2
+		if (receivedData.length != 3
 			|| !receivedData[0]
 				.equals(Constants.SERVER_MULTICAST_COMMAND)) {
 		    continue;
@@ -93,8 +94,6 @@ public class ReceiverThread extends Thread {
 
 		Log.i(Constants.LOG_TAG, receivedData.toString() + " "
 			+ recv.getAddress());
-		Thread.currentThread().sleep(2500);
-
 	    }
 	} catch (Exception e) {
 	    Log.e("foo", "", e);
