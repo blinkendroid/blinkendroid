@@ -20,6 +20,9 @@ package org.cbase.blinkendroid.network.multicast;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
+import java.net.UnknownHostException;
+
+import org.cbase.blinkendroid.Constants;
 
 import android.util.Log;
 
@@ -32,9 +35,14 @@ public class SenderThread extends Thread {
     private String message;
     private InetAddress group;
 
-    public SenderThread(InetAddress grp, String msg) {
+    public SenderThread(String msg) {
 	message = msg;
-	group = grp;
+	try {
+	    group = InetAddress.getByName("224.0.0.1");
+	} catch (UnknownHostException e) {
+	    Log.e(Constants.LOG_TAG, e.getMessage());
+	    e.printStackTrace();
+	}
     }
 
     @Override
@@ -51,7 +59,7 @@ public class SenderThread extends Thread {
 			.length(), group, 6789);
 		s.send(hi);
 		i++;
-		Thread.currentThread().sleep(1000);
+		Thread.currentThread().sleep(5000);
 	    }
 	} catch (Exception e) {
 	    Log.e("foo", "", e);
