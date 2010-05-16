@@ -3,9 +3,13 @@ package org.cbase.blinkendroid;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.cbase.blinkendroid.network.multicast.IServerHandler;
+import org.cbase.blinkendroid.network.multicast.ReceiverThread;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
@@ -18,9 +22,15 @@ import android.widget.AdapterView.OnItemClickListener;
 
 public class LoginActivity extends Activity {
 
-    private final List<String> serverList = new ArrayList<String>();
+    private final List<ListEntry> serverList = new ArrayList<ListEntry>();
     private ServerListAdapter serverListAdapter;
     private ListView serverListView;
+    private ReceiverThread receiverThread;
+
+    private static class ListEntry {
+	public String name;
+	public String ip;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +40,20 @@ public class LoginActivity extends Activity {
 	setContentView(R.layout.login);
 	final Button startServerButton = (Button) findViewById(R.id.login_start_server);
 	serverListView = (ListView) findViewById(R.id.login_server_list);
+
+	receiverThread = new ReceiverThread();
+	receiverThread.addHandler(new IServerHandler() {
+	    public void foundServer(String serverName, String serverIp) {
+		Log.d(Constants.LOG_TAG, "=== " + serverName + " " + serverIp);
+		final ListEntry entry = new ListEntry();
+		entry.name = serverName;
+		entry.ip = serverIp;
+		serverList.add(entry);
+		serverListAdapter.notifyDataSetChanged();
+		serverListView.setVisibility(View.VISIBLE);
+	    }
+	});
+	receiverThread.start();
 
 	serverListAdapter = new ServerListAdapter(serverList);
 
@@ -46,16 +70,21 @@ public class LoginActivity extends Activity {
 
 	    public void onItemClick(AdapterView<?> parent, View v,
 		    int position, long id) {
-		startActivity(new Intent(LoginActivity.this, Player.class));
+		final ListEntry entry = serverList.get(position);
+		final Intent intent = new Intent(LoginActivity.this,
+			Player.class);
+		intent.putExtra("ip", entry.ip);
+		intent.putExtra("port", 6789); // TODO
+		startActivity(intent);
 	    }
 	});
     }
 
     private class ServerListAdapter extends BaseAdapter {
 
-	private final List<String> serverList;
+	private final List<ListEntry> serverList;
 
-	public ServerListAdapter(List<String> serverList) {
+	public ServerListAdapter(List<ListEntry> serverList) {
 	    this.serverList = serverList;
 	}
 
@@ -65,12 +94,12 @@ public class LoginActivity extends Activity {
 		row = getLayoutInflater().inflate(
 			android.R.layout.two_line_list_item, null);
 
-	    final String s = serverList.get(position);
+	    final ListEntry entry = serverList.get(position);
 
-	    ((TextView) row.findViewById(android.R.id.text1)).setText("name "
-		    + s);
+	    ((TextView) row.findViewById(android.R.id.text1))
+		    .setText(entry.name);
 
-	    ((TextView) row.findViewById(android.R.id.text2)).setText("ip");
+	    ((TextView) row.findViewById(android.R.id.text2)).setText(entry.ip);
 
 	    return row;
 	}
@@ -86,15 +115,5 @@ public class LoginActivity extends Activity {
 	public int getCount() {
 	    return serverList.size();
 	}
-    }
-
-    @Override
-    public boolean onSearchRequested() {
-
-	serverList.add("" + Math.random());
-	serverListAdapter.notifyDataSetChanged();
-	serverListView.setVisibility(View.VISIBLE);
-
-	return false;
     }
 }
