@@ -46,5 +46,9 @@ public class BlinkendroidClient {
     public BlinkendroidProtocol getProtocol() {
 	return protocol;
     }
-
+    
+    public void shutdown() {
+	if(null!=protocol)
+	    protocol.shutdown();
+    }
 }

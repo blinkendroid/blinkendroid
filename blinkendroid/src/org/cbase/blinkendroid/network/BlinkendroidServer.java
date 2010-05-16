@@ -20,64 +20,76 @@ package org.cbase.blinkendroid.network;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.cbase.blinkendroid.Constants;
 
 import android.util.Log;
 
-public class BlinkendroidServer extends Thread{
-	private boolean running=false;
-	private BlinkendroidProtocol blinkendroidProtocol;
-	private int port=4444;
-	public BlinkendroidServer(int port) {
-		this.port=4444;
+public class BlinkendroidServer extends Thread {
+    private boolean running = false;
+    private int port = 4444;
+    Map<String, BlinkendroidProtocol> clients;
+
+    public BlinkendroidServer(int port) {
+	this.port = 4444;
+	clients = new HashMap<String, BlinkendroidProtocol>();
+    }
+
+    @Override
+    public void run() {
+	ServerSocket serverSocket;
+	try {
+	    serverSocket = new ServerSocket(port);
+	} catch (IOException e) {
+	    Log.e(Constants.LOG_TAG, "Could not create Socket", e);
+	    return;
 	}
+	running = true;
+	Log.i(Constants.LOG_TAG, "BlinkendroidServer Thread started");
+	while (running) {
+	    try {
+		Socket clientSocket = serverSocket.accept();
+		Log.i(Constants.LOG_TAG, "BlinkendroidServer got connection "
+			+ clientSocket.getRemoteSocketAddress().toString());
+		BlinkendroidProtocol blinkendroidProtocol = new BlinkendroidProtocol(
+			clientSocket, true);
+		if (null != blinkendroidProtocol) {
+		    blinkendroidProtocol.startTimerThread();
+		    clients.put(clientSocket.getRemoteSocketAddress()
+			    .toString(), blinkendroidProtocol);
 
-
-	@Override
-	public void run() {
-		ServerSocket serverSocket;
-		try {
-			serverSocket = new ServerSocket(port);
-		} catch (IOException e) {
-			Log.e(Constants.LOG_TAG, "Could not create Socket",e);
-			return;
 		}
-		running=true;
-		Log.i(Constants.LOG_TAG,"BlinkendroidServer Thread started");
-		while(running){
-			try {
-				Socket clientSocket = serverSocket.accept();
-				Log.i(Constants.LOG_TAG,"BlinkendroidServer got connection "+clientSocket.getRemoteSocketAddress().toString());
-				blinkendroidProtocol	=	new BlinkendroidProtocol(clientSocket,true);
-				if(null!=blinkendroidProtocol)
-				    blinkendroidProtocol.startTimerThread();
-			} catch (IOException e) {
-				Log.e(Constants.LOG_TAG, "BlinkendroidServer Could not accept",e);
-			}
-		}
-		try {
-			serverSocket.close();
-		} catch (IOException e) {
-			Log.e(Constants.LOG_TAG, "Could not close",e);
-		}
-		Log.i(Constants.LOG_TAG,"BlinkendroidServer Thread closed");
+	    } catch (IOException e) {
+		Log.e(Constants.LOG_TAG, "BlinkendroidServer Could not accept",
+			e);
+	    }
 	}
+	try {
+	    serverSocket.close();
+	} catch (IOException e) {
+	    Log.e(Constants.LOG_TAG, "Could not close", e);
+	}
+	Log.i(Constants.LOG_TAG, "BlinkendroidServer Thread closed");
+    }
 
-	public void end(){
-        	if(null!=blinkendroidProtocol)
-        	    blinkendroidProtocol.stopTimerThread();
-        	running=false;
-        	Log.i(Constants.LOG_TAG, "BlinkendroidServer Thread ended");
-        	interrupt();
+    public void shutdown() {
+	for (BlinkendroidProtocol blinkendroidProtocol : clients.values()) {
+	    if (null != blinkendroidProtocol)
+		    blinkendroidProtocol.shutdown();
 	}
 	
-	public boolean isRunning() {
-	    return running;
-	}
+	running = false;
+	Log.i(Constants.LOG_TAG, "BlinkendroidServer Thread ended");
+	interrupt();
+    }
 
+    public boolean isRunning() {
+	return running;
+    }
 
-	public BlinkendroidProtocol getProtocol() {
-		return blinkendroidProtocol;
-	}
+//    public BlinkendroidProtocol getProtocol() {
+//	return blinkendroidProtocol;
+//    }
 }
