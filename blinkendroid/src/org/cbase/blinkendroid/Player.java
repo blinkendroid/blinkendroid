@@ -15,29 +15,49 @@ public class Player extends Activity {
     public static final String INTENT_EXTRA_PORT = "port";
 
     private PlayerView playerView;
+    private PlayerThread pThread;
+    private BlinkendroidClient blinkendroidClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
 	super.onCreate(savedInstanceState);
+
 	playerView = new PlayerView(this);
 	setContentView(playerView);
 
-	BlinkendroidClient blinkendroidClient = new BlinkendroidClient(
-		getIntent().getStringExtra(INTENT_EXTRA_IP), getIntent()
-			.getIntExtra(INTENT_EXTRA_PORT, 4444));
-	blinkendroidClient.connect();
-
-	BLM blm = new BMLParser(this).parseBLM(R.raw.anapaula);
-	PlayerThread pThread = new PlayerThread(playerView, blm);
-	pThread.start();
-
 	blinkendroidClient.setPlayerThread(pThread);
-
     }
 
     @Override
-    protected void onStop() {
-	super.onStop();
+    protected void onResume() {
+
+	super.onResume();
+
+	blinkendroidClient = new BlinkendroidClient(getIntent().getStringExtra(
+		INTENT_EXTRA_IP), getIntent().getIntExtra(INTENT_EXTRA_PORT,
+		4444));
+	blinkendroidClient.connect();
+
+	final BLM blm = new BMLParser(this).parseBLM(R.raw.anapaula);
+
+	PlayerThread pThread = new PlayerThread(playerView, blm);
+	pThread.start();
     }
 
+    @Override
+    protected void onPause() {
+
+	if (pThread != null) {
+	    pThread.shutdown();
+	    pThread = null;
+	}
+
+	if (blinkendroidClient != null) {
+	    blinkendroidClient.shutdown();
+	    blinkendroidClient = null;
+	}
+
+	super.onPause();
+    }
 }
