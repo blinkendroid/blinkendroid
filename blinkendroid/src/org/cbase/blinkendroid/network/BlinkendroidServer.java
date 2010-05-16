@@ -28,6 +28,7 @@ import android.util.Log;
 
 public class BlinkendroidServer extends Thread{
 	private boolean running=false;
+	private BlinkendroidProtocol blinkendroidProtocol;
 	public BlinkendroidServer() {
 	}
 
@@ -44,10 +45,9 @@ public class BlinkendroidServer extends Thread{
 		running=true;
 		Log.i(Constants.LOG_TAG,"BlinkendroidServer Thread started");
 		while(running){
-			Socket clientSocket;
 			try {
-				clientSocket = serverSocket.accept();
-				new BlinkendroidProtocol(clientSocket.getOutputStream(),clientSocket.getInputStream(),true);	
+				Socket clientSocket = serverSocket.accept();
+				blinkendroidProtocol	=	new BlinkendroidProtocol(clientSocket,true);	
 			} catch (IOException e) {
 				Log.e(Constants.LOG_TAG, "BlinkendroidServer Could not accept",e);
 			}
@@ -62,11 +62,16 @@ public class BlinkendroidServer extends Thread{
 
 	public void end(){
 		running=false;
-		Log.i(Constants.LOG_TAG, "TimeServerServer Thread ended");
+		Log.i(Constants.LOG_TAG, "BlinkendroidServer Thread ended");
 		interrupt();
 	}
 	
 	public boolean isRunning() {
 	    return running;
+	}
+
+
+	public BlinkendroidProtocol getProtocol() {
+		return blinkendroidProtocol;
 	}
 }
