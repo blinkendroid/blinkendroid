@@ -29,6 +29,7 @@ import org.cbase.blinkendroid.player.bml.BMLParser;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.view.Window;
 
 /**
  * @author Andreas Schildbach
@@ -45,6 +46,8 @@ public class PlayerActivity extends Activity implements BlinkendroidListener {
     protected void onCreate(Bundle savedInstanceState) {
 
 	super.onCreate(savedInstanceState);
+
+	requestWindowFeature(Window.FEATURE_NO_TITLE);
 
 	final BLM blm = new BMLParser()
 		.parseBLM(resourceAsReader(R.raw.allyourbase));
