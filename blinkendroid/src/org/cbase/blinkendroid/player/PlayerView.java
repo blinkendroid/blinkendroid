@@ -18,7 +18,6 @@
 package org.cbase.blinkendroid.player;
 
 import org.cbase.blinkendroid.player.bml.BLM;
-import org.cbase.blinkendroid.player.bml.BLM.Frame;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -32,10 +31,13 @@ import android.view.View;
  */
 public class PlayerView extends View implements Runnable {
 
-    private final BLM blm;
+    private BLM blm;
     private int startX, startY, endX, endY;
     private boolean playing = false;
-    private int frameNum = 0;
+    private long startedTime;
+    private long[] frameTime;
+    private int numFrames;
+    private int frame = 0;
 
     private final Handler handler = new Handler();
     private final Paint paint = new Paint();
@@ -44,10 +46,24 @@ public class PlayerView extends View implements Runnable {
 
     public PlayerView(final Context context, final BLM blm) {
 	super(context);
+	init(blm);
+    }
+
+    private void init(final BLM blm) {
 	this.blm = blm;
 	this.endX = blm.width;
 	this.endY = blm.height;
-	handler.post(this);
+	this.numFrames = blm.frames.size();
+	long t = 0;
+	frameTime = new long[numFrames];
+	for (int i = 0; i < numFrames; i++) {
+	    frameTime[i] = t;
+	    t += blm.frames.get(i).duration;
+	}
+
+	if (t != blm.header.duration)
+	    throw new IllegalStateException("corrupt BLM '" + blm.header.title
+		    + "', invalid duration");
     }
 
     public void setClipping(int startX, int startY, int endX, int endY) {
@@ -60,6 +76,7 @@ public class PlayerView extends View implements Runnable {
     public void startPlaying() {
 	if (!playing) {
 	    playing = true;
+	    startedTime = System.currentTimeMillis();
 	    handler.post(this);
 	}
     }
@@ -74,8 +91,7 @@ public class PlayerView extends View implements Runnable {
     @Override
     protected void onDraw(final Canvas canvas) {
 
-	final Frame frame = blm.frames.get(frameNum);
-	final int[][] matrix = frame.matrix;
+	final int[][] matrix = blm.frames.get(frame).matrix;
 
 	final float pixelWidth = getWidth() / (endX - startX);
 	final float pixelHeight = getHeight() / (endY - startY);
@@ -98,13 +114,30 @@ public class PlayerView extends View implements Runnable {
 
     public void run() {
 
-	frameNum++;
-	if (frameNum >= blm.frames.size())
-	    frameNum = 0;
+	// time into movie, taking endless looping into account
+	long time = (System.currentTimeMillis() - startedTime)
+		% blm.header.duration;
 
+	// determine frame to be displayed
+	long nextFrameTime;
+	while (true) {
+	    if (time < frameTime[frame]) {
+		frame--;
+		continue;
+	    }
+	    nextFrameTime = frame < numFrames - 1 ? frameTime[frame + 1]
+		    : blm.header.duration;
+	    if (time >= nextFrameTime) {
+		frame++;
+		continue;
+	    }
+	    break;
+	}
+
+	// display frame asap
 	invalidate();
 
-	if (playing)
-	    handler.postDelayed(this, blm.frames.get(frameNum).duration);
+	// wait until next frame
+	handler.postDelayed(this, nextFrameTime - time);
     }
 }
