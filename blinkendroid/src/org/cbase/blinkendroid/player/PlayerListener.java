@@ -15,12 +15,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.cbase.blinkendroid.network;
+package org.cbase.blinkendroid.player;
 
 /**
  * @author Andreas Schildbach
  */
-public interface BlinkendroidListener {
+public interface PlayerListener {
 
     void clip(int startX, int startY, int endX, int endY);
 

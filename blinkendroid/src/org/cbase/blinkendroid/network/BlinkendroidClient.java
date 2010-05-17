@@ -20,7 +20,7 @@ public class BlinkendroidClient {
 
     public void connect() {
 	try {
-	    Thread.sleep(5000);
+	    Thread.sleep(1000);
 	    Log.i(Constants.LOG_TAG, "connect to server: '" + ip + "':" + port);
 	    Socket socket = new Socket(ip, port);
 	    protocol = new BlinkendroidProtocol(socket, false);

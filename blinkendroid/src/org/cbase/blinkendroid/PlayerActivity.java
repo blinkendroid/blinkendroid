@@ -22,7 +22,9 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 
 import org.cbase.blinkendroid.network.BlinkendroidClient;
-import org.cbase.blinkendroid.network.BlinkendroidListener;
+import org.cbase.blinkendroid.network.BlinkendroidProtocol;
+import org.cbase.blinkendroid.player.PlayerListener;
+import org.cbase.blinkendroid.player.PlayerProtocolHandler;
 import org.cbase.blinkendroid.player.PlayerView;
 import org.cbase.blinkendroid.player.bml.BBMZParser;
 import org.cbase.blinkendroid.player.bml.BLM;
@@ -30,12 +32,13 @@ import org.cbase.blinkendroid.player.bml.BLM;
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.Window;
 
 /**
  * @author Andreas Schildbach
  */
-public class PlayerActivity extends Activity implements BlinkendroidListener,
+public class PlayerActivity extends Activity implements PlayerListener,
 	Runnable {
 
     public static final String INTENT_EXTRA_IP = "ip";
@@ -88,7 +91,7 @@ public class PlayerActivity extends Activity implements BlinkendroidListener,
 		INTENT_EXTRA_IP), getIntent().getIntExtra(INTENT_EXTRA_PORT,
 		Constants.SERVER_PORT));
 	blinkendroidClient.connect();
-
+	blinkendroidClient.getProtocol().registerHandler(BlinkendroidProtocol.PROTOCOL_PLAYER, new PlayerProtocolHandler(this));
 	playerView.startPlaying();
 
 	handler.post(this);
@@ -98,7 +101,7 @@ public class PlayerActivity extends Activity implements BlinkendroidListener,
     protected void onPause() {
 
 	handler.removeCallbacks(this);
-
+	//TODO schtief remove handler from protocol
 	playerView.stopPlaying();
 
 	if (blinkendroidClient != null) {
@@ -114,6 +117,7 @@ public class PlayerActivity extends Activity implements BlinkendroidListener,
 	runOnUiThread(new Runnable() {
 	    public void run() {
 		playerView.setClipping(startX, startY, endX, endY);
+		Log.i(Constants.LOG_TAG,"setClipping "+startX+","+ startY+","+ endX+","+ endY);
 	    }
 	});
     }
@@ -123,6 +127,7 @@ public class PlayerActivity extends Activity implements BlinkendroidListener,
 	    public void run() {
 		long timeDelta = System.currentTimeMillis() - serverTime;
 		// TODO
+		Log.i(Constants.LOG_TAG,"timeDelta "+timeDelta);
 	    }
 	});
     }

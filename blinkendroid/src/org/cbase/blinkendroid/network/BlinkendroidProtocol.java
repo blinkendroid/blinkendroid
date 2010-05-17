@@ -16,6 +16,7 @@ public class BlinkendroidProtocol {
     public final static String PROTOCOL_INIT = "I";
 
     public final static String COMMAND_PLAYER_TIME = "T";
+    public final static String COMMAND_CLIP = "C";
 
     private boolean server;
     PrintWriter out;
@@ -113,6 +114,14 @@ public class BlinkendroidProtocol {
 		out.write(PROTOCOL_PLAYER + COMMAND_PLAYER_TIME
 			+ Long.toString(t) + '\n');
 		out.flush();
+		
+		//testing clipping
+		if(t%3==0){
+			out.write(PROTOCOL_PLAYER + COMMAND_CLIP
+				+ "0,0,"+(t%20)+","+(t%20) + '\n');
+			out.flush();
+		}
+		    
 	    }
 	}
 
