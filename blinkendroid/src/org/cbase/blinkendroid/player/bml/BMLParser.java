@@ -1,7 +1,3 @@
-package org.cbase.blinkendroid.player.bml;
-
-import java.io.Reader;
-
 /*
  * Copyright 2010 the original author or authors.
  * 
@@ -19,14 +15,30 @@ import java.io.Reader;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+package org.cbase.blinkendroid.player.bml;
+
+import java.io.IOException;
+import java.io.Reader;
+import java.util.ArrayList;
+
+import org.cbase.blinkendroid.player.bml.BLM.Frame;
+import org.cbase.blinkendroid.player.bml.BLM.Header;
 import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
 
 import android.util.Log;
 import android.util.Xml;
 
 public class BMLParser {
 
-    static final String BLM = "blm";
+    private static final String BLM = "blm";
+    private static final String ATTRIBUTE_WIDTH = "width";
+    private static final String ATTRIBUTE_HEIGHT = "height";
+    private static final String FRAME = "frame";
+    private static final String ROW = "row";
+    private static final String HEADER = "header";
+    private static final String TITLE = "title";
+    private static final String DURATION = "duration";
 
     public BLM parseBLM(final Reader reader) {
 
@@ -43,7 +55,7 @@ public class BMLParser {
 		case XmlPullParser.START_TAG:
 		    name = parser.getName();
 		    if (name.equalsIgnoreCase(BLM)) {
-			blm = new BLM(parser);
+			blm = parseBLM(parser);
 		    }
 		    break;
 		case XmlPullParser.END_TAG:
@@ -56,6 +68,102 @@ public class BMLParser {
 	} catch (Exception e) {
 	    Log.e("BMLParser", "could not parse", e);
 	    return null;
+	}
+    }
+
+    private BLM parseBLM(final XmlPullParser parser)
+	    throws XmlPullParserException, IOException {
+
+	BLM blm = new BLM();
+
+	blm.width = Integer.parseInt(parser.getAttributeValue(null,
+		ATTRIBUTE_WIDTH));
+	blm.height = Integer.parseInt(parser.getAttributeValue(null,
+		ATTRIBUTE_HEIGHT));
+	blm.frames = new ArrayList<Frame>();
+	int eventType = parser.next();
+	String name = null;
+	while (true) {
+	    switch (eventType) {
+	    case XmlPullParser.START_TAG:
+		if (parser.getName().equalsIgnoreCase(HEADER)) {
+		    blm.header = parseHeader(parser);
+		} else if (parser.getName().equalsIgnoreCase(FRAME)) {
+		    blm.frames.add(parseFrame(parser, blm.width, blm.height));
+		}
+		break;
+	    case XmlPullParser.END_TAG:
+		name = parser.getName();
+		if (null != name && name.equalsIgnoreCase(BMLParser.BLM))
+		    return blm;
+	    }
+	    eventType = parser.next();
+	}
+    }
+
+    private Header parseHeader(final XmlPullParser parser)
+	    throws XmlPullParserException, IOException {
+
+	final Header header = new Header();
+
+	int eventType = parser.next();
+	String name = null;
+	while (true) {
+	    switch (eventType) {
+	    case XmlPullParser.START_TAG:
+		name = parser.getName();
+		if (name.equalsIgnoreCase(TITLE)) {
+		    parser.next();
+		    header.title = parser.getText();
+		    parser.next();
+		} else if (name.equalsIgnoreCase(DURATION)) {
+		    parser.next();
+		    header.duration = Integer.parseInt(parser.getText());
+		    parser.next();
+		}
+		break;
+	    case XmlPullParser.END_TAG:
+		name = parser.getName();
+		if (null != name && name.equalsIgnoreCase(HEADER))
+		    return header;
+	    }
+	    eventType = parser.next();
+	}
+    }
+
+    private Frame parseFrame(final XmlPullParser parser, final int width,
+	    final int height) throws XmlPullParserException, IOException {
+
+	final Frame frame = new Frame();
+
+	frame.matrix = new int[height][width];
+	int row = 0;
+	frame.duration = Integer.parseInt(parser.getAttributeValue(null,
+		DURATION));
+	// Log.i("BMLParser", "parsed frame with duration "+duration);
+	int eventType = parser.next();
+	String name = null;
+	while (true) {
+	    switch (eventType) {
+	    case XmlPullParser.START_TAG:
+		name = parser.getName();
+		if (name.equalsIgnoreCase(ROW)) {
+		    parser.next();
+		    String rowS = parser.getText();
+		    for (int i = 0; i < width; i++) {
+			frame.matrix[row][i] = Integer.parseInt(rowS.charAt(i)
+				+ "", 16);
+		    }
+		    parser.next();
+		    row++;
+		}
+		break;
+	    case XmlPullParser.END_TAG:
+		name = parser.getName();
+		if (null != name && name.equalsIgnoreCase(FRAME))
+		    return frame;
+	    }
+	    eventType = parser.next();
 	}
     }
 }
