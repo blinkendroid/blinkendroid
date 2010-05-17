@@ -23,24 +23,32 @@ import java.io.Reader;
 
 import org.cbase.blinkendroid.network.BlinkendroidClient;
 import org.cbase.blinkendroid.network.BlinkendroidListener;
+import org.cbase.blinkendroid.player.ArrowView;
 import org.cbase.blinkendroid.player.PlayerView;
 import org.cbase.blinkendroid.player.bml.BLM;
 import org.cbase.blinkendroid.player.bml.BMLParser;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.os.Handler;
+import android.view.View;
 import android.view.Window;
 
 /**
  * @author Andreas Schildbach
  */
-public class PlayerActivity extends Activity implements BlinkendroidListener {
+public class PlayerActivity extends Activity implements BlinkendroidListener,
+	Runnable {
 
     public static final String INTENT_EXTRA_IP = "ip";
     public static final String INTENT_EXTRA_PORT = "port";
 
     private PlayerView playerView;
+    private ArrowView arrowView;
     private BlinkendroidClient blinkendroidClient;
+
+    private float arrowAngle = 0f, arrowScale = 0f;
+    private final Handler handler = new Handler();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,12 +57,16 @@ public class PlayerActivity extends Activity implements BlinkendroidListener {
 
 	requestWindowFeature(Window.FEATURE_NO_TITLE);
 
+	setContentView(R.layout.player_content);
+
 	final BLM blm = new BMLParser()
 		.parseBLM(resourceAsReader(R.raw.allyourbase));
 
-	playerView = new PlayerView(this, blm);
+	playerView = (PlayerView) findViewById(R.id.player_image);
+	playerView.setBLM(blm);
 
-	setContentView(playerView);
+	arrowView = (ArrowView) findViewById(R.id.player_arrow);
+	arrowView.setVisibility(View.VISIBLE);
     }
 
     private Reader resourceAsReader(final int res) {
@@ -77,10 +89,14 @@ public class PlayerActivity extends Activity implements BlinkendroidListener {
 	blinkendroidClient.connect();
 
 	playerView.startPlaying();
+
+	handler.post(this);
     }
 
     @Override
     protected void onPause() {
+
+	handler.removeCallbacks(this);
 
 	playerView.stopPlaying();
 
@@ -113,8 +129,29 @@ public class PlayerActivity extends Activity implements BlinkendroidListener {
     public void arrow(final boolean visible, final float angle) {
 	runOnUiThread(new Runnable() {
 	    public void run() {
-		// TODO
+		if (visible) {
+		    arrowView.setAngle(angle);
+		    arrowView.setVisibility(View.VISIBLE);
+		} else {
+		    arrowView.setVisibility(View.INVISIBLE);
+		}
 	    }
 	});
+    }
+
+    public void run() {
+	arrowAngle += 2f;
+	if (arrowAngle >= 360f)
+	    arrowAngle -= 360f;
+	arrowView.setAngle(arrowAngle);
+
+	arrowScale += 0.5f;
+	if (arrowScale >= 2 * Math.PI)
+	    arrowScale -= 2 * Math.PI;
+	final float scale = 0.5f + (float) Math.sin(arrowScale) / 20;
+	System.out.println(scale);
+	arrowView.setScale(scale);
+
+	handler.postDelayed(this, 20);
     }
 }

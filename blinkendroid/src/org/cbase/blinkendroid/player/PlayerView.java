@@ -24,6 +24,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Handler;
+import android.util.AttributeSet;
 import android.view.View;
 
 /**
@@ -45,12 +46,11 @@ public class PlayerView extends View implements Runnable {
 
     private static final int PIXEL_PADDING = 1;
 
-    public PlayerView(final Context context, final BLM blm) {
-	super(context);
-	init(blm);
+    public PlayerView(Context context, AttributeSet attrs) {
+	super(context, attrs);
     }
 
-    private void init(final BLM blm) {
+    public void setBLM(final BLM blm) {
 	this.blm = blm;
 	this.endX = blm.width;
 	this.endY = blm.height;
