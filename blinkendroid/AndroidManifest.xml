@@ -10,22 +10,11 @@
 			</intent-filter>
 		</activity>
 		<activity android:name=".ServerActivity" />
-		<activity android:name=".Blinkendroid" android:label="@string/app_name" android:screenOrientation="portrait" />
 		<activity android:name=".Player" android:screenOrientation="portrait" />
-		<activity android:name=".OldBlinkendroid" />
-		<activity android:name=".FrequencyActivity" />
-		<activity android:name=".DebugActivity" />
-		<activity android:name=".IdentifyActivity" />
-		<activity android:name=".CameraView" />
-		<activity android:name=".IRActivity" />
 	</application>
 
 	<uses-sdk android:minSdkVersion="3" />
-	<uses-permission android:name="android.permission.VIBRATE" />
-	<uses-permission android:name="android.permission.READ_PHONE_STATE" />
 	<uses-permission android:name="android.permission.WAKE_LOCK" />
 	<uses-permission android:name="android.permission.INTERNET" />
-	<uses-permission android:name="android.permission.RECORD_AUDIO" />
-	<uses-permission android:name="android.permission.CAMERA"></uses-permission>
 </manifest>
  

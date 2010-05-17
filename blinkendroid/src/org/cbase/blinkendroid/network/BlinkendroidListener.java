@@ -25,4 +25,6 @@ public interface BlinkendroidListener {
     void clip(int startX, int startY, int endX, int endY);
 
     void serverTime(long serverTime);
+
+    void arrow(boolean visible, float angle);
 }

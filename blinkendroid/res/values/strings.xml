@@ -1,15 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <resources>
-    <string name="send">send</string>
-    <string name="serverip">ServerIP</string>
-   
-    
-    <string name="app_name">Blinkendroid</string>
-<string name="vibrate">Vibrate</string>
-<string name="exit">Commit Suicide</string>
-<string name="calibrate">Calibrate</string>
-<string name="calibrating">Calibrating</string>
- <string name="serverbuttonstart">Start Server Thread</string>
-  <string name="serverbuttonstop">Stop Server Thread</string>
-<string name="debugView">Debug View</string>
+	<string name="app_name">Blinkendroid</string>
 </resources>

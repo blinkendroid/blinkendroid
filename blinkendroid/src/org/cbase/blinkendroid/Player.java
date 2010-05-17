@@ -106,4 +106,12 @@ public class Player extends Activity implements BlinkendroidListener {
 	    }
 	});
     }
+
+    public void arrow(final boolean visible, final float angle) {
+	runOnUiThread(new Runnable() {
+	    public void run() {
+		// TODO
+	    }
+	});
+    }
 }
