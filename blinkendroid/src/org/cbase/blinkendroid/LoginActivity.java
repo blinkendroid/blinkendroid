@@ -32,7 +32,7 @@ public class LoginActivity extends Activity {
 
 	super.onCreate(savedInstanceState);
 
-	setContentView(R.layout.login);
+	setContentView(R.layout.login_content);
 	final Button startServerButton = (Button) findViewById(R.id.login_start_server);
 	serverListView = (ListView) findViewById(R.id.login_server_list);
 

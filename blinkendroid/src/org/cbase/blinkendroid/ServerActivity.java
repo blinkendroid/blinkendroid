@@ -22,7 +22,7 @@ public class ServerActivity extends Activity {
 
 	super.onCreate(savedInstanceState);
 
-	setContentView(R.layout.server);
+	setContentView(R.layout.server_content);
 
 	final TextView serverNameView = (TextView) findViewById(R.id.server_name);
 	final Button startButton = (Button) findViewById(R.id.server_start);
