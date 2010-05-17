@@ -40,7 +40,6 @@ public class PlayerView extends View implements Runnable {
     private final Handler handler = new Handler();
     private final Paint paint = new Paint();
 
-    private static final int MS_PER_FRAME = 100;
     private static final int PIXEL_PADDING = 1;
 
     public PlayerView(final Context context, final BLM blm) {
@@ -106,6 +105,6 @@ public class PlayerView extends View implements Runnable {
 	invalidate();
 
 	if (playing)
-	    handler.postDelayed(this, MS_PER_FRAME);
+	    handler.postDelayed(this, blm.frames.get(frameNum).duration);
     }
 }
