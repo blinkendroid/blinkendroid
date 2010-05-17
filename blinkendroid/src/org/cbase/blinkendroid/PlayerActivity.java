@@ -24,7 +24,7 @@ import java.io.Reader;
 import org.cbase.blinkendroid.network.BlinkendroidClient;
 import org.cbase.blinkendroid.network.BlinkendroidProtocol;
 import org.cbase.blinkendroid.network.BlinkendroidListener;
-import org.cbase.blinkendroid.network.PlayerProtocolHandler;
+import org.cbase.blinkendroid.network.BlinkendroidProtocolHandler;
 import org.cbase.blinkendroid.player.ArrowView;
 import org.cbase.blinkendroid.player.PlayerView;
 import org.cbase.blinkendroid.player.bml.BBMZParser;
@@ -89,7 +89,7 @@ public class PlayerActivity extends Activity implements BlinkendroidListener,
 		INTENT_EXTRA_IP), getIntent().getIntExtra(INTENT_EXTRA_PORT,
 		Constants.SERVER_PORT));
 	blinkendroidClient.connect();
-	blinkendroidClient.getProtocol().registerHandler(BlinkendroidProtocol.PROTOCOL_PLAYER, new PlayerProtocolHandler(this));
+	blinkendroidClient.getProtocol().registerHandler(BlinkendroidProtocol.PROTOCOL_PLAYER, new BlinkendroidProtocolHandler(this));
 
 	playerView.startPlaying();
 

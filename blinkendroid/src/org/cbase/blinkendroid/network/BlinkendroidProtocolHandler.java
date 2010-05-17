@@ -3,9 +3,9 @@ package org.cbase.blinkendroid.network;
 import java.util.StringTokenizer;
 
 
-public class PlayerProtocolHandler implements ICommandHandler {
+public class BlinkendroidProtocolHandler implements ICommandHandler {
     BlinkendroidListener playerListener;
-    public PlayerProtocolHandler(BlinkendroidListener playerListener) {
+    public BlinkendroidProtocolHandler(BlinkendroidListener playerListener) {
 	this.playerListener=playerListener;
     }
 
