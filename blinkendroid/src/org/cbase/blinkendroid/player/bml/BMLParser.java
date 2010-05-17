@@ -66,9 +66,8 @@ public class BMLParser {
 	    }
 	    Log.i("BMLParser", "parsed BML with rows" + blm.frames.size());
 	    return blm;
-	} catch (Exception e) {
-	    Log.e("BMLParser", "could not parse", e);
-	    return null;
+	} catch (Exception x) {
+	    throw new RuntimeException(x);
 	}
     }
 
