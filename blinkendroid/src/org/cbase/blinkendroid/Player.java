@@ -1,3 +1,20 @@
+/*
+ * Copyright 2010 the original author or authors.
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package org.cbase.blinkendroid;
 
 import java.io.IOException;
@@ -5,6 +22,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 
 import org.cbase.blinkendroid.network.BlinkendroidClient;
+import org.cbase.blinkendroid.network.BlinkendroidListener;
 import org.cbase.blinkendroid.player.PlayerView;
 import org.cbase.blinkendroid.player.bml.BLM;
 import org.cbase.blinkendroid.player.bml.BMLParser;
@@ -12,7 +30,10 @@ import org.cbase.blinkendroid.player.bml.BMLParser;
 import android.app.Activity;
 import android.os.Bundle;
 
-public class Player extends Activity {
+/**
+ * @author Andreas Schildbach
+ */
+public class Player extends Activity implements BlinkendroidListener {
 
     public static final String INTENT_EXTRA_IP = "ip";
     public static final String INTENT_EXTRA_PORT = "port";
@@ -66,5 +87,23 @@ public class Player extends Activity {
 	}
 
 	super.onPause();
+    }
+
+    public void clip(final int startX, final int startY, final int endX,
+	    final int endY) {
+	runOnUiThread(new Runnable() {
+	    public void run() {
+		playerView.setClipping(startX, startY, endX, endY);
+	    }
+	});
+    }
+
+    public void serverTime(final long serverTime) {
+	runOnUiThread(new Runnable() {
+	    public void run() {
+		long timeDelta = System.currentTimeMillis() - serverTime;
+		// TODO
+	    }
+	});
     }
 }
