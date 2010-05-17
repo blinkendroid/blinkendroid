@@ -149,7 +149,6 @@ public class PlayerActivity extends Activity implements BlinkendroidListener,
 	if (arrowScale >= 2 * Math.PI)
 	    arrowScale -= 2 * Math.PI;
 	final float scale = 0.5f + (float) Math.sin(arrowScale) / 20;
-	System.out.println(scale);
 	arrowView.setScale(scale);
 
 	handler.postDelayed(this, 20);
