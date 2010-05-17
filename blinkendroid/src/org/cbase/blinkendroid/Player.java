@@ -1,5 +1,9 @@
 package org.cbase.blinkendroid;
 
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
+
 import org.cbase.blinkendroid.network.BlinkendroidClient;
 import org.cbase.blinkendroid.player.PlayerView;
 import org.cbase.blinkendroid.player.bml.BLM;
@@ -21,11 +25,21 @@ public class Player extends Activity {
 
 	super.onCreate(savedInstanceState);
 
-	final BLM blm = new BMLParser(this).parseBLM(R.raw.allyourbase);
+	final BLM blm = new BMLParser()
+		.parseBLM(resourceAsReader(R.raw.allyourbase));
 
 	playerView = new PlayerView(this, blm);
 
 	setContentView(playerView);
+    }
+
+    private Reader resourceAsReader(final int res) {
+	try {
+	    return new InputStreamReader(getResources().openRawResource(res),
+		    "utf-8");
+	} catch (final IOException x) {
+	    throw new RuntimeException(x);
+	}
     }
 
     @Override
