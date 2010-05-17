@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<blm width="26" height="20" bits="4" channels="1">
+
+	<frame duration="800">
+		<row>ffffffffffffffffffffffffff</row>
+		<row>ffffffffffffffffffffffffff</row>
+		<row>ffffffffffffffffffffffffff</row>
+		<row>ffffffffffffffffffffffffff</row>
+		<row>ffffffffffffffffffffffffff</row>
+		<row>ffffffffffffffffffffffffff</row>
+		<row>ffffffffffffffffffffffffff</row>
+		<row>ffffffffffffffffffffffffff</row>
+		<row>ffffffffffffffffffffffffff</row>
+		<row>ffffffffffffffffffffffffff</row>
+		<row>ffffffffffffffffffffffffff</row>
+		<row>ffffffffffffffffffffffffff</row>
+		<row>ffffffffffffffffffffffffff</row>
+		<row>ffffffffffffffffffffffffff</row>
+		<row>ffffffffffffffffffffffffff</row>
+		<row>ffffffffffffffffffffffffff</row>
+		<row>ffffffffffffffffffffffffff</row>
+		<row>ffffffffffffffffffffffffff</row>
+		<row>ffffffffffffffffffffffffff</row>
+		<row>ffffffffffffffffffffffffff</row>
+	</frame>
+
+	<frame duration="200">
+		<row>00000000000000000000000000</row>
+		<row>00000000000000000000000000</row>
+		<row>00000000000000000000000000</row>
+		<row>00000000000000000000000000</row>
+		<row>00000000000000000000000000</row>
+		<row>00000000000000000000000000</row>
+		<row>00000000000000000000000000</row>
+		<row>00000000000000000000000000</row>
+		<row>00000000000000000000000000</row>
+		<row>00000000000000000000000000</row>
+		<row>00000000000000000000000000</row>
+		<row>00000000000000000000000000</row>
+		<row>00000000000000000000000000</row>
+		<row>00000000000000000000000000</row>
+		<row>00000000000000000000000000</row>
+		<row>00000000000000000000000000</row>
+		<row>00000000000000000000000000</row>
+		<row>00000000000000000000000000</row>
+		<row>00000000000000000000000000</row>
+		<row>00000000000000000000000000</row>
+	</frame>
+
+</blm>

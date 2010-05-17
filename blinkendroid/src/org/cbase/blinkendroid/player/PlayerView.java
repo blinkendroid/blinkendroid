@@ -92,8 +92,8 @@ public class PlayerView extends View implements Runnable {
 
 	final int[][] matrix = blm.frames.get(frame).matrix;
 
-	final float pixelWidth = getWidth() / (endX - startX);
-	final float pixelHeight = getHeight() / (endY - startY);
+	final float pixelWidth = (float) getWidth() / (endX - startX);
+	final float pixelHeight = (float) getHeight() / (endY - startY);
 
 	// clip
 	for (int y = startY; y < endY; y++) {
