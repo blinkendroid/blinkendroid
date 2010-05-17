@@ -1,7 +1,6 @@
 package org.cbase.blinkendroid;
 
 import org.cbase.blinkendroid.network.BlinkendroidClient;
-import org.cbase.blinkendroid.player.PlayerThread;
 import org.cbase.blinkendroid.player.PlayerView;
 import org.cbase.blinkendroid.player.bml.BLM;
 import org.cbase.blinkendroid.player.bml.BMLParser;
@@ -15,7 +14,6 @@ public class Player extends Activity {
     public static final String INTENT_EXTRA_PORT = "port";
 
     private PlayerView playerView;
-    private PlayerThread pThread;
     private BlinkendroidClient blinkendroidClient;
 
     @Override
@@ -23,7 +21,10 @@ public class Player extends Activity {
 
 	super.onCreate(savedInstanceState);
 
-	playerView = new PlayerView(this);
+	final BLM blm = new BMLParser(this).parseBLM(R.raw.allyourbase);
+
+	playerView = new PlayerView(this, blm);
+
 	setContentView(playerView);
     }
 
@@ -37,21 +38,13 @@ public class Player extends Activity {
 		Constants.SERVER_PORT));
 	blinkendroidClient.connect();
 
-	final BLM blm = new BMLParser(this).parseBLM(R.raw.allyourbase);
-
-	PlayerThread pThread = new PlayerThread(playerView, blm);
-	pThread.start();
-
-	blinkendroidClient.setPlayerThread(pThread);
+	playerView.startPlaying();
     }
 
     @Override
     protected void onPause() {
 
-	if (pThread != null) {
-	    pThread.shutdown();
-	    pThread = null;
-	}
+	playerView.stopPlaying();
 
 	if (blinkendroidClient != null) {
 	    blinkendroidClient.shutdown();
