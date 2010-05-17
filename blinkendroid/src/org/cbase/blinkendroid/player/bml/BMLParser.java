@@ -32,13 +32,14 @@ import android.util.Xml;
 public class BMLParser {
 
     private static final String BLM = "blm";
-    private static final String ATTRIBUTE_WIDTH = "width";
-    private static final String ATTRIBUTE_HEIGHT = "height";
-    private static final String FRAME = "frame";
-    private static final String ROW = "row";
+    private static final String BLM_ATTR_WIDTH = "width";
+    private static final String BLM_ATTR_HEIGHT = "height";
     private static final String HEADER = "header";
+    private static final String HEADER_ATTR_DURATION = "duration";
     private static final String TITLE = "title";
-    private static final String DURATION = "duration";
+    private static final String FRAME = "frame";
+    private static final String FRAME_ATTR_DURATION = "duration";
+    private static final String ROW = "row";
 
     public BLM parseBLM(final Reader reader) {
 
@@ -74,15 +75,16 @@ public class BMLParser {
     private BLM parseBLM(final XmlPullParser parser)
 	    throws XmlPullParserException, IOException {
 
-	BLM blm = new BLM();
+	final BLM blm = new BLM();
 
 	blm.width = Integer.parseInt(parser.getAttributeValue(null,
-		ATTRIBUTE_WIDTH));
+		BLM_ATTR_WIDTH));
 	blm.height = Integer.parseInt(parser.getAttributeValue(null,
-		ATTRIBUTE_HEIGHT));
+		BLM_ATTR_HEIGHT));
 	blm.frames = new ArrayList<Frame>();
 	int eventType = parser.next();
 	String name = null;
+
 	while (true) {
 	    switch (eventType) {
 	    case XmlPullParser.START_TAG:
@@ -94,7 +96,7 @@ public class BMLParser {
 		break;
 	    case XmlPullParser.END_TAG:
 		name = parser.getName();
-		if (null != name && name.equalsIgnoreCase(BMLParser.BLM))
+		if (null != name && name.equalsIgnoreCase(BLM))
 		    return blm;
 	    }
 	    eventType = parser.next();
@@ -116,7 +118,7 @@ public class BMLParser {
 		    parser.next();
 		    header.title = parser.getText();
 		    parser.next();
-		} else if (name.equalsIgnoreCase(DURATION)) {
+		} else if (name.equalsIgnoreCase(HEADER_ATTR_DURATION)) {
 		    parser.next();
 		    header.duration = Integer.parseInt(parser.getText());
 		    parser.next();
@@ -139,7 +141,7 @@ public class BMLParser {
 	frame.matrix = new int[height][width];
 	int row = 0;
 	frame.duration = Integer.parseInt(parser.getAttributeValue(null,
-		DURATION));
+		FRAME_ATTR_DURATION));
 	// Log.i("BMLParser", "parsed frame with duration "+duration);
 	int eventType = parser.next();
 	String name = null;
@@ -149,10 +151,9 @@ public class BMLParser {
 		name = parser.getName();
 		if (name.equalsIgnoreCase(ROW)) {
 		    parser.next();
-		    String rowS = parser.getText();
+		    final String rowS = parser.getText();
 		    for (int i = 0; i < width; i++) {
-			frame.matrix[row][i] = Integer.parseInt(rowS.charAt(i)
-				+ "", 16);
+			frame.matrix[row][i] = parsePixel(rowS.charAt(i));
 		    }
 		    parser.next();
 		    row++;
@@ -165,5 +166,14 @@ public class BMLParser {
 	    }
 	    eventType = parser.next();
 	}
+    }
+
+    private int parsePixel(final char c) {
+	if (c >= '0' && c <= '9')
+	    return c - '0';
+	else if (c >= 'a' && c <= 'f')
+	    return c - 'a' + 10;
+	else
+	    throw new IllegalArgumentException("illegal pixel: " + c);
     }
 }
