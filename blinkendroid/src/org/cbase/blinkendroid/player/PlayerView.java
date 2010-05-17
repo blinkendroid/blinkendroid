@@ -84,9 +84,10 @@ public class PlayerView extends View implements Runnable {
 	// clip
 	for (int y = startY; y < endY; y++) {
 	    final int clippedY = y - startY;
+	    final int[] row = matrix[y];
 	    for (int x = startX; x < endX; x++) {
 		final int clippedX = x - startX;
-		final int value = matrix[y][x] * 16;
+		final int value = row[x] * 16;
 		paint.setColor(Color.argb(255, value, value, value));
 		canvas.drawRect(pixelWidth * clippedX + PIXEL_PADDING,
 			pixelHeight * clippedY + PIXEL_PADDING, pixelWidth
