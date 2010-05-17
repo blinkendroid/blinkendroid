@@ -27,24 +27,27 @@ import android.graphics.Paint;
 import android.os.Handler;
 import android.view.View;
 
+/**
+ * @author Andreas Schildbach
+ */
 public class PlayerView extends View implements Runnable {
 
-    private static final int MS_PER_FRAME = 100;
-
-    private final Paint paint = new Paint();
-    private int matrix[][] = null;
-    private BLM blm;
-    private int startX = 0, startY = 0, endX = 0, endY = 0;
-    private int frameNum = 0;
-    private Handler handler = new Handler();
+    private final BLM blm;
+    private int startX, startY, endX, endY;
     private boolean playing = false;
+    private int frameNum = 0;
+
+    private final Handler handler = new Handler();
+    private final Paint paint = new Paint();
+
+    private static final int MS_PER_FRAME = 100;
+    private static final int PIXEL_PADDING = 1;
 
     public PlayerView(final Context context, final BLM blm) {
 	super(context);
 	this.blm = blm;
-	this.endX = blm.width - 1;
-	this.endY = blm.height - 1;
-	paint.setColor(Color.WHITE);
+	this.endX = blm.width;
+	this.endY = blm.height;
 	handler.post(this);
     }
 
@@ -70,35 +73,36 @@ public class PlayerView extends View implements Runnable {
     }
 
     @Override
-    protected void onDraw(Canvas canvas) {
+    protected void onDraw(final Canvas canvas) {
 
-	if (null == matrix)
-	    return;
+	final Frame frame = blm.frames.get(frameNum);
+	final int[][] matrix = frame.matrix;
 
-	int height = matrix.length;
-	int width = matrix[0].length;
+	final int pixelWidth = getWidth() / (endX - startX);
+	final int pixelHeight = getHeight() / (endY - startY);
 
-	int pwidth = (getWidth() - width * 3) / width;
-	int pheight = (getHeight() - height * 3) / height;
-
-	int y = 0;
-	for (int i = 0; i < height; i++) {
-	    int x = 0;
-	    for (int j = 0; j < width; j++) {
-		paint.setColor(Color.argb(255, matrix[i][j] * 16,
-			matrix[i][j] * 16, matrix[i][j] * 16));
-		canvas.drawRect(x, y, x + pwidth, y + pheight, paint);
-		x += pwidth + 3;
+	// clip
+	for (int y = 0; y < matrix.length; y++) {
+	    if (y >= startY && y < endY) {
+		final int clippedY = y - startY;
+		for (int x = 0; x < matrix[y].length; x++) {
+		    if (x >= startX && x < endX) {
+			final int clippedX = x - startX;
+			paint.setColor(Color.argb(255, matrix[y][x] * 16,
+				matrix[y][x] * 16, matrix[y][x] * 16));
+			canvas.drawRect(pixelWidth * clippedX + PIXEL_PADDING,
+				pixelHeight * clippedY + PIXEL_PADDING,
+				pixelWidth * (clippedX + 1) - PIXEL_PADDING,
+				pixelHeight * (clippedY + 1) - PIXEL_PADDING,
+				paint);
+		    }
+		}
 	    }
-	    y += pheight + 3;
 	}
     }
 
     public void run() {
 
-	final Frame frame = blm.frames.get(frameNum);
-
-	matrix = clipMatrix(frame.matrix, blm.width, blm.height);
 	invalidate();
 
 	frameNum++;
@@ -107,18 +111,5 @@ public class PlayerView extends View implements Runnable {
 
 	if (playing)
 	    handler.postDelayed(this, MS_PER_FRAME);
-    }
-
-    private int[][] clipMatrix(int[][] matrix, int width, int height) {
-
-	final int[][] clippedMatrix = new int[endY - startY + 1][endX - startX
-		+ 1];
-
-	for (int i = 0; i < height; i++)
-	    for (int j = 0; j < width; j++)
-		if (i >= startY && i <= endY && j >= startX && j <= endX)
-		    clippedMatrix[i - startY][j - startX] = matrix[i][j];
-
-	return clippedMatrix;
     }
 }
