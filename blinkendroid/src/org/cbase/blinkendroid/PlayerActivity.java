@@ -33,7 +33,7 @@ import android.os.Bundle;
 /**
  * @author Andreas Schildbach
  */
-public class Player extends Activity implements BlinkendroidListener {
+public class PlayerActivity extends Activity implements BlinkendroidListener {
 
     public static final String INTENT_EXTRA_IP = "ip";
     public static final String INTENT_EXTRA_PORT = "port";

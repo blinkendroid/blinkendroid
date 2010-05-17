@@ -68,11 +68,11 @@ public class ServerActivity extends Activity {
 	    public void onClick(View v) {
 
 		final Intent intent = new Intent(ServerActivity.this,
-			Player.class);
-		intent.putExtra(Player.INTENT_EXTRA_IP, NetworkUtils
+			PlayerActivity.class);
+		intent.putExtra(PlayerActivity.INTENT_EXTRA_IP, NetworkUtils
 			.getLocalIpAddress());
 		intent
-			.putExtra(Player.INTENT_EXTRA_PORT,
+			.putExtra(PlayerActivity.INTENT_EXTRA_PORT,
 				Constants.SERVER_PORT);
 		startActivity(intent);
 	    }

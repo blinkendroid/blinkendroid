@@ -53,10 +53,10 @@ public class LoginActivity extends Activity {
 		    int position, long id) {
 		final ListEntry entry = serverList.get(position);
 		final Intent intent = new Intent(LoginActivity.this,
-			Player.class);
-		intent.putExtra(Player.INTENT_EXTRA_IP, entry.ip);
+			PlayerActivity.class);
+		intent.putExtra(PlayerActivity.INTENT_EXTRA_IP, entry.ip);
 		intent
-			.putExtra(Player.INTENT_EXTRA_PORT,
+			.putExtra(PlayerActivity.INTENT_EXTRA_PORT,
 				Constants.SERVER_PORT);
 		startActivity(intent);
 	    }
