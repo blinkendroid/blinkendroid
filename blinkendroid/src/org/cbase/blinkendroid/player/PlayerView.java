@@ -90,7 +90,7 @@ public class PlayerView extends View implements Runnable {
     @Override
     protected void onDraw(final Canvas canvas) {
 
-	final int[][] matrix = blm.frames.get(frame).matrix;
+	final byte[][] matrix = blm.frames.get(frame).matrix;
 
 	final float pixelWidth = (float) getWidth() / (endX - startX);
 	final float pixelHeight = (float) getHeight() / (endY - startY);
@@ -98,7 +98,7 @@ public class PlayerView extends View implements Runnable {
 	// clip
 	for (int y = startY; y < endY; y++) {
 	    final int clippedY = y - startY;
-	    final int[] row = matrix[y];
+	    final byte[] row = matrix[y];
 	    for (int x = startX; x < endX; x++) {
 		final int clippedX = x - startX;
 		final int value = row[x] * 16;

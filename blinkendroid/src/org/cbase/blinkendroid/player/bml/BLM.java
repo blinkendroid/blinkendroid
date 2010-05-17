@@ -37,6 +37,6 @@ public class BLM {
 
     public static class Frame {
 	public int duration;
-	public int matrix[][];
+	public byte matrix[][];
     }
 }

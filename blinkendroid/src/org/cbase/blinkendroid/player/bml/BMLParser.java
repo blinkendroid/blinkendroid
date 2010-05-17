@@ -132,11 +132,10 @@ public class BMLParser {
 
 	final Frame frame = new Frame();
 
-	frame.matrix = new int[height][width];
+	frame.matrix = new byte[height][width];
 	int row = 0;
 	frame.duration = Integer.parseInt(parser.getAttributeValue(null,
 		FRAME_ATTR_DURATION));
-	// Log.i("BMLParser", "parsed frame with duration "+duration);
 	int eventType = parser.next();
 	String name = null;
 	while (true) {
@@ -162,11 +161,11 @@ public class BMLParser {
 	}
     }
 
-    private int parsePixel(final char c) {
+    private byte parsePixel(final char c) {
 	if (c >= '0' && c <= '9')
-	    return c - '0';
+	    return (byte) (c - '0');
 	else if (c >= 'a' && c <= 'f')
-	    return c - 'a' + 10;
+	    return (byte) (c - 'a' + 10);
 	else
 	    throw new IllegalArgumentException("illegal pixel: " + c);
     }
