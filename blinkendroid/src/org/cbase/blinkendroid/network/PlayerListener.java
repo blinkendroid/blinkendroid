@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.cbase.blinkendroid.player;
+package org.cbase.blinkendroid.network;
 
 /**
  * @author Andreas Schildbach

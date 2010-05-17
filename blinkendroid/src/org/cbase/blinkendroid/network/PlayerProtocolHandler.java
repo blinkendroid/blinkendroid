@@ -1,8 +1,7 @@
-package org.cbase.blinkendroid.player;
+package org.cbase.blinkendroid.network;
 
 import java.util.StringTokenizer;
 
-import org.cbase.blinkendroid.network.ICommandHandler;
 
 public class PlayerProtocolHandler implements ICommandHandler {
     PlayerListener playerListener;

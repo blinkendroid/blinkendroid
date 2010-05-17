@@ -23,9 +23,9 @@ import java.io.Reader;
 
 import org.cbase.blinkendroid.network.BlinkendroidClient;
 import org.cbase.blinkendroid.network.BlinkendroidProtocol;
+import org.cbase.blinkendroid.network.PlayerListener;
+import org.cbase.blinkendroid.network.PlayerProtocolHandler;
 import org.cbase.blinkendroid.player.ArrowView;
-import org.cbase.blinkendroid.player.PlayerListener;
-import org.cbase.blinkendroid.player.PlayerProtocolHandler;
 import org.cbase.blinkendroid.player.PlayerView;
 import org.cbase.blinkendroid.player.bml.BBMZParser;
 import org.cbase.blinkendroid.player.bml.BLM;
