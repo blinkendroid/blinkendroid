@@ -98,11 +98,11 @@ public class PlayerView extends View implements Runnable {
 
     public void run() {
 
-	invalidate();
-
 	frameNum++;
 	if (frameNum >= blm.frames.size())
 	    frameNum = 0;
+
+	invalidate();
 
 	if (playing)
 	    handler.postDelayed(this, MS_PER_FRAME);
