@@ -1,3 +1,20 @@
+/*
+ * Copyright 2010 the original author or authors.
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package org.cbase.blinkendroid;
 
 import java.util.ArrayList;
@@ -10,16 +27,20 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.View.OnClickListener;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
 
+/**
+ * @author Andreas Schildbach
+ */
 public class LoginActivity extends Activity {
 
     private final List<ListEntry> serverList = new ArrayList<ListEntry>();
@@ -32,19 +53,14 @@ public class LoginActivity extends Activity {
 
 	super.onCreate(savedInstanceState);
 
+	requestWindowFeature(Window.FEATURE_LEFT_ICON);
+	setTitle(getTitle() + " - Select Server to connect to");
 	setContentView(R.layout.login_content);
-	final Button startServerButton = (Button) findViewById(R.id.login_start_server);
+	setFeatureDrawableResource(Window.FEATURE_LEFT_ICON, R.drawable.icon);
+
 	serverListView = (ListView) findViewById(R.id.login_server_list);
 
 	serverListAdapter = new ServerListAdapter(serverList);
-
-	startServerButton.setOnClickListener(new OnClickListener() {
-
-	    public void onClick(View v) {
-		startActivity(new Intent(LoginActivity.this,
-			ServerActivity.class));
-	    }
-	});
 
 	serverListView.setAdapter(serverListAdapter);
 	serverListView.setOnItemClickListener(new OnItemClickListener() {
@@ -55,9 +71,8 @@ public class LoginActivity extends Activity {
 		final Intent intent = new Intent(LoginActivity.this,
 			PlayerActivity.class);
 		intent.putExtra(PlayerActivity.INTENT_EXTRA_IP, entry.ip);
-		intent
-			.putExtra(PlayerActivity.INTENT_EXTRA_PORT,
-				Constants.SERVER_PORT);
+		intent.putExtra(PlayerActivity.INTENT_EXTRA_PORT,
+			Constants.SERVER_PORT);
 		startActivity(intent);
 	    }
 	});
@@ -101,6 +116,23 @@ public class LoginActivity extends Activity {
 	}
 
 	super.onPause();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+	getMenuInflater().inflate(R.menu.login_options, menu);
+	return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+	switch (item.getItemId()) {
+	case R.id.login_options_start_server: {
+	    startActivity(new Intent(LoginActivity.this, ServerActivity.class));
+	}
+	}
+
+	return false;
     }
 
     private class ServerListAdapter extends BaseAdapter {

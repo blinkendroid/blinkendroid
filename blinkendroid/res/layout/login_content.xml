@@ -3,13 +3,10 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="fill_parent"
 	android:layout_height="fill_parent" android:orientation="vertical">
 
-	<Button android:id="@+id/login_start_server" android:text="Start new Server" android:layout_width="fill_parent"
-		android:layout_height="wrap_content" />
-
 	<ListView android:id="@+id/login_server_list" android:layout_width="fill_parent" android:layout_height="fill_parent"
 		android:visibility="gone" />
 
-	<TextView android:id="@+id/login_server_list_empty" android:text="Searching for servers..."
-		android:layout_width="fill_parent" android:layout_height="wrap_content" />
+	<TextView android:id="@+id/login_server_list_empty" android:text="Looking for servers..." android:textSize="20sp"
+		android:layout_width="fill_parent" android:layout_height="fill_parent" android:gravity="center" />
 
 </LinearLayout>
