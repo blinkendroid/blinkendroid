@@ -78,25 +78,20 @@ public class PlayerView extends View implements Runnable {
 	final Frame frame = blm.frames.get(frameNum);
 	final int[][] matrix = frame.matrix;
 
-	final int pixelWidth = getWidth() / (endX - startX);
-	final int pixelHeight = getHeight() / (endY - startY);
+	final float pixelWidth = getWidth() / (endX - startX);
+	final float pixelHeight = getHeight() / (endY - startY);
 
 	// clip
-	for (int y = 0; y < matrix.length; y++) {
-	    if (y >= startY && y < endY) {
-		final int clippedY = y - startY;
-		for (int x = 0; x < matrix[y].length; x++) {
-		    if (x >= startX && x < endX) {
-			final int clippedX = x - startX;
-			paint.setColor(Color.argb(255, matrix[y][x] * 16,
-				matrix[y][x] * 16, matrix[y][x] * 16));
-			canvas.drawRect(pixelWidth * clippedX + PIXEL_PADDING,
-				pixelHeight * clippedY + PIXEL_PADDING,
-				pixelWidth * (clippedX + 1) - PIXEL_PADDING,
-				pixelHeight * (clippedY + 1) - PIXEL_PADDING,
-				paint);
-		    }
-		}
+	for (int y = startY; y < endY; y++) {
+	    final int clippedY = y - startY;
+	    for (int x = startX; x < endX; x++) {
+		final int clippedX = x - startX;
+		final int value = matrix[y][x] * 16;
+		paint.setColor(Color.argb(255, value, value, value));
+		canvas.drawRect(pixelWidth * clippedX + PIXEL_PADDING,
+			pixelHeight * clippedY + PIXEL_PADDING, pixelWidth
+				* (clippedX + 1) - PIXEL_PADDING, pixelHeight
+				* (clippedY + 1) - PIXEL_PADDING, paint);
 	    }
 	}
     }
