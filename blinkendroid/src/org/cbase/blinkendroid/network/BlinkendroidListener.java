@@ -26,5 +26,5 @@ public interface BlinkendroidListener {
 
     void serverTime(long serverTime);
 
-    void arrow(boolean visible, float angle);
+//    void arrow(boolean visible, float angle);
 }
