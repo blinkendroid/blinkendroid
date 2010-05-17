@@ -4,8 +4,8 @@ import java.util.StringTokenizer;
 
 
 public class PlayerProtocolHandler implements ICommandHandler {
-    PlayerListener playerListener;
-    public PlayerProtocolHandler(PlayerListener playerListener) {
+    BlinkendroidListener playerListener;
+    public PlayerProtocolHandler(BlinkendroidListener playerListener) {
 	this.playerListener=playerListener;
     }
 

@@ -20,7 +20,7 @@ package org.cbase.blinkendroid.network;
 /**
  * @author Andreas Schildbach
  */
-public interface PlayerListener {
+public interface BlinkendroidListener {
 
     void clip(int startX, int startY, int endX, int endY);
 

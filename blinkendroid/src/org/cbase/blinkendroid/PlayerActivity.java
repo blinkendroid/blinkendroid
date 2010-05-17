@@ -23,7 +23,7 @@ import java.io.Reader;
 
 import org.cbase.blinkendroid.network.BlinkendroidClient;
 import org.cbase.blinkendroid.network.BlinkendroidProtocol;
-import org.cbase.blinkendroid.network.PlayerListener;
+import org.cbase.blinkendroid.network.BlinkendroidListener;
 import org.cbase.blinkendroid.network.PlayerProtocolHandler;
 import org.cbase.blinkendroid.player.ArrowView;
 import org.cbase.blinkendroid.player.PlayerView;
@@ -40,7 +40,7 @@ import android.view.Window;
 /**
  * @author Andreas Schildbach
  */
-public class PlayerActivity extends Activity implements PlayerListener,
+public class PlayerActivity extends Activity implements BlinkendroidListener,
 	Runnable {
 
     public static final String INTENT_EXTRA_IP = "ip";
