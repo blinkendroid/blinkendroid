@@ -23,7 +23,6 @@ import java.net.MulticastSocket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 
 import org.cbase.blinkendroid.Constants;
@@ -38,8 +37,8 @@ public class ReceiverThread extends Thread {
     private InetAddress group;
     private boolean running = true;
 
-    private HashMap<InetAddress, String> servers = new HashMap<InetAddress, String>();
-    private List<IServerHandler> handlers = Collections.synchronizedList(new ArrayList<IServerHandler>());
+    private List<IServerHandler> handlers = Collections
+	    .synchronizedList(new ArrayList<IServerHandler>());
 
     /**
      * Creates a {@link ReceiverThread}
@@ -102,10 +101,7 @@ public class ReceiverThread extends Thread {
 		InetAddress address = recv.getAddress();
 		String serverName = receivedData[1];
 
-		if (!servers.containsKey(address)) {
-		    servers.put(address, serverName);
-		    notifyHandlers(serverName, address.getHostAddress());
-		}
+		notifyHandlers(serverName, address.getHostAddress());
 
 		Log.i(Constants.LOG_TAG, receivedData.toString() + " "
 			+ recv.getAddress() + " Thread: "
@@ -121,11 +117,11 @@ public class ReceiverThread extends Thread {
 
     public void shutdown() {
 	Log.d(Constants.LOG_TAG, "starting shutdown");
-	
+
 	handlers.clear();
 	running = false;
 	interrupt();
-	
+
 	Log.d(Constants.LOG_TAG, "shutdown complete");
     }
 }

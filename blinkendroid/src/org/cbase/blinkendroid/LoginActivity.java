@@ -8,7 +8,6 @@ import org.cbase.blinkendroid.network.multicast.ReceiverThread;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -27,11 +26,6 @@ public class LoginActivity extends Activity {
     private ServerListAdapter serverListAdapter;
     private ListView serverListView;
     private ReceiverThread receiverThread;
-
-    private static class ListEntry {
-	public String name;
-	public String ip;
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +55,9 @@ public class LoginActivity extends Activity {
 		final Intent intent = new Intent(LoginActivity.this,
 			Player.class);
 		intent.putExtra(Player.INTENT_EXTRA_IP, entry.ip);
-		intent.putExtra(Player.INTENT_EXTRA_PORT, Constants.SERVER_PORT);
+		intent
+			.putExtra(Player.INTENT_EXTRA_PORT,
+				Constants.SERVER_PORT);
 		startActivity(intent);
 	    }
 	});
@@ -81,13 +77,14 @@ public class LoginActivity extends Activity {
 			Log.d(Constants.LOG_TAG, "=== " + serverName + " "
 				+ serverIp);
 
-			final ListEntry entry = new ListEntry();
-			entry.name = serverName;
-			entry.ip = serverIp;
+			final ListEntry entry = new ListEntry(serverName,
+				serverIp);
 
-			serverList.add(entry);
-			serverListAdapter.notifyDataSetChanged();
-			serverListView.setVisibility(View.VISIBLE);
+			if (!serverList.contains(entry)) {
+			    serverList.add(entry);
+			    serverListAdapter.notifyDataSetChanged();
+			    serverListView.setVisibility(View.VISIBLE);
+			}
 		    }
 		});
 	    }
@@ -140,6 +137,28 @@ public class LoginActivity extends Activity {
 
 	public int getCount() {
 	    return serverList.size();
+	}
+    }
+
+    private static class ListEntry {
+
+	public final String name;
+	public final String ip;
+
+	public ListEntry(final String name, final String ip) {
+	    this.name = name;
+	    this.ip = ip;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+	    final ListEntry other = (ListEntry) o;
+	    return other.name.equals(this.name) && other.ip.equals(this.ip);
+	}
+
+	@Override
+	public int hashCode() {
+	    return name.hashCode() * 9 + ip.hashCode();
 	}
     }
 }
