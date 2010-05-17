@@ -34,6 +34,7 @@ public class BMLParser {
     private static final String BLM = "blm";
     private static final String BLM_ATTR_WIDTH = "width";
     private static final String BLM_ATTR_HEIGHT = "height";
+    private static final String BLM_ATTR_BITS = "bits";
     private static final String HEADER = "header";
     private static final String TITLE = "title";
     private static final String FRAME = "frame";
@@ -79,6 +80,8 @@ public class BMLParser {
 		BLM_ATTR_WIDTH));
 	blm.height = Integer.parseInt(parser.getAttributeValue(null,
 		BLM_ATTR_HEIGHT));
+	blm.bits = Integer.parseInt(parser.getAttributeValue(null,
+		BLM_ATTR_BITS));
 	blm.frames = new ArrayList<Frame>();
 	int eventType = parser.next();
 	String name = null;

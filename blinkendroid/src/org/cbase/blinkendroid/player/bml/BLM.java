@@ -23,6 +23,7 @@ public class BLM {
 
     public int width;
     public int height;
+    public int bits;
     public Header header;
     public List<Frame> frames;
 

@@ -101,7 +101,7 @@ public class PlayerView extends View implements Runnable {
 	    final byte[] row = matrix[y];
 	    for (int x = startX; x < endX; x++) {
 		final int clippedX = x - startX;
-		final int value = row[x] * 16;
+		final int value = row[x] << blm.bits;
 		paint.setColor(Color.argb(255, value, value, value));
 		canvas.drawRect(pixelWidth * clippedX + PIXEL_PADDING,
 			pixelHeight * clippedY + PIXEL_PADDING, pixelWidth
