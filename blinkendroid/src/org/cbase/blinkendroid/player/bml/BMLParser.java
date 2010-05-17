@@ -26,9 +26,6 @@ import org.cbase.blinkendroid.player.bml.BLM.Header;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
-import android.util.Log;
-import android.util.Xml;
-
 public class BMLParser {
 
     private static final String BLM = "blm";
@@ -40,10 +37,15 @@ public class BMLParser {
     private static final String FRAME = "frame";
     private static final String FRAME_ATTR_DURATION = "duration";
     private static final String ROW = "row";
+    
+    private XmlPullParser parser;
+
+    public BMLParser(XmlPullParser parser) {
+	this.parser=parser;
+    }
 
     public BLM parseBLM(final Reader reader) {
 
-	XmlPullParser parser = Xml.newPullParser();
 	try {
 	    parser.setInput(reader);
 	    int eventType = parser.getEventType();
@@ -64,7 +66,7 @@ public class BMLParser {
 		}
 		eventType = parser.next();
 	    }
-	    Log.i("BMLParser", "parsed BML with rows" + blm.frames.size());
+	    System.out.println("parsed BML with rows" + blm.frames.size());
 	    return blm;
 	} catch (Exception x) {
 	    throw new RuntimeException(x);
@@ -169,6 +171,8 @@ public class BMLParser {
 	    return (byte) (c - '0');
 	else if (c >= 'a' && c <= 'f')
 	    return (byte) (c - 'a' + 10);
+	else if (c >= 'A' && c <= 'F')
+	    return (byte) (c - 'A' + 10);
 	else
 	    throw new IllegalArgumentException("illegal pixel: " + c);
     }

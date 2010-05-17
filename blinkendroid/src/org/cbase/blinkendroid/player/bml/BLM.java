@@ -17,9 +17,10 @@
 
 package org.cbase.blinkendroid.player.bml;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class BLM {
+public class BLM implements Serializable{
 
     public int width;
     public int height;
@@ -27,7 +28,7 @@ public class BLM {
     public Header header;
     public List<Frame> frames;
 
-    public static class Header {
+    public static class Header implements Serializable{
 	public String title;
 	public String description;
 	public String creator;
@@ -36,7 +37,7 @@ public class BLM {
 	public boolean loop;
     }
 
-    public static class Frame {
+    public static class Frame implements Serializable{
 	public int duration;
 	public byte matrix[][];
     }
