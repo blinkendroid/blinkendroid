@@ -4,6 +4,7 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 
 import org.cbase.blinkendroid.Constants;
+import org.cbase.blinkendroid.PlayerActivity;
 
 import android.util.Log;
 
@@ -16,9 +17,10 @@ public class BlinkendroidClient {
     public BlinkendroidClient(String ip, int port) {
 	this.ip = ip;
 	this.port = port;
+	connect();
     }
 
-    public void connect() {
+    private void connect() {
 	try {
 	    Thread.sleep(1000);
 	    Log.i(Constants.LOG_TAG, "connect to server: '" + ip + "':" + port);
@@ -40,5 +42,14 @@ public class BlinkendroidClient {
     public void shutdown() {
 	if (null != protocol)
 	    protocol.shutdown();
+    }
+
+    public void registerListener(BlinkendroidListener listener) {
+	getProtocol().registerHandler(BlinkendroidProtocol.PROTOCOL_PLAYER,
+		new BlinkendroidProtocolHandler(listener));
+    }
+
+    public void unregisterListener(BlinkendroidListener listener) {
+	// TODO schtief remove handler from protocol
     }
 }

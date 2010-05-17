@@ -22,9 +22,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 
 import org.cbase.blinkendroid.network.BlinkendroidClient;
-import org.cbase.blinkendroid.network.BlinkendroidProtocol;
 import org.cbase.blinkendroid.network.BlinkendroidListener;
-import org.cbase.blinkendroid.network.BlinkendroidProtocolHandler;
 import org.cbase.blinkendroid.player.ArrowView;
 import org.cbase.blinkendroid.player.PlayerView;
 import org.cbase.blinkendroid.player.bml.BBMZParser;
@@ -62,8 +60,9 @@ public class PlayerActivity extends Activity implements BlinkendroidListener,
 
 	setContentView(R.layout.player_content);
 
-	final BLM blm = new BBMZParser().parseBBMZ(getResources().openRawResource(R.raw.allyourbase));
-	
+	final BLM blm = new BBMZParser().parseBBMZ(getResources()
+		.openRawResource(R.raw.allyourbase));
+
 	playerView = (PlayerView) findViewById(R.id.player_image);
 	playerView.setBLM(blm);
 
@@ -88,8 +87,7 @@ public class PlayerActivity extends Activity implements BlinkendroidListener,
 	blinkendroidClient = new BlinkendroidClient(getIntent().getStringExtra(
 		INTENT_EXTRA_IP), getIntent().getIntExtra(INTENT_EXTRA_PORT,
 		Constants.SERVER_PORT));
-	blinkendroidClient.connect();
-	blinkendroidClient.getProtocol().registerHandler(BlinkendroidProtocol.PROTOCOL_PLAYER, new BlinkendroidProtocolHandler(this));
+	blinkendroidClient.registerListener(this);
 
 	playerView.startPlaying();
 
@@ -100,7 +98,7 @@ public class PlayerActivity extends Activity implements BlinkendroidListener,
     protected void onPause() {
 
 	handler.removeCallbacks(this);
-	//TODO schtief remove handler from protocol
+
 	playerView.stopPlaying();
 
 	if (blinkendroidClient != null) {
@@ -116,7 +114,8 @@ public class PlayerActivity extends Activity implements BlinkendroidListener,
 	runOnUiThread(new Runnable() {
 	    public void run() {
 		playerView.setClipping(startX, startY, endX, endY);
-		Log.i(Constants.LOG_TAG,"setClipping "+startX+","+ startY+","+ endX+","+ endY);
+		Log.i(Constants.LOG_TAG, "setClipping " + startX + "," + startY
+			+ "," + endX + "," + endY);
 	    }
 	});
     }
@@ -126,7 +125,7 @@ public class PlayerActivity extends Activity implements BlinkendroidListener,
 	    public void run() {
 		long timeDelta = System.currentTimeMillis() - serverTime;
 		// TODO
-		Log.i(Constants.LOG_TAG,"timeDelta "+timeDelta);
+		Log.i(Constants.LOG_TAG, "timeDelta " + timeDelta);
 	    }
 	});
     }
