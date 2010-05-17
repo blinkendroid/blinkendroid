@@ -23,6 +23,7 @@ import java.io.Reader;
 
 import org.cbase.blinkendroid.network.BlinkendroidClient;
 import org.cbase.blinkendroid.network.BlinkendroidProtocol;
+import org.cbase.blinkendroid.player.ArrowView;
 import org.cbase.blinkendroid.player.PlayerListener;
 import org.cbase.blinkendroid.player.PlayerProtocolHandler;
 import org.cbase.blinkendroid.player.PlayerView;
@@ -33,6 +34,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.view.View;
 import android.view.Window;
 
 /**
@@ -45,7 +47,7 @@ public class PlayerActivity extends Activity implements PlayerListener,
     public static final String INTENT_EXTRA_PORT = "port";
 
     private PlayerView playerView;
-//    private ArrowView arrowView;
+    private ArrowView arrowView;
     private BlinkendroidClient blinkendroidClient;
 
     private float arrowAngle = 0f, arrowScale = 0f;
@@ -60,17 +62,13 @@ public class PlayerActivity extends Activity implements PlayerListener,
 
 	setContentView(R.layout.player_content);
 
-//	final BLM blm = new BMLParser()
-//		.parseBLM(resourceAsReader(R.raw.allyourbase));
-
 	final BLM blm = new BBMZParser().parseBBMZ(getResources().openRawResource(R.raw.allyourbase));
-
 	
 	playerView = (PlayerView) findViewById(R.id.player_image);
 	playerView.setBLM(blm);
-//
-//	arrowView = (ArrowView) findViewById(R.id.player_arrow);
-//	arrowView.setVisibility(View.VISIBLE);
+
+	arrowView = (ArrowView) findViewById(R.id.player_arrow);
+	arrowView.setVisibility(View.VISIBLE);
     }
 
     private Reader resourceAsReader(final int res) {
@@ -92,6 +90,7 @@ public class PlayerActivity extends Activity implements PlayerListener,
 		Constants.SERVER_PORT));
 	blinkendroidClient.connect();
 	blinkendroidClient.getProtocol().registerHandler(BlinkendroidProtocol.PROTOCOL_PLAYER, new PlayerProtocolHandler(this));
+
 	playerView.startPlaying();
 
 	handler.post(this);
@@ -132,30 +131,30 @@ public class PlayerActivity extends Activity implements PlayerListener,
 	});
     }
 
-//    public void arrow(final boolean visible, final float angle) {
-//	runOnUiThread(new Runnable() {
-//	    public void run() {
-//		if (visible) {
-//		    arrowView.setAngle(angle);
-//		    arrowView.setVisibility(View.VISIBLE);
-//		} else {
-//		    arrowView.setVisibility(View.INVISIBLE);
-//		}
-//	    }
-//	});
-//    }
+    public void arrow(final boolean visible, final float angle) {
+	runOnUiThread(new Runnable() {
+	    public void run() {
+		if (visible) {
+		    arrowView.setAngle(angle);
+		    arrowView.setVisibility(View.VISIBLE);
+		} else {
+		    arrowView.setVisibility(View.INVISIBLE);
+		}
+	    }
+	});
+    }
 
     public void run() {
-//	arrowAngle += 2f;
-//	if (arrowAngle >= 360f)
-//	    arrowAngle -= 360f;
-//	arrowView.setAngle(arrowAngle);
-//
-//	arrowScale += 0.5f;
-//	if (arrowScale >= 2 * Math.PI)
-//	    arrowScale -= 2 * Math.PI;
-//	final float scale = 0.5f + (float) Math.sin(arrowScale) / 20;
-//	arrowView.setScale(scale);
+	arrowAngle += 2f;
+	if (arrowAngle >= 360f)
+	    arrowAngle -= 360f;
+	arrowView.setAngle(arrowAngle);
+
+	arrowScale += 0.5f;
+	if (arrowScale >= 2 * Math.PI)
+	    arrowScale -= 2 * Math.PI;
+	final float scale = 0.5f + (float) Math.sin(arrowScale) / 20;
+	arrowView.setScale(scale);
 
 	handler.postDelayed(this, 20);
     }
