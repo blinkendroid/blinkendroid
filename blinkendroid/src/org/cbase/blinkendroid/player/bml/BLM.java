@@ -33,7 +33,6 @@ public class BLM {
 	public String author;
 	public String email;
 	public boolean loop;
-	public int duration;
     }
 
     public static class Frame {

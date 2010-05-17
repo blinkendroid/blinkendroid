@@ -35,7 +35,6 @@ public class BMLParser {
     private static final String BLM_ATTR_WIDTH = "width";
     private static final String BLM_ATTR_HEIGHT = "height";
     private static final String HEADER = "header";
-    private static final String HEADER_ATTR_DURATION = "duration";
     private static final String TITLE = "title";
     private static final String FRAME = "frame";
     private static final String FRAME_ATTR_DURATION = "duration";
@@ -116,10 +115,6 @@ public class BMLParser {
 		if (name.equalsIgnoreCase(TITLE)) {
 		    parser.next();
 		    header.title = parser.getText();
-		    parser.next();
-		} else if (name.equalsIgnoreCase(HEADER_ATTR_DURATION)) {
-		    parser.next();
-		    header.duration = Integer.parseInt(parser.getText());
 		    parser.next();
 		}
 		break;

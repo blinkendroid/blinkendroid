@@ -38,6 +38,7 @@ public class PlayerView extends View implements Runnable {
     private long[] frameTime;
     private int numFrames;
     private int frame = 0;
+    private long duration;
 
     private final Handler handler = new Handler();
     private final Paint paint = new Paint();
@@ -55,15 +56,13 @@ public class PlayerView extends View implements Runnable {
 	this.endY = blm.height;
 	this.numFrames = blm.frames.size();
 	long t = 0;
-	frameTime = new long[numFrames];
+	frameTime = new long[numFrames + 1];
 	for (int i = 0; i < numFrames; i++) {
 	    frameTime[i] = t;
 	    t += blm.frames.get(i).duration;
 	}
-
-	if (t != blm.header.duration)
-	    throw new IllegalStateException("corrupt BLM '" + blm.header.title
-		    + "', invalid duration");
+	frameTime[numFrames] = t;
+	duration = t;
     }
 
     public void setClipping(int startX, int startY, int endX, int endY) {
@@ -115,8 +114,7 @@ public class PlayerView extends View implements Runnable {
     public void run() {
 
 	// time into movie, taking endless looping into account
-	long time = (System.currentTimeMillis() - startedTime)
-		% blm.header.duration;
+	long time = (System.currentTimeMillis() - startedTime) % duration;
 
 	// determine frame to be displayed
 	long nextFrameTime;
@@ -125,8 +123,7 @@ public class PlayerView extends View implements Runnable {
 		frame--;
 		continue;
 	    }
-	    nextFrameTime = frame < numFrames - 1 ? frameTime[frame + 1]
-		    : blm.header.duration;
+	    nextFrameTime = frameTime[frame + 1];
 	    if (time >= nextFrameTime) {
 		frame++;
 		continue;

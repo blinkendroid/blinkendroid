@@ -26,7 +26,7 @@ public class Player extends Activity {
 	super.onCreate(savedInstanceState);
 
 	final BLM blm = new BMLParser()
-		.parseBLM(resourceAsReader(R.raw.anapaula));
+		.parseBLM(resourceAsReader(R.raw.allyourbase));
 
 	playerView = new PlayerView(this, blm);
 
