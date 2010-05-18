@@ -116,10 +116,10 @@ public class PlayerActivity extends Activity implements BlinkendroidListener,
 
     public void serverTime(final long serverTime) {
 	Log.i(Constants.LOG_TAG, "time " + serverTime);
+	final long timeDelta = System.currentTimeMillis() - serverTime;
 	runOnUiThread(new Runnable() {
 	    public void run() {
 		Log.i(Constants.LOG_TAG, "ui time start " + serverTime);
-		long timeDelta = System.currentTimeMillis() - serverTime;
 		playerView.setTimeDelta(timeDelta);
 		Log.i(Constants.LOG_TAG, "ui time end " + serverTime);
 	    }
