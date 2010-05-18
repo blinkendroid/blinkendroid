@@ -68,7 +68,9 @@ public class PlayerManager {
 			&& pClient.y + yOffset < clients[pClient.x].length
 			&& pClient.y + yOffset >= 0) {
 		    if (clients[i][j] != null) {
+			//TODO change to a variable value:
 			clients[i][j].arrow(360);
+			Log.d(Constants.LOG_TAG, "Arrow set to " + 360 + " degrees.");
 		    }
 		    // System.out.println("Adding " + (position.x + xOffset) +
 		    // ";" + (position.y + yOffset) + " as neightbour");
