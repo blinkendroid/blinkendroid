@@ -44,7 +44,7 @@ public class BlinkendroidProtocolHandler implements ICommandHandler {
 	    int degrees = Integer.parseInt(input.substring(1));
 	    //Sanity check:
 	    if (degrees >= 0 && degrees <= 360) {
-		playerListener.arrow(1000, degrees);
+		playerListener.arrow(2500, degrees);
 		Log.d(Constants.LOG_TAG, "Got arrow input from server!");
 	    } else {
 		Log.e(Constants.LOG_TAG, "Wrong degree value " + degrees);
