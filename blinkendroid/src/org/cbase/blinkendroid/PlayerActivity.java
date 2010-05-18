@@ -183,6 +183,6 @@ public class PlayerActivity extends Activity implements BlinkendroidListener,
 
     public void connectionClosed() {
 	Log.i(Constants.LOG_TAG, "connectionClosed");
-	Toast.makeText(getBaseContext(), "connectionClosed", Toast.LENGTH_LONG).show();
+//	Toast.makeText(getBaseContext(), "connectionClosed", Toast.LENGTH_LONG).show();
     }
 }
