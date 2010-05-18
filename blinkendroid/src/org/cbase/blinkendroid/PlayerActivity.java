@@ -164,19 +164,19 @@ public class PlayerActivity extends Activity implements BlinkendroidListener,
     }
 
     public void arrow(final long duration, final float angle) {
-	Log.i(Constants.LOG_TAG, "arrow " + angle);
+	Log.i(Constants.LOG_TAG, "arrow " + angle + " " + duration);
 	runOnUiThread(new Runnable() {
 	    public void run() {
 		arrowView.setAngle(angle);
 		arrowView.setVisibility(View.VISIBLE);
 		arrowDuration = System.currentTimeMillis() + duration;
-		handler.post(this);
+		handler.post(PlayerActivity.this);
 	    }
 	});
     }
 
     public void run() {
-
+	
 	arrowScale += 0.5f;
 	if (arrowScale >= 2 * Math.PI)
 	    arrowScale -= 2 * Math.PI;
