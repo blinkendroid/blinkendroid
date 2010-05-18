@@ -105,6 +105,7 @@ public class ReceiverThread extends Thread {
 			+ recv.getAddress() + " Thread: "
 			+ Thread.currentThread().getId());
 	    }
+	    s.close();
 	    Log.i(Constants.LOG_TAG,
 		    "Finished receiving broadcast packets. Thread: "
 			    + Thread.currentThread().getId());

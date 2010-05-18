@@ -62,6 +62,7 @@ public class SenderThread extends Thread {
 		Log.i(Constants.LOG_TAG, "Broadcasting: " + message);
 		Thread.currentThread().sleep(5000);
 	    }
+	    s.close();
 	} catch (Exception e) {
 	    Log.e(Constants.LOG_TAG, "Oooops: ", e);
 	}
@@ -69,6 +70,7 @@ public class SenderThread extends Thread {
     
     public void shutdown() {
 	running = false;
+
 	interrupt();
     }
 
