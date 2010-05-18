@@ -62,29 +62,7 @@ public class PlayerManager {
 
     private void clip() {
 	//maxX neu berechnen
-	boolean newMaxX=true;
-	for (int i = 0; i < maxY; i++) {
-	    if(clients[i][maxX]!=null){
-		newMaxX=false;
-		break;
-	    }
-	}
-	if(newMaxX){
-	    maxX--;
-	    Log.i(Constants.LOG_TAG, "newMaxX "+maxX);
-	}
-	
-	boolean newMaxY=true;
-	for (int i = 0; i < maxX; i++) {
-	    if(clients[maxY][i]!=null){
-		newMaxY=false;
-		break;
-	    }
-	}
-	if(newMaxY){
-	    maxY--;
-	    Log.i(Constants.LOG_TAG, "newMaxY "+maxY);
-	}
+
 	
 	// clipping für alle berechnen
 	float startY = 0;
@@ -117,6 +95,29 @@ public class PlayerManager {
     public void removeClient(PlayerClient playerClient) {
 	Log.i(Constants.LOG_TAG, "removeClient "+ playerClient.x+":"+playerClient.y);
 	clients[playerClient.y][playerClient.x]=null;
+//	boolean newMaxX=true;
+//	for (int i = 0; i < maxY; i++) {
+//	    if(clients[i][maxX]!=null){
+//		newMaxX=false;
+//		break;
+//	    }
+//	}
+//	if(newMaxX){
+//	    maxX--;
+//	    Log.i(Constants.LOG_TAG, "newMaxX "+maxX);
+//	}
+//	
+//	boolean newMaxY=true;
+//	for (int i = 0; i < maxX; i++) {
+//	    if(clients[maxY][i]!=null){
+//		newMaxY=false;
+//		break;
+//	    }
+//	}
+//	if(newMaxY){
+//	    maxY--;
+//	    Log.i(Constants.LOG_TAG, "newMaxY "+maxY);
+//	}
 	clip();
     }
 }
