@@ -18,10 +18,11 @@ public class PlayerManager {
     public void addClient(BlinkendroidProtocol blinkendroidProtocol) {
 	if (startTime == 0)
 	    startTime = System.currentTimeMillis();
-	PlayerClient pClient = new PlayerClient(this, blinkendroidProtocol, startTime);
+	PlayerClient pClient = new PlayerClient(this, blinkendroidProtocol,
+		startTime);
 	// server starts thread to send globaltime
 	blinkendroidProtocol.startTimerThread();// TODO evtl nur ein timerthread
-						// im server
+	// im server
 
 	// TODO finde freien Platz in der Matrix
 	boolean found = false;
@@ -52,53 +53,58 @@ public class PlayerManager {
 		maxX++;
 	    }
 	}
-	Log.i(Constants.LOG_TAG, "added Client at pos "+pClient.x+":"+pClient.y);
+	Log.i(Constants.LOG_TAG, "added Client at pos " + pClient.x + ":"
+		+ pClient.y);
 	clients[pClient.y][pClient.x] = pClient;
-	
-	//Testing arrow allocation:
-//	int posOffsets[] = { -1, 0, +1 };
-//
-//	for (int i = 0; i < posOffsets.length; i++) {
-//	    int xOffset = posOffsets[i];
-//
-//	    for (int j = 0; j < posOffsets.length; j++) {
-//		int yOffset = posOffsets[j];
-//		if (!(xOffset == 0 && yOffset == 0)
-//			&& pClient.x + xOffset < clients.length && pClient.x + xOffset >= 0
-//			&& pClient.y + yOffset < clients[pClient.x].length
-//			&& pClient.y + yOffset >= 0) {
-//		    if (clients[i][j] != null) {
-//			//TODO change to a variable value:
-//			clients[i][j].arrow(360);
-//			Log.d(Constants.LOG_TAG, "Arrow set to " + 360 + " degrees.");
-//		    }
-//		    // System.out.println("Adding " + (position.x + xOffset) +
-//		    // ";" + (position.y + yOffset) + " as neightbour");
-//		}
-//	    }
-//	}
+
+	// Testing arrow allocation:
+	// int posOffsets[] = { -1, 0, +1 };
+	//
+	// for (int i = 0; i < posOffsets.length; i++) {
+	// int xOffset = posOffsets[i];
+	//
+	// for (int j = 0; j < posOffsets.length; j++) {
+	// int yOffset = posOffsets[j];
+	// if (!(xOffset == 0 && yOffset == 0)
+	// && pClient.x + xOffset < clients.length && pClient.x + xOffset >= 0
+	// && pClient.y + yOffset < clients[pClient.x].length
+	// && pClient.y + yOffset >= 0) {
+	// if (clients[i][j] != null) {
+	// //TODO change to a variable value:
+	// clients[i][j].arrow(360);
+	// Log.d(Constants.LOG_TAG, "Arrow set to " + 360 + " degrees.");
+	// }
+	// // System.out.println("Adding " + (position.x + xOffset) +
+	// // ";" + (position.y + yOffset) + " as neightbour");
+	// }
+	// }
+	// }
 	arrow(pClient);
 	// Play
 	pClient.play();
-	
+
 	clip();
     }
 
     private void arrow(PlayerClient pClient) {
-	if(pClient.y-1 >0 &&pClient.x>0 && null!=clients[pClient.y-1][pClient.x])
-	    clients[pClient.y-1][pClient.x].arrow(180);
-	
-	if(pClient.y-1 >0 &&pClient.x-1>0 && null!=clients[pClient.y-1][pClient.x-1])
-	    clients[pClient.y-1][pClient.x-1].arrow(135);
-	
-	if(pClient.y >0 &&pClient.x-1>0 && null!=clients[pClient.y][pClient.x-1])
-	    clients[pClient.y][pClient.x-1].arrow(90);
-	
+	if (pClient.y - 1 >= 0 && pClient.x >= 0
+		&& null != clients[pClient.y - 1][pClient.x]) {
+	    clients[pClient.y - 1][pClient.x].arrow(180);
+	}
+
+	if (pClient.y - 1 >= 0 && pClient.x - 1 >= 0
+		&& null != clients[pClient.y - 1][pClient.x - 1]) {
+	    clients[pClient.y - 1][pClient.x - 1].arrow(135);
+	}
+	if (pClient.y >= 0 && pClient.x - 1 >= 0
+		&& null != clients[pClient.y][pClient.x - 1]) {
+	    clients[pClient.y][pClient.x - 1].arrow(90);
+	}
     }
 
     private void clip() {
 	// clipping für alle berechnen
-//	  Log.i(Constants.LOG_TAG, "clip maxX "+i+":"+j);
+	// Log.i(Constants.LOG_TAG, "clip maxX "+i+":"+j);
 	float startY = 0;
 	for (int i = 0; i < maxY; i++) {
 	    float startX = 0;
@@ -106,13 +112,13 @@ public class PlayerManager {
 		if (clients[i][j] != null) {
 		    clients[i][j].startX = startX;
 		    clients[i][j].startY = startY;
-		    clients[i][j].endX = startX + (float)(1.0 / maxX);
-		    clients[i][j].endY = startY + (float)(1.0 / maxY);
+		    clients[i][j].endX = startX + (float) (1.0 / maxX);
+		    clients[i][j].endY = startY + (float) (1.0 / maxY);
 		    clients[i][j].clip();
 		}
-		startX = startX + (float)(1.0 / maxX);
+		startX = startX + (float) (1.0 / maxX);
 	    }
-	    startY = startY + (float)(1.0 / maxY);
+	    startY = startY + (float) (1.0 / maxY);
 	}
     }
 
@@ -120,7 +126,8 @@ public class PlayerManager {
 	for (int i = 0; i < maxY; i++) {
 	    for (int j = 0; j < maxY; j++) {
 		if (null != clients[i][j]) {
-		    Log.i(Constants.LOG_TAG, "shutdown PlayerClient "+i+":"+j);
+		    Log.i(Constants.LOG_TAG, "shutdown PlayerClient " + i + ":"
+			    + j);
 		    clients[i][j].shutdown();
 		}
 	    }
@@ -128,31 +135,32 @@ public class PlayerManager {
     }
 
     public void removeClient(PlayerClient playerClient) {
-	Log.i(Constants.LOG_TAG, "removeClient "+ playerClient.x+":"+playerClient.y);
-	clients[playerClient.y][playerClient.x]=null;
-//	boolean newMaxX=true;
-//	for (int i = 0; i < maxY; i++) {
-//	    if(clients[i][maxX]!=null){
-//		newMaxX=false;
-//		break;
-//	    }
-//	}
-//	if(newMaxX){
-//	    maxX--;
-//	    Log.i(Constants.LOG_TAG, "newMaxX "+maxX);
-//	}
-//	
-//	boolean newMaxY=true;
-//	for (int i = 0; i < maxX; i++) {
-//	    if(clients[maxY][i]!=null){
-//		newMaxY=false;
-//		break;
-//	    }
-//	}
-//	if(newMaxY){
-//	    maxY--;
-//	    Log.i(Constants.LOG_TAG, "newMaxY "+maxY);
-//	}
+	Log.i(Constants.LOG_TAG, "removeClient " + playerClient.x + ":"
+		+ playerClient.y);
+	clients[playerClient.y][playerClient.x] = null;
+	// boolean newMaxX=true;
+	// for (int i = 0; i < maxY; i++) {
+	// if(clients[i][maxX]!=null){
+	// newMaxX=false;
+	// break;
+	// }
+	// }
+	// if(newMaxX){
+	// maxX--;
+	// Log.i(Constants.LOG_TAG, "newMaxX "+maxX);
+	// }
+	//	
+	// boolean newMaxY=true;
+	// for (int i = 0; i < maxX; i++) {
+	// if(clients[maxY][i]!=null){
+	// newMaxY=false;
+	// break;
+	// }
+	// }
+	// if(newMaxY){
+	// maxY--;
+	// Log.i(Constants.LOG_TAG, "newMaxY "+maxY);
+	// }
 	clip();
     }
 }
