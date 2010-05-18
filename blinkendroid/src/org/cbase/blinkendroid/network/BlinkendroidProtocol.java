@@ -172,7 +172,7 @@ public class BlinkendroidProtocol {
 	Log.i(Constants.LOG_TAG, cmd);
     }
     public void arrow(int degrees) {
-	String cmd = COMMAND_INIT + " " + degrees;
+	String cmd = COMMAND_INIT + " " + degrees + "\n";
 	out.write(cmd);
 	out.flush();
 	Log.i(Constants.LOG_TAG, cmd);
