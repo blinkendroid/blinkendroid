@@ -87,21 +87,18 @@ public class PlayerManager {
     }
 
     private void arrow(PlayerClient pClient) {
-	if (pClient.y - 1 >= 0 && pClient.x >= 0
-		&& null != clients[pClient.y - 1][pClient.x]) {
-	    clients[pClient.y - 1][pClient.x].arrow(180);
-	}
+	arrow(pClient, -1, 0,180);
+	arrow(pClient, -1, -1,135);
+	arrow(pClient, 0, -1,90);
+	arrow(pClient, -1, +1,225);
 
-	if (pClient.y - 1 >= 0 && pClient.x - 1 >= 0
-		&& null != clients[pClient.y - 1][pClient.x - 1]) {
-	    clients[pClient.y - 1][pClient.x - 1].arrow(135);
-	}
-	if (pClient.y >= 0 && pClient.x - 1 >= 0
-		&& null != clients[pClient.y][pClient.x - 1]) {
-	    clients[pClient.y][pClient.x - 1].arrow(90);
+    }
+    private void arrow(PlayerClient pClient, int dy, int dx, int deg) {
+	if (pClient.y + dy >= 0 && pClient.x + dx >= 0
+		&& null != clients[pClient.y + dy ][pClient.x + dx]) {
+	    clients[pClient.y + dy][pClient.x + dx].arrow(deg);
 	}
     }
-
     private void clip() {
 	// clipping für alle berechnen
 	// Log.i(Constants.LOG_TAG, "clip maxX "+i+":"+j);
