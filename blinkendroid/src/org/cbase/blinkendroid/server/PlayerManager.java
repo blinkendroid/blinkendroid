@@ -1,11 +1,14 @@
 package org.cbase.blinkendroid.server;
 
+import org.cbase.blinkendroid.Constants;
 import org.cbase.blinkendroid.network.BlinkendroidProtocol;
+
+import android.util.Log;
 
 public class PlayerManager {
 
     PlayerClient[][] clients = new PlayerClient[10][10];
-    int maxX = 0, maxY = 0;
+    int maxX = 1, maxY = 1;
     long startTime = 0;
 
     public void PlayerManager() {
@@ -39,16 +42,17 @@ public class PlayerManager {
 	if (!found) {
 	    // wenn maxX>maxY -> neuen client an maxY+1
 	    if (maxX > maxY) {
-		pClient.y = maxY + 1;
+		pClient.y = maxY;
 		pClient.x = 0;
 		maxY++;
 	    } else {
 		// else -> neuen client an maxX+1
 		pClient.y = 0;
-		pClient.x = maxX + 1;
+		pClient.x = maxX;
 		maxX++;
 	    }
 	}
+	Log.i(Constants.LOG_TAG, "added Client at pos "+pClient.x+":"+pClient.y);
 	clients[pClient.y][pClient.x] = pClient;
 
 	// clipping für alle berechnen
@@ -59,12 +63,14 @@ public class PlayerManager {
 		if (clients[i][j] != null) {
 		    clients[i][j].startX = startX;
 		    clients[i][j].startY = startY;
-		    clients[i][j].endX = startX + 1 / maxX;
-		    clients[i][j].endY = startY + 1 / maxY;
+		    clients[i][j].endX = startX + (float)(1.0 / maxX);
+		    clients[i][j].endY = startY + (float)(1.0 / maxY);
+		    if( clients[i][j]!=pClient)
+			clients[i][j].clip();
 		}
-		startX = startX + 1 / maxX;
+		startX = startX + (float)(1.0 / maxX);
 	    }
-	    startY = startY + 1 / maxY;
+	    startY = startY + (float)(1.0 / maxY);
 	}
 	// Play
 	pClient.play();
