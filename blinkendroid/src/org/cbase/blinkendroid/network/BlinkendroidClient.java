@@ -26,6 +26,7 @@ public class BlinkendroidClient {
 	    Log.i(Constants.LOG_TAG, "connect to server: '" + ip + "':" + port);
 	    Socket socket = new Socket(ip, port);
 	    protocol = new BlinkendroidProtocol(socket, false);
+	    
 	} catch (UnknownHostException e) {
 	    // TODO Auto-generated catch block
 	    e.printStackTrace();
@@ -48,6 +49,7 @@ public class BlinkendroidClient {
 	protocolHandler	=	new BlinkendroidProtocolHandler(listener);
 	getProtocol().registerHandler(BlinkendroidProtocol.PROTOCOL_PLAYER,
 		protocolHandler);
+	protocol.setConnectionClosedListener(listener);
     }
 
     public void unregisterListener(BlinkendroidListener listener) {

@@ -17,10 +17,12 @@
 
 package org.cbase.blinkendroid.network;
 
+import org.cbase.blinkendroid.network.BlinkendroidProtocol.ConnectionClosedListener;
+
 /**
  * @author Andreas Schildbach
  */
-public interface BlinkendroidListener {
+public interface BlinkendroidListener extends ConnectionClosedListener {
 
     void serverTime(long serverTime);
 

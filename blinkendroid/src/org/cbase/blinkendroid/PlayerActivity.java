@@ -180,4 +180,9 @@ public class PlayerActivity extends Activity implements BlinkendroidListener,
 	else
 	    arrowView.setVisibility(View.INVISIBLE);
     }
+
+    public void connectionClosed() {
+	Log.i(Constants.LOG_TAG, "connectionClosed");
+	Toast.makeText(getBaseContext(), "connectionClosed", Toast.LENGTH_LONG).show();
+    }
 }
