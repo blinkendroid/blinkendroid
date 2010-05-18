@@ -152,13 +152,17 @@ public class BlinkendroidProtocol {
 	}
     }
     public void play(int x, int y, int resId, long l) {
-	out.write(PROTOCOL_PLAYER + COMMAND_PLAY
-		+ Integer.toString(x)+"," + Integer.toString(y)+"," + Integer.toString(resId)+"," + Long.toString(l)+ '\n');
+	String cmd=PROTOCOL_PLAYER + COMMAND_PLAY
+	+ Integer.toString(x)+"," + Integer.toString(y)+"," + Integer.toString(resId)+"," + Long.toString(l)+ '\n';
+	out.write(cmd);
 	out.flush();
+	    Log.i(Constants.LOG_TAG, cmd);
     }
     public void clip(float startX,float startY,float endX,float endY){
-	    out.write(PROTOCOL_PLAYER + COMMAND_CLIP +
-	    + startX + "," + startY +","+ endX + "," + endY+ '\n');
+	String cmd=PROTOCOL_PLAYER + COMMAND_CLIP +
+	    + startX + "," + startY +","+ endX + "," + endY+ '\n';
+	    out.write(cmd);
 	    out.flush();
+	    Log.i(Constants.LOG_TAG, cmd);
     }
 }
