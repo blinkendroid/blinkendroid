@@ -56,6 +56,7 @@ public class SenderThread extends Thread {
 	try {
 	    MulticastSocket s = new MulticastSocket(
 		    Constants.MULTICAST_SERVER_PORT);
+	    s.setTimeToLive(2);
 	    s.joinGroup(group);
 
 	    while (running) {

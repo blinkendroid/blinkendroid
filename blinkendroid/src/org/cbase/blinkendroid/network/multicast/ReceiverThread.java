@@ -82,6 +82,7 @@ public class ReceiverThread extends Thread {
 	try {
 	    MulticastSocket s = new MulticastSocket(
 		    Constants.MULTICAST_SERVER_PORT);
+	    s.setTimeToLive(2);
 	    s.joinGroup(group);
 	    byte[] buf;
 
@@ -116,12 +117,9 @@ public class ReceiverThread extends Thread {
     }
 
     public void shutdown() {
-	Log.d(Constants.LOG_TAG, "ReceiverThread: starting shutdown");
-
 	handlers.clear();
 	running = false;
 	interrupt();
-
 	Log.d(Constants.LOG_TAG, "ReceiverThread: shutdown complete");
     }
 }
