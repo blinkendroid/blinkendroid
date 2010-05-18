@@ -31,7 +31,9 @@ public class PlayerClient implements ConnectionClosedListener {
     public void play() {
 	blinkendroidProtocol.play(x,y,R.raw.allyourbase,System.currentTimeMillis(),startTime);
     }
-
+    public void arrow(int degrees) {
+	blinkendroidProtocol.arrow(degrees);
+    }
     public void connectionClosed() {
 	playerManager.removeClient(this);
     }

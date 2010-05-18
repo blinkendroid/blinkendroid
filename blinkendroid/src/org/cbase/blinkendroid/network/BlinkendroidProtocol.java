@@ -13,12 +13,14 @@ import org.cbase.blinkendroid.Constants;
 import android.util.Log;
 
 public class BlinkendroidProtocol {
+
     public final static String PROTOCOL_PLAYER = "P";
 //    public final static String PROTOCOL_INIT = "I";
 
-    public final static String COMMAND_PLAYER_TIME = "T";
-    public final static String COMMAND_CLIP = "C";
+    public static final String COMMAND_PLAYER_TIME = "T";
+    public static final String COMMAND_CLIP = "C";
     public static final String COMMAND_PLAY = "P";
+    public static final String COMMAND_INIT = "I";
 
     private boolean server;
     PrintWriter out;
@@ -167,7 +169,13 @@ public class BlinkendroidProtocol {
 	+ Integer.toString(x)+"," + Integer.toString(y)+"," + Integer.toString(resId)+"," + Long.toString(l)+"," + Long.toString(startTime)+ '\n';
 	out.write(cmd);
 	out.flush();
-	    Log.i(Constants.LOG_TAG, cmd);
+	Log.i(Constants.LOG_TAG, cmd);
+    }
+    public void arrow(int degrees) {
+	String cmd = COMMAND_INIT + " " + degrees;
+	out.write(cmd);
+	out.flush();
+	Log.i(Constants.LOG_TAG, cmd);
     }
     public void clip(float startX,float startY,float endX,float endY){
 	String cmd=PROTOCOL_PLAYER + COMMAND_CLIP +

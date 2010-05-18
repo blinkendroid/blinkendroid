@@ -15,9 +15,9 @@ public class BlinkendroidProtocolHandler implements ICommandHandler {
 
     public void handle(byte[] data) {
 	String input = new String(data);
-	if (input.startsWith("T"))
+	if (input.startsWith(BlinkendroidProtocol.COMMAND_PLAYER_TIME)) {
 	    playerListener.serverTime(Long.parseLong(input.substring(1)));
-	else if (input.startsWith("C")) {
+	} else if (input.startsWith(BlinkendroidProtocol.COMMAND_CLIP)) {
 	    // clipping "Cstartx,starty,endx,endy"
 	    StringTokenizer tokenizer = new StringTokenizer(input.substring(1),
 		    ",");
@@ -26,7 +26,7 @@ public class BlinkendroidProtocolHandler implements ICommandHandler {
 	    float endX = Float.parseFloat(tokenizer.nextToken());
 	    float endY = Float.parseFloat(tokenizer.nextToken());
 	    playerListener.clip(startX, startY, endX, endY);
-	}else if (input.startsWith("P")) {
+	} else if (input.startsWith(BlinkendroidProtocol.COMMAND_PLAY)) {
 	    // clipping "Cstartx,starty,endx,endy"
 	    StringTokenizer tokenizer = new StringTokenizer(input.substring(1),
 		    ",");
@@ -38,6 +38,15 @@ public class BlinkendroidProtocolHandler implements ICommandHandler {
 	    Log.i(Constants.LOG_TAG,"Play "+x+","+y);
 	    playerListener.serverTime(serverTime);
 	    playerListener.play(resId, startTime);
+	} else if (input.startsWith(BlinkendroidProtocol.COMMAND_INIT)) {
+	    //I ::= 0 <= degrees <= 359
+	    int degrees = Integer.parseInt(input.substring(1));
+	    //Sanity check:
+	    if (degrees >= 0 && degrees <= 360) {
+		playerListener.arrow(1000, degrees);
+	    } else {
+		Log.i(Constants.LOG_TAG, "Wrong degree value " + degrees);
+	    }
 	}
 
     }

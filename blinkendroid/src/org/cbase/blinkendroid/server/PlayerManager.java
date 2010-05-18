@@ -54,6 +54,26 @@ public class PlayerManager {
 	}
 	Log.i(Constants.LOG_TAG, "added Client at pos "+pClient.x+":"+pClient.y);
 	clients[pClient.y][pClient.x] = pClient;
+	
+	//Testing arrow allocation:
+	int posOffsets[] = { -1, 0, +1 };
+
+	for (int i = 0; i < posOffsets.length; i++) {
+	    int xOffset = posOffsets[i];
+
+	    for (int j = 0; j < posOffsets.length; j++) {
+		int yOffset = posOffsets[j];
+		if (!(xOffset == 0 && yOffset == 0)
+			&& pClient.x + xOffset < clients.length && pClient.x + xOffset >= 0
+			&& pClient.y + yOffset < clients[pClient.x].length
+			&& pClient.y + yOffset >= 0) {
+		    clients[i][j].arrow(360);
+		    // System.out.println("Adding " + (position.x + xOffset) +
+		    // ";" + (position.y + yOffset) + " as neightbour");
+		}
+	    }
+	}
+
 	// Play
 	pClient.play();
 	
