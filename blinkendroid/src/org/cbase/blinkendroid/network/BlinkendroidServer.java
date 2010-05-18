@@ -30,7 +30,6 @@ public class BlinkendroidServer extends Thread {
     private boolean running = false;
     private int port = -1;
     PlayerManager playerManager;
-    private ServerSocket serverSocket;
 
     public BlinkendroidServer(int port) {
 	this.port = port;
@@ -39,6 +38,7 @@ public class BlinkendroidServer extends Thread {
 
     @Override
     public void run() {
+	ServerSocket serverSocket;
 	try {
 	    serverSocket = new ServerSocket(port);
 	} catch (IOException e) {
@@ -63,6 +63,7 @@ public class BlinkendroidServer extends Thread {
 	} finally {
 	    try {
 		serverSocket.close();
+		Log.d(Constants.LOG_TAG, "Closed serverSocket.");
 	    } catch (IOException e) {
 		Log.e(Constants.LOG_TAG, "Could not close in finally: ", e);
 	    }
@@ -72,11 +73,8 @@ public class BlinkendroidServer extends Thread {
     }
 
     public void shutdown() {
-	playerManager.shutdown();
-	try {
-	    serverSocket.close();
-	} catch (IOException e) {
-	    Log.e(Constants.LOG_TAG, "Couldn't close serverSocket: ", e);
+	if (playerManager != null) {
+	    playerManager.shutdown();
 	}
 	running = false;
 	Log.i(Constants.LOG_TAG, "BlinkendroidServer Thread ended");
