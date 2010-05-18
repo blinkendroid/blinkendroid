@@ -20,8 +20,6 @@ package org.cbase.blinkendroid.network;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.cbase.blinkendroid.Constants;
 import org.cbase.blinkendroid.server.PlayerManager;
@@ -32,25 +30,25 @@ public class BlinkendroidServer extends Thread {
     private boolean running = false;
     private int port = -1;
     PlayerManager playerManager;
-    
+    private ServerSocket serverSocket;
+
     public BlinkendroidServer(int port) {
 	this.port = port;
-	playerManager	=	new PlayerManager();
+	playerManager = new PlayerManager();
     }
 
     @Override
     public void run() {
-	ServerSocket serverSocket;
 	try {
 	    serverSocket = new ServerSocket(port);
 	} catch (IOException e) {
 	    Log.e(Constants.LOG_TAG, "Could not create Socket", e);
 	    return;
-	}
+	} 
 	running = true;
 	Log.i(Constants.LOG_TAG, "BlinkendroidServer Thread started");
-	while (running) {
-	    try {
+	try {
+	    while (running) {
 		Socket clientSocket = serverSocket.accept();
 		Log.i(Constants.LOG_TAG, "BlinkendroidServer got connection "
 			+ clientSocket.getRemoteSocketAddress().toString());
@@ -59,22 +57,27 @@ public class BlinkendroidServer extends Thread {
 		if (null != blinkendroidProtocol) {
 		    playerManager.addClient(blinkendroidProtocol);
 		}
+	    }
+	} catch (IOException e) {
+	    Log.e(Constants.LOG_TAG, "BlinkendroidServer Could not accept", e);
+	} finally {
+	    try {
+		serverSocket.close();
 	    } catch (IOException e) {
-		Log.e(Constants.LOG_TAG, "BlinkendroidServer Could not accept",
-			e);
+		Log.e(Constants.LOG_TAG, "Could not close in finally: ", e);
 	    }
 	}
-	try {
-	    serverSocket.close();
-	} catch (IOException e) {
-	    Log.e(Constants.LOG_TAG, "Could not close", e);
-	}
+	
 	Log.i(Constants.LOG_TAG, "BlinkendroidServer Thread closed");
     }
 
     public void shutdown() {
 	playerManager.shutdown();
-	
+	try {
+	    serverSocket.close();
+	} catch (IOException e) {
+	    Log.e(Constants.LOG_TAG, "Couldn't close serverSocket: ", e);
+	}
 	running = false;
 	Log.i(Constants.LOG_TAG, "BlinkendroidServer Thread ended");
 	interrupt();
@@ -84,7 +87,7 @@ public class BlinkendroidServer extends Thread {
 	return running;
     }
 
-//    public BlinkendroidProtocol getProtocol() {
-//	return blinkendroidProtocol;
-//    }
+    // public BlinkendroidProtocol getProtocol() {
+    // return blinkendroidProtocol;
+    // }
 }

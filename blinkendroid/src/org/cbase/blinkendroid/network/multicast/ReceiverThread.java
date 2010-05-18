@@ -20,6 +20,7 @@ package org.cbase.blinkendroid.network.multicast;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -91,8 +92,7 @@ public class ReceiverThread extends Thread {
 		Log.d(Constants.LOG_TAG, "received something via broadcast");
 		String[] receivedData = new String(recv.getData()).split(" ");
 
-		if (receivedData.length != 3
-			|| !receivedData[0]
+		if (receivedData.length != 3 || !receivedData[0]
 				.equals(Constants.SERVER_BROADCAST_COMMAND)) {
 		    continue;
 		}
@@ -109,6 +109,8 @@ public class ReceiverThread extends Thread {
 	    Log.i(Constants.LOG_TAG,
 		    "Finished receiving broadcast packets. Thread: "
 			    + Thread.currentThread().getId());
+	} catch (SocketException e) {
+	    Log.e(Constants.LOG_TAG, "Closing Receiver Socket: ", e);
 	} catch (Exception e) {
 	    Log.e(Constants.LOG_TAG, "", e);
 	}

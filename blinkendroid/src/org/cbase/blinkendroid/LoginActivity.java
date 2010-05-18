@@ -81,9 +81,9 @@ public class LoginActivity extends Activity {
     @Override
     protected void onResume() {
 
-	super.onResume();
 
 	receiverThread = new ReceiverThread();
+	Log.d(Constants.LOG_TAG, "resuming Thread: " + receiverThread.getId());
 	receiverThread.addHandler(new IServerHandler() {
 	    public void foundServer(final String serverName,
 		    final String serverIp) {
@@ -105,6 +105,7 @@ public class LoginActivity extends Activity {
 	    }
 	});
 	receiverThread.start();
+	super.onResume();
     }
 
     @Override

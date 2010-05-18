@@ -20,6 +20,7 @@ package org.cbase.blinkendroid.network.multicast;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.net.SocketException;
 
 import org.cbase.blinkendroid.Constants;
 
@@ -33,6 +34,7 @@ public class SenderThread extends Thread {
     private String message;
     private InetAddress group;
     private boolean running = true;
+    private DatagramSocket socket;
 
     /**
      * Creates a new {@link SenderThread}
@@ -47,9 +49,7 @@ public class SenderThread extends Thread {
     @Override
     public void run() {
 	try {
-	    DatagramSocket s = new DatagramSocket(Constants.BROADCAST_SERVER_PORT);
-	    s.setBroadcast(true);
-	    s.setBroadcast(true);
+	    socket = new DatagramSocket(Constants.BROADCAST_SERVER_PORT);
 	    group = InetAddress.getByName("255.255.255.255");
 	    Log.i(Constants.LOG_TAG, "Server ip: " + group.toString());
 
@@ -57,20 +57,23 @@ public class SenderThread extends Thread {
 		DatagramPacket initPacket = new DatagramPacket(message
 			.getBytes(), message.length(), group,
 			Constants.BROADCAST_CLIENT_PORT);
-		s.send(initPacket);
+		socket.send(initPacket);
 
 		Log.i(Constants.LOG_TAG, "Broadcasting: " + message);
 		Thread.currentThread().sleep(5000);
 	    }
-	    s.close();
+	} catch (InterruptedException ie) {
+	    Log.d(Constants.LOG_TAG, "Stopping SenderThread: ", ie);
+	} catch (SocketException e) {
+	    Log.e(Constants.LOG_TAG, "Closing SenderSocket: ", e);
 	} catch (Exception e) {
 	    Log.e(Constants.LOG_TAG, "Oooops: ", e);
 	}
     }
     
     public void shutdown() {
+	socket.close();
 	running = false;
-
 	interrupt();
     }
 
