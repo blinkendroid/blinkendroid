@@ -67,7 +67,9 @@ public class PlayerManager {
 			&& pClient.x + xOffset < clients.length && pClient.x + xOffset >= 0
 			&& pClient.y + yOffset < clients[pClient.x].length
 			&& pClient.y + yOffset >= 0) {
-		    clients[i][j].arrow(360);
+		    if (clients[i][j] != null) {
+			clients[i][j].arrow(360);
+		    }
 		    // System.out.println("Adding " + (position.x + xOffset) +
 		    // ";" + (position.y + yOffset) + " as neightbour");
 		}
