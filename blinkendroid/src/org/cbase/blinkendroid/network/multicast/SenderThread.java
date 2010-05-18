@@ -56,7 +56,7 @@ public class SenderThread extends Thread {
 	    while (running) {
 		DatagramPacket initPacket = new DatagramPacket(message
 			.getBytes(), message.length(), group,
-			Constants.BROADCAST_SERVER_PORT);
+			Constants.BROADCAST_CLIENT_PORT);
 		s.send(initPacket);
 
 		Log.i(Constants.LOG_TAG, "Broadcasting: " + message);
