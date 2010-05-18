@@ -24,17 +24,18 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.cbase.blinkendroid.Constants;
+import org.cbase.blinkendroid.server.PlayerManager;
 
 import android.util.Log;
 
 public class BlinkendroidServer extends Thread {
     private boolean running = false;
     private int port = -1;
-    Map<String, BlinkendroidProtocol> clients;
-
+    PlayerManager playerManager;
+    
     public BlinkendroidServer(int port) {
 	this.port = port;
-	clients = new HashMap<String, BlinkendroidProtocol>();
+	playerManager	=	new PlayerManager();
     }
 
     @Override
@@ -56,10 +57,7 @@ public class BlinkendroidServer extends Thread {
 		BlinkendroidProtocol blinkendroidProtocol = new BlinkendroidProtocol(
 			clientSocket, true);
 		if (null != blinkendroidProtocol) {
-		    blinkendroidProtocol.startTimerThread();
-		    clients.put(clientSocket.getRemoteSocketAddress()
-			    .toString(), blinkendroidProtocol);
-
+		    playerManager.addClient(blinkendroidProtocol);
 		}
 	    } catch (IOException e) {
 		Log.e(Constants.LOG_TAG, "BlinkendroidServer Could not accept",
@@ -75,10 +73,7 @@ public class BlinkendroidServer extends Thread {
     }
 
     public void shutdown() {
-	for (BlinkendroidProtocol blinkendroidProtocol : clients.values()) {
-	    if (null != blinkendroidProtocol)
-		    blinkendroidProtocol.shutdown();
-	}
+	playerManager.shutdown();
 	
 	running = false;
 	Log.i(Constants.LOG_TAG, "BlinkendroidServer Thread ended");
