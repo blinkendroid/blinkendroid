@@ -50,8 +50,9 @@ public class PlayerActivity extends Activity implements BlinkendroidListener,
     private BlinkendroidClient blinkendroidClient;
     private BLM blm;
     private boolean playing = false;
+    private long arrowDuration;
 
-    private float arrowAngle = 0f, arrowScale = 0f;
+    private float arrowScale = 0f;
     private final Handler handler = new Handler();
 
     @Override
@@ -66,7 +67,6 @@ public class PlayerActivity extends Activity implements BlinkendroidListener,
 	playerView = (PlayerView) findViewById(R.id.player_image);
 
 	arrowView = (ArrowView) findViewById(R.id.player_arrow);
-	arrowView.setVisibility(View.VISIBLE);
     }
 
     private Reader resourceAsReader(final int res) {
@@ -91,7 +91,12 @@ public class PlayerActivity extends Activity implements BlinkendroidListener,
 	if (playing)
 	    playerView.startPlaying();
 
-	handler.post(this);
+	if (System.currentTimeMillis() < arrowDuration) {
+	    handler.post(this);
+	    arrowView.setVisibility(View.VISIBLE);
+	} else {
+	    arrowView.setVisibility(View.INVISIBLE);
+	}
     }
 
     @Override
@@ -150,15 +155,12 @@ public class PlayerActivity extends Activity implements BlinkendroidListener,
 	});
     }
 
-    public void arrow(final boolean visible, final float angle) {
+    public void arrow(final long duration, final float angle) {
 	runOnUiThread(new Runnable() {
 	    public void run() {
-		if (visible) {
-		    arrowView.setAngle(angle);
-		    arrowView.setVisibility(View.VISIBLE);
-		} else {
-		    arrowView.setVisibility(View.INVISIBLE);
-		}
+		arrowView.setAngle(angle);
+		arrowView.setVisibility(View.VISIBLE);
+		arrowDuration = System.currentTimeMillis() + duration;
 		Toast.makeText(getBaseContext(), "arrow", Toast.LENGTH_SHORT)
 			.show();
 	    }
@@ -166,10 +168,6 @@ public class PlayerActivity extends Activity implements BlinkendroidListener,
     }
 
     public void run() {
-	arrowAngle += 2f;
-	if (arrowAngle >= 360f)
-	    arrowAngle -= 360f;
-	arrowView.setAngle(arrowAngle);
 
 	arrowScale += 0.5f;
 	if (arrowScale >= 2 * Math.PI)
@@ -177,6 +175,9 @@ public class PlayerActivity extends Activity implements BlinkendroidListener,
 	final float scale = 0.5f + (float) Math.sin(arrowScale) / 20;
 	arrowView.setScale(scale);
 
-	handler.postDelayed(this, 20);
+	if (System.currentTimeMillis() < arrowDuration)
+	    handler.postDelayed(this, 20);
+	else
+	    arrowView.setVisibility(View.INVISIBLE);
     }
 }
