@@ -134,6 +134,7 @@ public class LoginActivity extends Activity {
 	switch (item.getItemId()) {
 	case R.id.login_options_start_server: {
 	    startActivity(new Intent(LoginActivity.this, ServerActivity.class));
+	    break;
 	}
 	case R.id.login_options_connect_to_ip: {
 	    final Dialog dialog = new Dialog(this);
@@ -157,6 +158,7 @@ public class LoginActivity extends Activity {
 		    return true;
 		}
 	    });
+	    break;
 	}
 	}
 
