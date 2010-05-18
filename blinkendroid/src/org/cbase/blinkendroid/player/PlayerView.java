@@ -129,8 +129,10 @@ public class PlayerView extends View implements Runnable {
     public void run() {
 
 	// time into movie, taking endless looping into account
-	long time = (System.currentTimeMillis() + timeDelta - startTime)
-		% duration;
+	final long currentTime = System.currentTimeMillis();
+	long time = (currentTime - timeDelta - startTime) % duration;
+	if (time < 0)
+	    time = duration + time;
 
 	// determine frame to be displayed
 	long nextFrameTime;
