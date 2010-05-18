@@ -36,7 +36,8 @@ public class BlinkendroidProtocolHandler implements ICommandHandler {
 	    long serverTime = Long.parseLong(tokenizer.nextToken());
 	    long startTime = Long.parseLong(tokenizer.nextToken());
 	    Log.i(Constants.LOG_TAG,"Play "+x+","+y);
-	    playerListener.play(resId, serverTime, startTime);
+	    playerListener.serverTime(serverTime);
+	    playerListener.play(resId, startTime);
 	}
 
     }
