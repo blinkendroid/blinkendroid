@@ -170,8 +170,7 @@ public class PlayerActivity extends Activity implements BlinkendroidListener,
 		arrowView.setAngle(angle);
 		arrowView.setVisibility(View.VISIBLE);
 		arrowDuration = System.currentTimeMillis() + duration;
-		Toast.makeText(getBaseContext(), "arrow", Toast.LENGTH_SHORT)
-			.show();
+		handler.post(this);
 	    }
 	});
     }
