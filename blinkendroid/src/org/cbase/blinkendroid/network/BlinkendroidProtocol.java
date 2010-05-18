@@ -123,7 +123,8 @@ public class BlinkendroidProtocol {
 		    + (server ? "server" : "client"));
 	    
 	    //wenn auf serverseite dann PlayerManager remove
-	    connectionClosedListener.connectionClosed();
+	    if(server)
+		connectionClosedListener.connectionClosed();
 	}
 
 	public void shutdown() {
