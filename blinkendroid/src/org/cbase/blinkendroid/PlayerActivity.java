@@ -115,42 +115,47 @@ public class PlayerActivity extends Activity implements BlinkendroidListener,
     }
 
     public void serverTime(final long serverTime) {
+	Log.i(Constants.LOG_TAG, "time " + serverTime);
 	runOnUiThread(new Runnable() {
 	    public void run() {
+		Log.i(Constants.LOG_TAG, "ui time start " + serverTime);
 		long timeDelta = System.currentTimeMillis() - serverTime;
-		Toast.makeText(getBaseContext(), "serverTime",
-			Toast.LENGTH_SHORT).show();
 		playerView.setTimeDelta(timeDelta);
+		Log.i(Constants.LOG_TAG, "ui time end " + serverTime);
 	    }
 	});
     }
 
     public void play(final int resId, final long startTime) {
+	Log.i(Constants.LOG_TAG, "play " + startTime);
 	runOnUiThread(new Runnable() {
 	    public void run() {
+		Log.i(Constants.LOG_TAG, "ui play start " + startTime);
 		blm = new BBMZParser().parseBBMZ(getResources()
 			.openRawResource(resId));
 		playerView.setBLM(blm);
 		playerView.setStartTime(startTime);
 		playerView.startPlaying();
 		playing = true;
-		Log.i(Constants.LOG_TAG, "play " + startTime);
+		Log.i(Constants.LOG_TAG, "ui play end " + startTime);
 	    }
 	});
     }
 
     public void clip(final float startX, final float startY, final float endX,
 	    final float endY) {
+	Log.i(Constants.LOG_TAG, "clip " + startX + "," + startY
+		+ "," + endX + "," + endY);
 	runOnUiThread(new Runnable() {
 	    public void run() {
+		Log.i(Constants.LOG_TAG, "ui clip start " + startX + "," + startY
+			+ "," + endX + "," + endY);
 		final int absStartX = (int) (blm.width * startX);
 		final int absStartY = (int) (blm.height * startY);
 		final int absEndX = (int) (blm.width * endX);
 		final int absEndY = (int) (blm.height * endY);
 		playerView.setClipping(absStartX, absStartY, absEndX, absEndY);
-		Toast.makeText(getBaseContext(), "clip", Toast.LENGTH_SHORT)
-			.show();
-		Log.i(Constants.LOG_TAG, "setClipping " + startX + "," + startY
+		Log.i(Constants.LOG_TAG, "ui clip end " + startX + "," + startY
 			+ "," + endX + "," + endY);
 	    }
 	});
