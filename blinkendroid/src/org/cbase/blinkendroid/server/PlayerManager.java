@@ -42,8 +42,21 @@ public class PlayerManager {
 	    }
 	    clients[pClient.y][pClient.x]=pClient;
 	    
-	    //TODO clipping für alle berechnen
-	    
+	    //clipping für alle berechnen
+	    float startY=0;
+	    for (int i = 0; i < maxY; i++) {
+		float startX=0;
+		for (int j = 0; j < maxY; j++) {
+		    if(clients[i][j]!=null){
+			clients[i][j].startX=startX;
+			clients[i][j].startY=startY;
+			clients[i][j].endX=startX+1/maxX;
+			clients[i][j].endY=startY+1/maxY;
+		    }
+		    startX=startX+1/maxX;
+		}
+		startY=startY+1/maxY;
+	    }
 	    //Play
 	    pClient.play();
     }

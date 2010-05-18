@@ -142,14 +142,6 @@ public class BlinkendroidProtocol {
 		out.write(PROTOCOL_PLAYER + COMMAND_PLAYER_TIME
 			+ Long.toString(t) + '\n');
 		out.flush();
-
-		// testing clipping
-		if (t % 3 == 0) {
-		    out.write(PROTOCOL_PLAYER + COMMAND_CLIP + "0,0,"
-			    + (t % 20) + "," + (t % 20) + '\n');
-		    out.flush();
-		}
-
 	    }
 	}
 
@@ -164,5 +156,9 @@ public class BlinkendroidProtocol {
 		+ Integer.toString(x)+"," + Integer.toString(y)+"," + Integer.toString(resId)+"," + Long.toString(l)+ '\n');
 	out.flush();
     }
-
+    public void clip(float startX,float startY,float endX,float endY){
+	    out.write(PROTOCOL_PLAYER + COMMAND_CLIP +
+	    + startX + "," + startY +","+ endX + "," + endY+ '\n');
+	    out.flush();
+    }
 }
