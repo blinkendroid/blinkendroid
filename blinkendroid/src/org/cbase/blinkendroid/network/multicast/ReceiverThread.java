@@ -116,12 +116,12 @@ public class ReceiverThread extends Thread {
     }
 
     public void shutdown() {
-	Log.d(Constants.LOG_TAG, "starting shutdown");
+	Log.d(Constants.LOG_TAG, "ReceiverThread: starting shutdown");
 
 	handlers.clear();
 	running = false;
 	interrupt();
 
-	Log.d(Constants.LOG_TAG, "shutdown complete");
+	Log.d(Constants.LOG_TAG, "ReceiverThread: shutdown complete");
     }
 }
