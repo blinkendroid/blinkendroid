@@ -92,5 +92,6 @@ public class PlayerManager {
     public void removeClient(PlayerClient playerClient) {
 	Log.i(Constants.LOG_TAG, "removeClient "+ playerClient.x+":"+playerClient.y);
 	clients[playerClient.y][playerClient.x]=null;
+	clip();
     }
 }
