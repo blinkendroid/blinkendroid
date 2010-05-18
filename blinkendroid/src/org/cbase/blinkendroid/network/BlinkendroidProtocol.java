@@ -29,6 +29,14 @@ public class BlinkendroidProtocol {
 
     private final HashMap<String, ICommandHandler> handlers = new HashMap<String, ICommandHandler>();
 
+    ConnectionClosedListener connectionClosedListener;
+    
+    public interface ConnectionClosedListener{
+	public void connectionClosed();
+    }
+    public void setConnectionClosedListener(ConnectionClosedListener connectionClosedListener){
+	this.connectionClosedListener=connectionClosedListener;
+    }
     public BlinkendroidProtocol(Socket socket, boolean server) {
 	this.socket = socket;
 	try {
@@ -67,7 +75,6 @@ public class BlinkendroidProtocol {
 	    socket.close();
 	    Log.d(Constants.LOG_TAG, "BlinkendroidProtocol: Socket closed.");
 	} catch (IOException e) {
-	    // TODO Auto-generated catch block
 	    e.printStackTrace();
 	}
 
@@ -114,6 +121,9 @@ public class BlinkendroidProtocol {
 	    }
 	    Log.i(Constants.LOG_TAG, "InputThread ended!!!!!!! "
 		    + (server ? "server" : "client"));
+	    
+	    //wenn auf serverseite dann PlayerManager remove
+	    connectionClosedListener.connectionClosed();
 	}
 
 	public void shutdown() {

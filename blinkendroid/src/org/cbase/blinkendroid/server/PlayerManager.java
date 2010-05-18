@@ -18,7 +18,7 @@ public class PlayerManager {
     public void addClient(BlinkendroidProtocol blinkendroidProtocol) {
 	if (startTime == 0)
 	    startTime = System.currentTimeMillis();
-	PlayerClient pClient = new PlayerClient(blinkendroidProtocol, startTime);
+	PlayerClient pClient = new PlayerClient(this, blinkendroidProtocol, startTime);
 	// server starts thread to send globaltime
 	blinkendroidProtocol.startTimerThread();// TODO evtl nur ein timerthread
 						// im server
@@ -54,7 +54,13 @@ public class PlayerManager {
 	}
 	Log.i(Constants.LOG_TAG, "added Client at pos "+pClient.x+":"+pClient.y);
 	clients[pClient.y][pClient.x] = pClient;
+	// Play
+	pClient.play();
+	
+	clip();
+    }
 
+    private void clip() {
 	// clipping für alle berechnen
 	float startY = 0;
 	for (int i = 0; i < maxY; i++) {
@@ -65,15 +71,12 @@ public class PlayerManager {
 		    clients[i][j].startY = startY;
 		    clients[i][j].endX = startX + (float)(1.0 / maxX);
 		    clients[i][j].endY = startY + (float)(1.0 / maxY);
-		    if( clients[i][j]!=pClient)
-			clients[i][j].clip();
+		    clients[i][j].clip();
 		}
 		startX = startX + (float)(1.0 / maxX);
 	    }
 	    startY = startY + (float)(1.0 / maxY);
 	}
-	// Play
-	pClient.play();
     }
 
     public void shutdown() {
@@ -84,5 +87,10 @@ public class PlayerManager {
 		    clients[i][j].shutdown();
 	    }
 	}
+    }
+
+    public void removeClient(PlayerClient playerClient) {
+	Log.i(Constants.LOG_TAG, "removeClient "+ playerClient.x+":"+playerClient.y);
+	clients[playerClient.y][playerClient.x]=null;
     }
 }
