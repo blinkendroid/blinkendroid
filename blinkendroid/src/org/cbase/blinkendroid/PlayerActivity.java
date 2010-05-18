@@ -134,6 +134,7 @@ public class PlayerActivity extends Activity implements BlinkendroidListener,
 		playerView.setStartTime(startTime);
 		playerView.startPlaying();
 		playing = true;
+		Log.i(Constants.LOG_TAG, "play " + startTime);
 	    }
 	});
     }
@@ -183,6 +184,7 @@ public class PlayerActivity extends Activity implements BlinkendroidListener,
 
     public void connectionClosed() {
 	Log.i(Constants.LOG_TAG, "connectionClosed");
-//	Toast.makeText(getBaseContext(), "connectionClosed", Toast.LENGTH_LONG).show();
+	// Toast.makeText(getBaseContext(), "connectionClosed",
+	// Toast.LENGTH_LONG).show();
     }
 }
