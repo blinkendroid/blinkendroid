@@ -18,6 +18,7 @@
 package org.cbase.blinkendroid.network.multicast;
 
 import java.net.DatagramPacket;
+import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
 import java.net.UnknownHostException;
@@ -80,10 +81,12 @@ public class ReceiverThread extends Thread {
     @Override
     public void run() {
 	try {
-	    MulticastSocket s = new MulticastSocket(
-		    Constants.MULTICAST_SERVER_PORT);
-	    s.setTimeToLive(2);
-	    s.joinGroup(group);
+	    DatagramSocket s = new DatagramSocket(Constants.MULTICAST_SERVER_PORT);
+//	    MulticastSocket s = new MulticastSocket(
+//		    Constants.MULTICAST_SERVER_PORT);
+	    //Necessary for working multicast on devices below 2.1.
+//	    s.setTimeToLive(2);
+//	    s.joinGroup(group);
 	    byte[] buf;
 
 	    while (running) {

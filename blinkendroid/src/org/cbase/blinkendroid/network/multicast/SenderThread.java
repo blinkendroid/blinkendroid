@@ -18,6 +18,7 @@
 package org.cbase.blinkendroid.network.multicast;
 
 import java.net.DatagramPacket;
+import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
 import java.net.UnknownHostException;
@@ -41,12 +42,12 @@ public class SenderThread extends Thread {
      */
     public SenderThread(String serverName) {
 	message = Constants.SERVER_MULTICAST_COMMAND + " " + serverName + " ";
-	try {
-	    group = InetAddress.getByName(Constants.MULTICAST_GROUP);
-	} catch (UnknownHostException e) {
-	    Log.e(Constants.LOG_TAG, e.getMessage());
-	    e.printStackTrace();
-	}
+//	try {
+//	    group = InetAddress.getByName(Constants.MULTICAST_GROUP);
+//	} catch (UnknownHostException e) {
+//	    Log.e(Constants.LOG_TAG, e.getMessage());
+//	    e.printStackTrace();
+//	}
     }
     
 
@@ -54,16 +55,22 @@ public class SenderThread extends Thread {
     @Override
     public void run() {
 	try {
-	    MulticastSocket s = new MulticastSocket(
-		    Constants.MULTICAST_SERVER_PORT);
-	    s.setTimeToLive(2);
-	    s.joinGroup(group);
+//	    MulticastSocket s = new MulticastSocket(
+//		    Constants.MULTICAST_SERVER_PORT);
+	    DatagramSocket s = new DatagramSocket(Constants.MULTICAST_SERVER_PORT);
+	    s.setBroadcast(true);
+	    byte[] address = s.getInetAddress().getAddress();
+	    group = InetAddress.getByAddress(address);
+	    //Necessary for working multicast on devices below 2.1.
+//	    s.setTimeToLive(2);
+//	    s.joinGroup(group);
 
 	    while (running) {
 		DatagramPacket initPacket = new DatagramPacket(message
 			.getBytes(), message.length(), group,
 			Constants.MULTICAST_SERVER_PORT);
 		s.send(initPacket);
+		address[address.length -1] = (byte) 255;
 
 		Log.i(Constants.LOG_TAG, "Multicasting: " + message);
 		Thread.currentThread().sleep(5000);
