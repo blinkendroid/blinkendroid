@@ -119,9 +119,11 @@ public class PlayerActivity extends Activity implements BlinkendroidListener,
 	final long timeDelta = System.currentTimeMillis() - serverTime;
 	runOnUiThread(new Runnable() {
 	    public void run() {
-		Log.i(Constants.LOG_TAG, "ui time start " + serverTime);
+		Log.i(Constants.LOG_TAG, "ui time start " + serverTime + " "
+			+ timeDelta);
 		playerView.setTimeDelta(timeDelta);
-		Log.i(Constants.LOG_TAG, "ui time end " + serverTime);
+		Log.i(Constants.LOG_TAG, "ui time end " + serverTime + " "
+			+ timeDelta);
 	    }
 	});
     }
@@ -144,12 +146,12 @@ public class PlayerActivity extends Activity implements BlinkendroidListener,
 
     public void clip(final float startX, final float startY, final float endX,
 	    final float endY) {
-	Log.i(Constants.LOG_TAG, "clip " + startX + "," + startY
-		+ "," + endX + "," + endY);
+	Log.i(Constants.LOG_TAG, "clip " + startX + "," + startY + "," + endX
+		+ "," + endY);
 	runOnUiThread(new Runnable() {
 	    public void run() {
-		Log.i(Constants.LOG_TAG, "ui clip start " + startX + "," + startY
-			+ "," + endX + "," + endY);
+		Log.i(Constants.LOG_TAG, "ui clip start " + startX + ","
+			+ startY + "," + endX + "," + endY);
 		final int absStartX = (int) (blm.width * startX);
 		final int absStartY = (int) (blm.height * startY);
 		final int absEndX = (int) (blm.width * endX);
@@ -162,6 +164,7 @@ public class PlayerActivity extends Activity implements BlinkendroidListener,
     }
 
     public void arrow(final long duration, final float angle) {
+	Log.i(Constants.LOG_TAG, "arrow " + angle);
 	runOnUiThread(new Runnable() {
 	    public void run() {
 		arrowView.setAngle(angle);
