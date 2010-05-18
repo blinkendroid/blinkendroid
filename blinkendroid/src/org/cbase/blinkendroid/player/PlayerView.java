@@ -84,7 +84,6 @@ public class PlayerView extends View implements Runnable {
     public void startPlaying() {
 	if (!playing) {
 	    playing = true;
-	    startTime = System.currentTimeMillis();
 	    handler.post(this);
 	}
     }
@@ -129,8 +128,8 @@ public class PlayerView extends View implements Runnable {
     public void run() {
 
 	// time into movie, taking endless looping into account
-	final long currentTime = System.currentTimeMillis();
-	long time = (currentTime - timeDelta - startTime) % duration;
+	final long serverTime = System.currentTimeMillis() - timeDelta;
+	long time = (serverTime - startTime) % duration;
 	if (time < 0)
 	    time = duration + time;
 
