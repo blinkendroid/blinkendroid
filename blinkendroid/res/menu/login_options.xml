@@ -2,4 +2,5 @@
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 	<item android:id="@+id/login_options_start_server" android:icon="@android:drawable/ic_menu_add" android:title="Start new Server" />
+	<item android:id="@+id/login_options_connect_to_ip" android:icon="@android:drawable/ic_menu_send" android:title="Connect to IP" />
 </menu>

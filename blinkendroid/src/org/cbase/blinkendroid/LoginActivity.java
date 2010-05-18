@@ -24,9 +24,11 @@ import org.cbase.blinkendroid.network.multicast.IServerHandler;
 import org.cbase.blinkendroid.network.multicast.ReceiverThread;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -34,9 +36,11 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.TextView.OnEditorActionListener;
 
 /**
  * @author Andreas Schildbach
@@ -81,6 +85,7 @@ public class LoginActivity extends Activity {
     @Override
     protected void onResume() {
 
+	super.onResume();
 
 	receiverThread = new ReceiverThread();
 	Log.d(Constants.LOG_TAG, "resuming Thread: " + receiverThread.getId());
@@ -105,7 +110,6 @@ public class LoginActivity extends Activity {
 	    }
 	});
 	receiverThread.start();
-	super.onResume();
     }
 
     @Override
@@ -130,6 +134,29 @@ public class LoginActivity extends Activity {
 	switch (item.getItemId()) {
 	case R.id.login_options_start_server: {
 	    startActivity(new Intent(LoginActivity.this, ServerActivity.class));
+	}
+	case R.id.login_options_connect_to_ip: {
+	    final Dialog dialog = new Dialog(this);
+	    dialog.setTitle("Enter IP");
+	    dialog.setContentView(R.layout.login_connect_to_ip_dialog_content);
+	    dialog.show();
+	    final EditText ip = (EditText) dialog
+		    .findViewById(R.id.login_connect_to_ip_dialog_ip);
+	    ip.setOnEditorActionListener(new OnEditorActionListener() {
+
+		public boolean onEditorAction(final TextView v,
+			final int actionId, final KeyEvent event) {
+		    dialog.dismiss();
+		    final Intent intent = new Intent(LoginActivity.this,
+			    PlayerActivity.class);
+		    intent.putExtra(PlayerActivity.INTENT_EXTRA_IP, ip
+			    .getText().toString());
+		    intent.putExtra(PlayerActivity.INTENT_EXTRA_PORT,
+			    Constants.SERVER_PORT);
+		    startActivity(intent);
+		    return true;
+		}
+	    });
 	}
 	}
 
