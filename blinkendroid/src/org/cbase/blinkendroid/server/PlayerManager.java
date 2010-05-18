@@ -82,10 +82,11 @@ public class PlayerManager {
 
     private void clip() {
 	// clipping für alle berechnen
+//	  Log.i(Constants.LOG_TAG, "clip maxX "+i+":"+j);
 	float startY = 0;
 	for (int i = 0; i < maxY; i++) {
 	    float startX = 0;
-	    for (int j = 0; j < maxY; j++) {
+	    for (int j = 0; j < maxX; j++) {
 		if (clients[i][j] != null) {
 		    clients[i][j].startX = startX;
 		    clients[i][j].startY = startY;
