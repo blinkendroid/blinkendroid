@@ -61,9 +61,6 @@ public class PlayerManager {
     }
 
     private void clip() {
-	//maxX neu berechnen
-
-	
 	// clipping für alle berechnen
 	float startY = 0;
 	for (int i = 0; i < maxY; i++) {
