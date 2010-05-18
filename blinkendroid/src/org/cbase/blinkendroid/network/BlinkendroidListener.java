@@ -22,9 +22,11 @@ package org.cbase.blinkendroid.network;
  */
 public interface BlinkendroidListener {
 
-    void clip(float startX, float startY, float endX, float endY);
-
     void serverTime(long serverTime);
+
+    void play(int resId, long startTime);
+
+    void clip(float startX, float startY, float endX, float endY);
 
     void arrow(boolean visible, float angle);
 }
