@@ -20,7 +20,6 @@ package org.cbase.blinkendroid.network.multicast;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.net.MulticastSocket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -81,12 +80,7 @@ public class ReceiverThread extends Thread {
     @Override
     public void run() {
 	try {
-	    DatagramSocket s = new DatagramSocket(Constants.MULTICAST_SERVER_PORT);
-//	    MulticastSocket s = new MulticastSocket(
-//		    Constants.MULTICAST_SERVER_PORT);
-	    //Necessary for working multicast on devices below 2.1.
-//	    s.setTimeToLive(2);
-//	    s.joinGroup(group);
+	    DatagramSocket s = new DatagramSocket(Constants.BROADCAST_CLIENT_PORT);
 	    byte[] buf;
 
 	    while (running) {
@@ -94,12 +88,12 @@ public class ReceiverThread extends Thread {
 		buf = new byte[500];
 		DatagramPacket recv = new DatagramPacket(buf, buf.length);
 		s.receive(recv);
-		Log.d(Constants.LOG_TAG, "received something via multicast");
+		Log.d(Constants.LOG_TAG, "received something via broadcast");
 		String[] receivedData = new String(recv.getData()).split(" ");
 
 		if (receivedData.length != 3
 			|| !receivedData[0]
-				.equals(Constants.SERVER_MULTICAST_COMMAND)) {
+				.equals(Constants.SERVER_BROADCAST_COMMAND)) {
 		    continue;
 		}
 		InetAddress address = recv.getAddress();
@@ -112,7 +106,7 @@ public class ReceiverThread extends Thread {
 			+ Thread.currentThread().getId());
 	    }
 	    Log.i(Constants.LOG_TAG,
-		    "Finished receiving multicast packets. Thread: "
+		    "Finished receiving broadcast packets. Thread: "
 			    + Thread.currentThread().getId());
 	} catch (Exception e) {
 	    Log.e(Constants.LOG_TAG, "", e);

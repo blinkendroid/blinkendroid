@@ -23,8 +23,9 @@ package org.cbase.blinkendroid;
 public final class Constants {
 
     public static final String LOG_TAG = "blinkendroids";
-    public static final int MULTICAST_SERVER_PORT = 6789;
+    public static final int BROADCAST_CLIENT_PORT = 6789;
+    public static final int BROADCAST_SERVER_PORT = 6790;
     public static final String MULTICAST_GROUP = "230.0.0.1";
-    public static final String SERVER_MULTICAST_COMMAND = "BLINKENDROID_SERVER";
+    public static final String SERVER_BROADCAST_COMMAND = "BLINKENDROID_SERVER";
     public static final int SERVER_PORT = 9876;
 }
