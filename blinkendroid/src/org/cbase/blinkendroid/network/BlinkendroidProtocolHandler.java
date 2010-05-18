@@ -21,10 +21,10 @@ public class BlinkendroidProtocolHandler implements ICommandHandler {
 	    // clipping "Cstartx,starty,endx,endy"
 	    StringTokenizer tokenizer = new StringTokenizer(input.substring(1),
 		    ",");
-	    int startX = Integer.parseInt(tokenizer.nextToken());
-	    int startY = Integer.parseInt(tokenizer.nextToken());
-	    int endX = Integer.parseInt(tokenizer.nextToken());
-	    int endY = Integer.parseInt(tokenizer.nextToken());
+	    float startX = Float.parseFloat(tokenizer.nextToken());
+	    float startY = Float.parseFloat(tokenizer.nextToken());
+	    float endX = Float.parseFloat(tokenizer.nextToken());
+	    float endY = Float.parseFloat(tokenizer.nextToken());
 	    playerListener.clip(startX, startY, endX, endY);
 	}else if (input.startsWith("P")) {
 	    // clipping "Cstartx,starty,endx,endy"
@@ -33,9 +33,10 @@ public class BlinkendroidProtocolHandler implements ICommandHandler {
 	    int x = Integer.parseInt(tokenizer.nextToken());
 	    int y = Integer.parseInt(tokenizer.nextToken());
 	    int resId = Integer.parseInt(tokenizer.nextToken());
+	    long serverTime = Long.parseLong(tokenizer.nextToken());
 	    long startTime = Long.parseLong(tokenizer.nextToken());
 	    Log.i(Constants.LOG_TAG,"Play "+x+","+y);
-	    playerListener.play(resId, startTime);
+	    playerListener.play(resId, serverTime, startTime);
 	}
 
     }

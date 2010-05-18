@@ -11,9 +11,11 @@ public class PlayerClient {
     float startX,endX,startY,endY;
     //protocol
     BlinkendroidProtocol blinkendroidProtocol;
+    long startTime;
     
-    public PlayerClient(BlinkendroidProtocol blinkendroidProtocol) {
+    public PlayerClient(BlinkendroidProtocol blinkendroidProtocol, long startTime) {
 	this.blinkendroidProtocol=blinkendroidProtocol;
+	this.startTime=startTime;
     }
 
     public void shutdown() {
@@ -21,7 +23,7 @@ public class PlayerClient {
     }
 
     public void play() {
-	blinkendroidProtocol.play(x,y,R.raw.arius,System.currentTimeMillis()+2000);
+	blinkendroidProtocol.play(x,y,R.raw.arius,System.currentTimeMillis(),startTime);
 	blinkendroidProtocol.clip(startX, startY, endX, endY);
     }
 }

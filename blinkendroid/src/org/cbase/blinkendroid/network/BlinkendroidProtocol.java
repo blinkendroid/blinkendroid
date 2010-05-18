@@ -151,9 +151,9 @@ public class BlinkendroidProtocol {
 	    interrupt();
 	}
     }
-    public void play(int x, int y, int resId, long l) {
+    public void play(int x, int y, int resId, long l, long startTime) {
 	String cmd=PROTOCOL_PLAYER + COMMAND_PLAY
-	+ Integer.toString(x)+"," + Integer.toString(y)+"," + Integer.toString(resId)+"," + Long.toString(l)+ '\n';
+	+ Integer.toString(x)+"," + Integer.toString(y)+"," + Integer.toString(resId)+"," + Long.toString(l)+"," + Long.toString(startTime)+ '\n';
 	out.write(cmd);
 	out.flush();
 	    Log.i(Constants.LOG_TAG, cmd);
