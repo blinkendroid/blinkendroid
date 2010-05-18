@@ -107,9 +107,10 @@ public class PlayerManager {
     public void shutdown() {
 	for (int i = 0; i < maxY; i++) {
 	    for (int j = 0; j < maxY; j++) {
-		if (null != clients[i][j])
+		if (null != clients[i][j]) {
 		    Log.i(Constants.LOG_TAG, "shutdown PlayerClient "+i+":"+j);
 		    clients[i][j].shutdown();
+		}
 	    }
 	}
     }
