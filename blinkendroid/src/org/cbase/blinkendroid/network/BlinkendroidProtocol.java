@@ -46,7 +46,10 @@ public class BlinkendroidProtocol {
     public void registerHandler(String proto, ICommandHandler handler) {
 	handlers.put(proto, handler);
     }
-
+    
+    public void unregisterHandler(ICommandHandler handler) {
+	handlers.remove(handler);
+    }
     public void startTimerThread() {
 	// if(null==globalTimerThread)
 	globalTimerThread = new GlobalTimerThread();

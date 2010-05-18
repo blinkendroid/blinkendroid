@@ -13,7 +13,7 @@ public class BlinkendroidClient {
     private String ip;
     private int port;
     BlinkendroidProtocol protocol;
-
+    BlinkendroidProtocolHandler protocolHandler;
     public BlinkendroidClient(String ip, int port) {
 	this.ip = ip;
 	this.port = port;
@@ -45,11 +45,12 @@ public class BlinkendroidClient {
     }
 
     public void registerListener(BlinkendroidListener listener) {
+	protocolHandler	=	new BlinkendroidProtocolHandler(listener);
 	getProtocol().registerHandler(BlinkendroidProtocol.PROTOCOL_PLAYER,
-		new BlinkendroidProtocolHandler(listener));
+		protocolHandler);
     }
 
     public void unregisterListener(BlinkendroidListener listener) {
-	// TODO schtief remove handler from protocol
+	getProtocol().unregisterHandler(protocolHandler);
     }
 }
