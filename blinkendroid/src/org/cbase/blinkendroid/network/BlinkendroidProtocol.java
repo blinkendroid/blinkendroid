@@ -18,6 +18,7 @@ public class BlinkendroidProtocol {
 
     public final static String COMMAND_PLAYER_TIME = "T";
     public final static String COMMAND_CLIP = "C";
+    public static final String COMMAND_PLAY = "P";
 
     private boolean server;
     PrintWriter out;
@@ -158,4 +159,10 @@ public class BlinkendroidProtocol {
 	    interrupt();
 	}
     }
+    public void play(int x, int y, int resId, long l) {
+	out.write(PROTOCOL_PLAYER + COMMAND_PLAY
+		+ Integer.toString(x)+"," + Integer.toString(y)+"," + Integer.toString(resId)+"," + Long.toString(l)+ '\n');
+	out.flush();
+    }
+
 }
