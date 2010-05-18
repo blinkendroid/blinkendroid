@@ -49,6 +49,7 @@ public class PlayerActivity extends Activity implements BlinkendroidListener,
     private ArrowView arrowView;
     private BlinkendroidClient blinkendroidClient;
     private BLM blm;
+    private boolean playing = false;
 
     private float arrowAngle = 0f, arrowScale = 0f;
     private final Handler handler = new Handler();
@@ -62,11 +63,7 @@ public class PlayerActivity extends Activity implements BlinkendroidListener,
 
 	setContentView(R.layout.player_content);
 
-	blm = new BBMZParser().parseBBMZ(getResources().openRawResource(
-		R.raw.allyourbase));
-
 	playerView = (PlayerView) findViewById(R.id.player_image);
-	playerView.setBLM(blm);
 
 	arrowView = (ArrowView) findViewById(R.id.player_arrow);
 	arrowView.setVisibility(View.VISIBLE);
@@ -91,7 +88,8 @@ public class PlayerActivity extends Activity implements BlinkendroidListener,
 		Constants.SERVER_PORT));
 	blinkendroidClient.registerListener(this);
 
-	playerView.startPlaying();
+	if (playing)
+	    playerView.startPlaying();
 
 	handler.post(this);
     }
@@ -111,6 +109,30 @@ public class PlayerActivity extends Activity implements BlinkendroidListener,
 	super.onPause();
     }
 
+    public void serverTime(final long serverTime) {
+	runOnUiThread(new Runnable() {
+	    public void run() {
+		long timeDelta = System.currentTimeMillis() - serverTime;
+		Toast.makeText(getBaseContext(), "serverTime",
+			Toast.LENGTH_SHORT).show();
+		playerView.setTimeDelta(timeDelta);
+	    }
+	});
+    }
+
+    public void play(final int resId, final long startTime) {
+	runOnUiThread(new Runnable() {
+	    public void run() {
+		blm = new BBMZParser().parseBBMZ(getResources()
+			.openRawResource(resId));
+		playerView.setBLM(blm);
+		playerView.setStartTime(startTime);
+		playerView.startPlaying();
+		playing = true;
+	    }
+	});
+    }
+
     public void clip(final float startX, final float startY, final float endX,
 	    final float endY) {
 	runOnUiThread(new Runnable() {
@@ -124,18 +146,6 @@ public class PlayerActivity extends Activity implements BlinkendroidListener,
 			.show();
 		Log.i(Constants.LOG_TAG, "setClipping " + startX + "," + startY
 			+ "," + endX + "," + endY);
-	    }
-	});
-    }
-
-    public void serverTime(final long serverTime) {
-	runOnUiThread(new Runnable() {
-	    public void run() {
-		long timeDelta = System.currentTimeMillis() - serverTime;
-		Toast.makeText(getBaseContext(), "serverTime",
-			Toast.LENGTH_SHORT).show();
-		// TODO
-		Log.i(Constants.LOG_TAG, "timeDelta " + timeDelta);
 	    }
 	});
     }

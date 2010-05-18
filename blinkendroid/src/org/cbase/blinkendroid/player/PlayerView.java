@@ -35,7 +35,8 @@ public class PlayerView extends View implements Runnable {
     private BLM blm;
     private int startX, startY, endX, endY;
     private boolean playing = false;
-    private long startedTime;
+    private long startTime;
+    private long timeDelta = 0;
     private long[] frameTime;
     private int numFrames;
     private int frame = 0;
@@ -65,6 +66,14 @@ public class PlayerView extends View implements Runnable {
 	duration = t;
     }
 
+    public void setStartTime(long startTime) {
+	this.startTime = startTime;
+    }
+
+    public void setTimeDelta(long timeDelta) {
+	this.timeDelta = timeDelta;
+    }
+
     public void setClipping(int startX, int startY, int endX, int endY) {
 	this.startX = startX;
 	this.startY = startY;
@@ -75,7 +84,7 @@ public class PlayerView extends View implements Runnable {
     public void startPlaying() {
 	if (!playing) {
 	    playing = true;
-	    startedTime = System.currentTimeMillis();
+	    startTime = System.currentTimeMillis();
 	    handler.post(this);
 	}
     }
@@ -90,23 +99,29 @@ public class PlayerView extends View implements Runnable {
     @Override
     protected void onDraw(final Canvas canvas) {
 
-	final byte[][] matrix = blm.frames.get(frame).matrix;
+	if (blm != null) {
 
-	final float pixelWidth = (float) getWidth() / (endX - startX);
-	final float pixelHeight = (float) getHeight() / (endY - startY);
+	    final byte[][] matrix = blm.frames.get(frame).matrix;
 
-	// clip
-	for (int y = startY; y < endY; y++) {
-	    final int clippedY = y - startY;
-	    final byte[] row = matrix[y];
-	    for (int x = startX; x < endX; x++) {
-		final int clippedX = x - startX;
-		final int value = row[x] << blm.bits;
-		paint.setColor(Color.argb(255, value, value, value));
-		canvas.drawRect(pixelWidth * clippedX + PIXEL_PADDING,
-			pixelHeight * clippedY + PIXEL_PADDING, pixelWidth
-				* (clippedX + 1) - PIXEL_PADDING, pixelHeight
-				* (clippedY + 1) - PIXEL_PADDING, paint);
+	    final float pixelWidth = (float) getWidth() / (endX - startX);
+	    final float pixelHeight = (float) getHeight() / (endY - startY);
+
+	    // clip
+	    for (int y = startY; y < endY; y++) {
+		final int clippedY = y - startY;
+		final byte[] row = matrix[y];
+		for (int x = startX; x < endX; x++) {
+		    final int clippedX = x - startX;
+		    final int value = row[x] << blm.bits;
+		    paint.setColor(Color.argb(255, value, value, value));
+		    canvas
+			    .drawRect(
+				    pixelWidth * clippedX + PIXEL_PADDING,
+				    pixelHeight * clippedY + PIXEL_PADDING,
+				    pixelWidth * (clippedX + 1) - PIXEL_PADDING,
+				    pixelHeight * (clippedY + 1)
+					    - PIXEL_PADDING, paint);
+		}
 	    }
 	}
     }
@@ -114,7 +129,8 @@ public class PlayerView extends View implements Runnable {
     public void run() {
 
 	// time into movie, taking endless looping into account
-	long time = (System.currentTimeMillis() - startedTime) % duration;
+	long time = (System.currentTimeMillis() + timeDelta - startTime)
+		% duration;
 
 	// determine frame to be displayed
 	long nextFrameTime;
