@@ -34,6 +34,7 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
+import android.widget.Toast;
 
 /**
  * @author Andreas Schildbach
@@ -114,6 +115,8 @@ public class PlayerActivity extends Activity implements BlinkendroidListener,
 	runOnUiThread(new Runnable() {
 	    public void run() {
 		playerView.setClipping(startX, startY, endX, endY);
+		Toast.makeText(getBaseContext(), "clip", Toast.LENGTH_SHORT)
+			.show();
 		Log.i(Constants.LOG_TAG, "setClipping " + startX + "," + startY
 			+ "," + endX + "," + endY);
 	    }
@@ -124,6 +127,8 @@ public class PlayerActivity extends Activity implements BlinkendroidListener,
 	runOnUiThread(new Runnable() {
 	    public void run() {
 		long timeDelta = System.currentTimeMillis() - serverTime;
+		Toast.makeText(getBaseContext(), "serverTime",
+			Toast.LENGTH_SHORT).show();
 		// TODO
 		Log.i(Constants.LOG_TAG, "timeDelta " + timeDelta);
 	    }
@@ -139,6 +144,8 @@ public class PlayerActivity extends Activity implements BlinkendroidListener,
 		} else {
 		    arrowView.setVisibility(View.INVISIBLE);
 		}
+		Toast.makeText(getBaseContext(), "arrow", Toast.LENGTH_SHORT)
+			.show();
 	    }
 	});
     }
