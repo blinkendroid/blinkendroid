@@ -14,7 +14,7 @@ import android.util.Log;
 
 public class BlinkendroidProtocol {
     public final static String PROTOCOL_PLAYER = "P";
-    public final static String PROTOCOL_INIT = "I";
+//    public final static String PROTOCOL_INIT = "I";
 
     public final static String COMMAND_PLAYER_TIME = "T";
     public final static String COMMAND_CLIP = "C";
