@@ -152,7 +152,7 @@ public class LoginActivity extends Activity {
 	    final ListEntry entry = serverList.get(position);
 
 	    ((TextView) row.findViewById(android.R.id.text1))
-		    .setText(entry.name);
+		    .setText(entry.name.length() > 0 ? entry.name : "<unnamed>");
 
 	    ((TextView) row.findViewById(android.R.id.text2)).setText(entry.ip);
 
