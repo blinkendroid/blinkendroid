@@ -56,32 +56,44 @@ public class PlayerManager {
 	clients[pClient.y][pClient.x] = pClient;
 	
 	//Testing arrow allocation:
-	int posOffsets[] = { -1, 0, +1 };
-
-	for (int i = 0; i < posOffsets.length; i++) {
-	    int xOffset = posOffsets[i];
-
-	    for (int j = 0; j < posOffsets.length; j++) {
-		int yOffset = posOffsets[j];
-		if (!(xOffset == 0 && yOffset == 0)
-			&& pClient.x + xOffset < clients.length && pClient.x + xOffset >= 0
-			&& pClient.y + yOffset < clients[pClient.x].length
-			&& pClient.y + yOffset >= 0) {
-		    if (clients[i][j] != null) {
-			//TODO change to a variable value:
-			clients[i][j].arrow(360);
-			Log.d(Constants.LOG_TAG, "Arrow set to " + 360 + " degrees.");
-		    }
-		    // System.out.println("Adding " + (position.x + xOffset) +
-		    // ";" + (position.y + yOffset) + " as neightbour");
-		}
-	    }
-	}
-
+//	int posOffsets[] = { -1, 0, +1 };
+//
+//	for (int i = 0; i < posOffsets.length; i++) {
+//	    int xOffset = posOffsets[i];
+//
+//	    for (int j = 0; j < posOffsets.length; j++) {
+//		int yOffset = posOffsets[j];
+//		if (!(xOffset == 0 && yOffset == 0)
+//			&& pClient.x + xOffset < clients.length && pClient.x + xOffset >= 0
+//			&& pClient.y + yOffset < clients[pClient.x].length
+//			&& pClient.y + yOffset >= 0) {
+//		    if (clients[i][j] != null) {
+//			//TODO change to a variable value:
+//			clients[i][j].arrow(360);
+//			Log.d(Constants.LOG_TAG, "Arrow set to " + 360 + " degrees.");
+//		    }
+//		    // System.out.println("Adding " + (position.x + xOffset) +
+//		    // ";" + (position.y + yOffset) + " as neightbour");
+//		}
+//	    }
+//	}
+	arrow(pClient);
 	// Play
 	pClient.play();
 	
 	clip();
+    }
+
+    private void arrow(PlayerClient pClient) {
+	if(pClient.y-1 >0 &&pClient.x>0 && null!=clients[pClient.y-1][pClient.x])
+	    clients[pClient.y-1][pClient.x].arrow(180);
+	
+	if(pClient.y-1 >0 &&pClient.x-1>0 && null!=clients[pClient.y-1][pClient.x-1])
+	    clients[pClient.y-1][pClient.x-1].arrow(135);
+	
+	if(pClient.y >0 &&pClient.x-1>0 && null!=clients[pClient.y][pClient.x-1])
+	    clients[pClient.y][pClient.x-1].arrow(90);
+	
     }
 
     private void clip() {
