@@ -22,7 +22,7 @@ package org.cbase.blinkendroid.network;
  */
 public interface BlinkendroidListener {
 
-    void clip(int startX, int startY, int endX, int endY);
+    void clip(float startX, float startY, float endX, float endY);
 
     void serverTime(long serverTime);
 

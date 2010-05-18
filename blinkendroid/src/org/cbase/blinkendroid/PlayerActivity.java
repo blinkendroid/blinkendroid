@@ -48,6 +48,7 @@ public class PlayerActivity extends Activity implements BlinkendroidListener,
     private PlayerView playerView;
     private ArrowView arrowView;
     private BlinkendroidClient blinkendroidClient;
+    private BLM blm;
 
     private float arrowAngle = 0f, arrowScale = 0f;
     private final Handler handler = new Handler();
@@ -61,8 +62,8 @@ public class PlayerActivity extends Activity implements BlinkendroidListener,
 
 	setContentView(R.layout.player_content);
 
-	final BLM blm = new BBMZParser().parseBBMZ(getResources()
-		.openRawResource(R.raw.allyourbase));
+	blm = new BBMZParser().parseBBMZ(getResources().openRawResource(
+		R.raw.allyourbase));
 
 	playerView = (PlayerView) findViewById(R.id.player_image);
 	playerView.setBLM(blm);
@@ -110,11 +111,15 @@ public class PlayerActivity extends Activity implements BlinkendroidListener,
 	super.onPause();
     }
 
-    public void clip(final int startX, final int startY, final int endX,
-	    final int endY) {
+    public void clip(final float startX, final float startY, final float endX,
+	    final float endY) {
 	runOnUiThread(new Runnable() {
 	    public void run() {
-		playerView.setClipping(startX, startY, endX, endY);
+		final int absStartX = (int) (blm.width * startX);
+		final int absStartY = (int) (blm.height * startY);
+		final int absEndX = (int) (blm.width * endX);
+		final int absEndY = (int) (blm.height * endY);
+		playerView.setClipping(absStartX, absStartY, absEndX, absEndY);
 		Toast.makeText(getBaseContext(), "clip", Toast.LENGTH_SHORT)
 			.show();
 		Log.i(Constants.LOG_TAG, "setClipping " + startX + "," + startY
