@@ -28,4 +28,5 @@ public final class Constants {
     public static final String MULTICAST_GROUP = "230.0.0.1";
     public static final String SERVER_BROADCAST_COMMAND = "BLINKENDROID_SERVER";
     public static final int SERVER_PORT = 9876;
+    public static final int SERVER_SOCKET_CONNECT_TIMEOUT = 2000;
 }

@@ -18,8 +18,6 @@
 package org.cbase.blinkendroid;
 
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
 
 import org.cbase.blinkendroid.network.BlinkendroidClient;
 import org.cbase.blinkendroid.network.BlinkendroidListener;
@@ -34,7 +32,6 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
-import android.widget.Toast;
 
 /**
  * @author Andreas Schildbach
@@ -65,17 +62,7 @@ public class PlayerActivity extends Activity implements BlinkendroidListener,
 	setContentView(R.layout.player_content);
 
 	playerView = (PlayerView) findViewById(R.id.player_image);
-
 	arrowView = (ArrowView) findViewById(R.id.player_arrow);
-    }
-
-    private Reader resourceAsReader(final int res) {
-	try {
-	    return new InputStreamReader(getResources().openRawResource(res),
-		    "utf-8");
-	} catch (final IOException x) {
-	    throw new RuntimeException(x);
-	}
     }
 
     @Override
@@ -83,9 +70,13 @@ public class PlayerActivity extends Activity implements BlinkendroidListener,
 
 	super.onResume();
 
-	blinkendroidClient = new BlinkendroidClient(getIntent().getStringExtra(
-		INTENT_EXTRA_IP), getIntent().getIntExtra(INTENT_EXTRA_PORT,
-		Constants.SERVER_PORT));
+	try {
+	    blinkendroidClient = new BlinkendroidClient(getIntent()
+		    .getStringExtra(INTENT_EXTRA_IP), getIntent().getIntExtra(
+		    INTENT_EXTRA_PORT, Constants.SERVER_PORT));
+	} catch (final IOException x) {
+	    throw new RuntimeException(x);
+	}
 	blinkendroidClient.registerListener(this);
 
 	if (playing)
@@ -107,7 +98,11 @@ public class PlayerActivity extends Activity implements BlinkendroidListener,
 	playerView.stopPlaying();
 
 	if (blinkendroidClient != null) {
-	    blinkendroidClient.shutdown();
+	    try {
+		blinkendroidClient.shutdown();
+	    } catch (final IOException x) {
+		throw new RuntimeException(x);
+	    }
 	    blinkendroidClient = null;
 	}
 
@@ -176,7 +171,7 @@ public class PlayerActivity extends Activity implements BlinkendroidListener,
     }
 
     public void run() {
-	
+
 	arrowScale += 0.5f;
 	if (arrowScale >= 2 * Math.PI)
 	    arrowScale -= 2 * Math.PI;
