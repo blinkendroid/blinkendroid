@@ -15,7 +15,6 @@ import android.util.Log;
 public class BlinkendroidProtocol {
 
     public final static String PROTOCOL_PLAYER = "P";
-//    public final static String PROTOCOL_INIT = "I";
 
     public static final String COMMAND_PLAYER_TIME = "T";
     public static final String COMMAND_CLIP = "C";
@@ -23,31 +22,33 @@ public class BlinkendroidProtocol {
     public static final String COMMAND_INIT = "I";
 
     private boolean server;
-    PrintWriter out;
-    BufferedReader in;
-    Socket socket;
-    GlobalTimerThread globalTimerThread;
-    RecieverThread recieverThread;
+    private PrintWriter out;
+    private BufferedReader in;
+    private Socket socket;
+    private GlobalTimerThread globalTimerThread;
+    private RecieverThread recieverThread;
 
     private final HashMap<String, ICommandHandler> handlers = new HashMap<String, ICommandHandler>();
 
-    ConnectionClosedListener connectionClosedListener;
-    
-    public interface ConnectionClosedListener{
+    private ConnectionClosedListener connectionClosedListener;
+
+    public interface ConnectionClosedListener {
 	public void connectionClosed();
     }
-    public void setConnectionClosedListener(ConnectionClosedListener connectionClosedListener){
-	this.connectionClosedListener=connectionClosedListener;
+
+    public void setConnectionClosedListener(
+	    ConnectionClosedListener connectionClosedListener) {
+	this.connectionClosedListener = connectionClosedListener;
     }
-    public BlinkendroidProtocol(Socket socket, boolean server) {
+
+    public BlinkendroidProtocol(final Socket socket, final boolean server) {
 	this.socket = socket;
 	try {
 	    this.out = new PrintWriter(socket.getOutputStream(), true);
 	    this.in = new BufferedReader(new InputStreamReader(socket
 		    .getInputStream()));
-	} catch (IOException e) {
-	    e.printStackTrace();
-	    System.exit(42);
+	} catch (final IOException x) {
+	    throw new RuntimeException(x);
 	}
 	this.server = server;
 	// if(!server)
@@ -58,10 +59,11 @@ public class BlinkendroidProtocol {
     public void registerHandler(String proto, ICommandHandler handler) {
 	handlers.put(proto, handler);
     }
-    
+
     public void unregisterHandler(ICommandHandler handler) {
 	handlers.remove(handler);
     }
+
     public void startTimerThread() {
 	if (globalTimerThread != null) {
 	    globalTimerThread.shutdown();
@@ -79,7 +81,6 @@ public class BlinkendroidProtocol {
 	} catch (IOException e) {
 	    e.printStackTrace();
 	}
-
     }
 
     public void shutdown() {
@@ -95,6 +96,7 @@ public class BlinkendroidProtocol {
      * A thread that receives information from a Blinkendroid server.
      */
     private class RecieverThread extends Thread {
+
 	private boolean running = true;
 
 	@Override
@@ -105,14 +107,16 @@ public class BlinkendroidProtocol {
 	    String inputLine;
 	    try {
 		while (running && (inputLine = in.readLine()) != null) {
+		    if (!running) // fast exit
+			break;
 		    Log.i(Constants.LOG_TAG, "InputThread recieved: "
 			    + inputLine);
-		    String proto = inputLine.substring(0, 1);
+		    final String proto = inputLine.substring(0, 1);
 		    ICommandHandler handler = handlers.get(proto);
 		    if (null != handler)
 			handler.handle(inputLine.substring(1).getBytes());
 		}
-	    }catch (SocketException e) {
+	    } catch (SocketException e) {
 		Log.d(Constants.LOG_TAG, "Socket closed.");
 	    } catch (NumberFormatException e) {
 		Log.e(Constants.LOG_TAG, "InputThread fucked "
@@ -123,16 +127,16 @@ public class BlinkendroidProtocol {
 	    }
 	    Log.i(Constants.LOG_TAG, "InputThread ended!!!!!!! "
 		    + (server ? "server" : "client"));
-	    
-	    //wenn auf serverseite dann PlayerManager remove
-	    if(connectionClosedListener!=null)
+
+	    // wenn auf serverseite dann PlayerManager remove
+	    if (connectionClosedListener != null)
 		connectionClosedListener.connectionClosed();
 	}
 
 	public void shutdown() {
-	    Log.d(Constants.LOG_TAG, "RecieverThread shutdown.");
 	    running = false;
 	    interrupt();
+	    Log.d(Constants.LOG_TAG, "RecieverThread initiating shutdown");
 	}
     }
 
@@ -149,39 +153,49 @@ public class BlinkendroidProtocol {
 		try {
 		    GlobalTimerThread.sleep(5000);
 		} catch (InterruptedException e) {
+		    // swallow
 		}
+		if (!running) // fast exit
+		    break;
+
 		long t = System.currentTimeMillis();
 		Log.i(Constants.LOG_TAG, "GlobalTimerThread ping " + t);
 		out.write(PROTOCOL_PLAYER + COMMAND_PLAYER_TIME
 			+ Long.toString(t) + '\n');
 		out.flush();
 	    }
+	    Log.d(Constants.LOG_TAG, "GlobalTimerThread stopped");
 	}
 
 	public void shutdown() {
 	    running = false;
-	    Log.d(Constants.LOG_TAG, "GlobalTimerThread shutdown.");
 	    interrupt();
+	    Log.d(Constants.LOG_TAG, "GlobalTimerThread initiating shutdown");
 	}
     }
+
     public void play(int x, int y, int resId, long l, long startTime) {
-	String cmd=PROTOCOL_PLAYER + COMMAND_PLAY
-	+ Integer.toString(x)+"," + Integer.toString(y)+"," + Integer.toString(resId)+"," + Long.toString(l)+"," + Long.toString(startTime)+ '\n';
+	final String cmd = PROTOCOL_PLAYER + COMMAND_PLAY + Integer.toString(x)
+		+ "," + Integer.toString(y) + "," + Integer.toString(resId)
+		+ "," + Long.toString(l) + "," + Long.toString(startTime)
+		+ '\n';
 	out.write(cmd);
 	out.flush();
 	Log.i(Constants.LOG_TAG, cmd);
     }
+
     public void arrow(int degrees) {
-	String cmd = PROTOCOL_PLAYER + COMMAND_INIT + degrees + "\n";
+	final String cmd = PROTOCOL_PLAYER + COMMAND_INIT + degrees + "\n";
 	out.write(cmd);
 	out.flush();
 	Log.i(Constants.LOG_TAG, cmd);
     }
-    public void clip(float startX,float startY,float endX,float endY){
-	String cmd=PROTOCOL_PLAYER + COMMAND_CLIP +
-	    + startX + "," + startY +","+ endX + "," + endY+ '\n';
-	    out.write(cmd);
-	    out.flush();
-	    Log.i(Constants.LOG_TAG, cmd);
+
+    public void clip(float startX, float startY, float endX, float endY) {
+	final String cmd = PROTOCOL_PLAYER + COMMAND_CLIP + startX + ","
+		+ startY + "," + endX + "," + endY + '\n';
+	out.write(cmd);
+	out.flush();
+	Log.i(Constants.LOG_TAG, cmd);
     }
 }
