@@ -54,22 +54,24 @@ public class BlinkendroidClient {
     }
 
     public void shutdown() throws IOException {
-	if (null != protocol)
+	if (protocol != null) {
 	    protocol.shutdown();
+	    protocol = null;
+	}
 	if (socket != null) {
 	    socket.close();
 	    socket = null;
 	}
     }
 
-    public void registerListener(BlinkendroidListener listener) {
+    public void registerListener(final BlinkendroidListener listener) {
 	protocolHandler = new BlinkendroidProtocolHandler(listener);
 	protocol.registerHandler(BlinkendroidProtocol.PROTOCOL_PLAYER,
 		protocolHandler);
 	protocol.setConnectionClosedListener(listener);
     }
 
-    public void unregisterListener(BlinkendroidListener listener) {
+    public void unregisterListener(final BlinkendroidListener listener) {
 	protocol.unregisterHandler(protocolHandler);
     }
 }
