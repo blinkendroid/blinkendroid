@@ -131,7 +131,7 @@ public class BlinkendroidProtocol {
 		    final String proto = inputLine.substring(0, 1);
 		    ICommandHandler handler = handlers.get(proto);
 		    if (null != handler)
-			handler.handle(inputLine.substring(1).getBytes());
+			handler.handle(inputLine.substring(1));
 		}
 	    } catch (SocketException e) {
 		Log.d(Constants.LOG_TAG, "Socket closed.");

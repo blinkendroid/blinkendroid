@@ -101,24 +101,23 @@ public class BlinkendroidClient implements ICommandHandler,
 	    throw new IllegalStateException("listener has not been registered");
     }
 
-    public void handle(byte[] data) {
+    public void handle(final String command) {
 	Log.d(Constants.LOG_TAG, "BlinkendroidProtocolHandler received "
-		+ new String(data));
+		+ command);
 	final BlinkendroidListener listener = listenerRef.get();
 	if (listener != null) {
-	    final String input = new String(data);
-	    if (input.startsWith(BlinkendroidProtocol.COMMAND_PLAYER_TIME)) {
-		listener.serverTime(Long.parseLong(input.substring(1)));
-	    } else if (input.startsWith(BlinkendroidProtocol.COMMAND_CLIP)) {
-		final StringTokenizer tokenizer = new StringTokenizer(input
+	    if (command.startsWith(BlinkendroidProtocol.COMMAND_PLAYER_TIME)) {
+		listener.serverTime(Long.parseLong(command.substring(1)));
+	    } else if (command.startsWith(BlinkendroidProtocol.COMMAND_CLIP)) {
+		final StringTokenizer tokenizer = new StringTokenizer(command
 			.substring(1), ",");
 		final float startX = Float.parseFloat(tokenizer.nextToken());
 		final float startY = Float.parseFloat(tokenizer.nextToken());
 		final float endX = Float.parseFloat(tokenizer.nextToken());
 		final float endY = Float.parseFloat(tokenizer.nextToken());
 		listener.clip(startX, startY, endX, endY);
-	    } else if (input.startsWith(BlinkendroidProtocol.COMMAND_PLAY)) {
-		final StringTokenizer tokenizer = new StringTokenizer(input
+	    } else if (command.startsWith(BlinkendroidProtocol.COMMAND_PLAY)) {
+		final StringTokenizer tokenizer = new StringTokenizer(command
 			.substring(1), ",");
 		final int x = Integer.parseInt(tokenizer.nextToken());
 		final int y = Integer.parseInt(tokenizer.nextToken());
@@ -127,8 +126,8 @@ public class BlinkendroidClient implements ICommandHandler,
 		final long startTime = Long.parseLong(tokenizer.nextToken());
 		listener.serverTime(serverTime);
 		listener.play(resId, startTime);
-	    } else if (input.startsWith(BlinkendroidProtocol.COMMAND_INIT)) {
-		final int degrees = Integer.parseInt(input.substring(1));
+	    } else if (command.startsWith(BlinkendroidProtocol.COMMAND_INIT)) {
+		final int degrees = Integer.parseInt(command.substring(1));
 		listener.arrow(2500, degrees);
 	    }
 	}
