@@ -20,18 +20,21 @@ package org.cbase.blinkendroid.network;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.util.StringTokenizer;
 
 import org.cbase.blinkendroid.Constants;
+import org.cbase.blinkendroid.network.BlinkendroidProtocol.ConnectionClosedListener;
 
 import android.util.Log;
 
-public class BlinkendroidClient {
+public class BlinkendroidClient implements ICommandHandler,
+	ConnectionClosedListener {
 
     final private String ip;
     final private int port;
     private Socket socket;
     private BlinkendroidProtocol protocol;
-    private BlinkendroidProtocolHandler protocolHandler;
+    private BlinkendroidListener listener;
 
     public BlinkendroidClient(final String ip, final int port)
 	    throws IOException {
@@ -51,6 +54,7 @@ public class BlinkendroidClient {
 		Constants.SERVER_SOCKET_CONNECT_TIMEOUT);
 	Log.i(Constants.LOG_TAG, "connected");
 	protocol = new BlinkendroidProtocol(socket, false);
+	protocol.setConnectionClosedListener(this);
     }
 
     public void shutdown() throws IOException {
@@ -64,14 +68,62 @@ public class BlinkendroidClient {
 	}
     }
 
+    public void connectionClosed() {
+	try {
+	    shutdown();
+	} catch (IOException x) {
+	    Log
+		    .w(Constants.LOG_TAG,
+			    "exception after connection was closed", x);
+	}
+    }
+
     public void registerListener(final BlinkendroidListener listener) {
-	protocolHandler = new BlinkendroidProtocolHandler(listener);
-	protocol.registerHandler(BlinkendroidProtocol.PROTOCOL_PLAYER,
-		protocolHandler);
-	protocol.setConnectionClosedListener(listener);
+
+	if (this.listener != null)
+	    throw new IllegalStateException("can only register one listener");
+
+	this.listener = listener;
+
+	protocol.registerHandler(BlinkendroidProtocol.PROTOCOL_PLAYER, this);
     }
 
     public void unregisterListener(final BlinkendroidListener listener) {
-	protocol.unregisterHandler(protocolHandler);
+
+	protocol.unregisterHandler(this);
+
+	this.listener = null;
+    }
+
+    public void handle(byte[] data) {
+	Log.d(Constants.LOG_TAG, "BlinkendroidProtocolHandler received "
+		+ new String(data));
+	if (listener != null) {
+	    final String input = new String(data);
+	    if (input.startsWith(BlinkendroidProtocol.COMMAND_PLAYER_TIME)) {
+		listener.serverTime(Long.parseLong(input.substring(1)));
+	    } else if (input.startsWith(BlinkendroidProtocol.COMMAND_CLIP)) {
+		final StringTokenizer tokenizer = new StringTokenizer(input
+			.substring(1), ",");
+		final float startX = Float.parseFloat(tokenizer.nextToken());
+		final float startY = Float.parseFloat(tokenizer.nextToken());
+		final float endX = Float.parseFloat(tokenizer.nextToken());
+		final float endY = Float.parseFloat(tokenizer.nextToken());
+		listener.clip(startX, startY, endX, endY);
+	    } else if (input.startsWith(BlinkendroidProtocol.COMMAND_PLAY)) {
+		final StringTokenizer tokenizer = new StringTokenizer(input
+			.substring(1), ",");
+		final int x = Integer.parseInt(tokenizer.nextToken());
+		final int y = Integer.parseInt(tokenizer.nextToken());
+		final int resId = Integer.parseInt(tokenizer.nextToken());
+		final long serverTime = Long.parseLong(tokenizer.nextToken());
+		final long startTime = Long.parseLong(tokenizer.nextToken());
+		listener.serverTime(serverTime);
+		listener.play(resId, startTime);
+	    } else if (input.startsWith(BlinkendroidProtocol.COMMAND_INIT)) {
+		final int degrees = Integer.parseInt(input.substring(1));
+		listener.arrow(2500, degrees);
+	    }
+	}
     }
 }
