@@ -27,6 +27,9 @@ import org.cbase.blinkendroid.player.bml.BBMZParser;
 import org.cbase.blinkendroid.player.bml.BLM;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnCancelListener;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -76,18 +79,31 @@ public class PlayerActivity extends Activity implements BlinkendroidListener,
 		    .getStringExtra(INTENT_EXTRA_IP), getIntent().getIntExtra(
 		    INTENT_EXTRA_PORT, Constants.SERVER_PORT));
 	} catch (final IOException x) {
-	    throw new RuntimeException(x);
+	    Log.w(Constants.LOG_TAG, "exception while connecting to server", x);
+	    new AlertDialog.Builder(this).setIcon(
+		    android.R.drawable.ic_dialog_alert).setTitle(
+		    "Cannot connect to server").setMessage(
+		    x.getClass().getName() + ": " + x.getMessage())
+		    .setOnCancelListener(new OnCancelListener() {
+			public void onCancel(DialogInterface dialog) {
+			    finish();
+			}
+		    }).create().show();
 	}
-	blinkendroidClient.registerListener(this);
 
-	if (playing)
-	    playerView.startPlaying();
+	if (blinkendroidClient != null) {
 
-	if (System.currentTimeMillis() < arrowDuration) {
-	    handler.post(this);
-	    arrowView.setVisibility(View.VISIBLE);
-	} else {
-	    arrowView.setVisibility(View.INVISIBLE);
+	    blinkendroidClient.registerListener(this);
+
+	    if (playing)
+		playerView.startPlaying();
+
+	    if (System.currentTimeMillis() < arrowDuration) {
+		handler.post(this);
+		arrowView.setVisibility(View.VISIBLE);
+	    } else {
+		arrowView.setVisibility(View.INVISIBLE);
+	    }
 	}
     }
 
@@ -102,7 +118,7 @@ public class PlayerActivity extends Activity implements BlinkendroidListener,
 	    try {
 		blinkendroidClient.shutdown();
 	    } catch (final IOException x) {
-		throw new RuntimeException(x);
+		Log.w(Constants.LOG_TAG, "exception while shutting down", x);
 	    }
 	    blinkendroidClient = null;
 	}
