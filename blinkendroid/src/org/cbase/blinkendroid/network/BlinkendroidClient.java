@@ -31,21 +31,12 @@ import android.util.Log;
 public class BlinkendroidClient implements ICommandHandler,
 	ConnectionClosedListener {
 
-    private final InetSocketAddress socketAddress;
     private Socket socket;
     private BlinkendroidProtocol protocol;
     private final AtomicReference<BlinkendroidListener> listenerRef = new AtomicReference<BlinkendroidListener>();
 
     public BlinkendroidClient(final InetSocketAddress socketAddress)
 	    throws IOException {
-	this.socketAddress = socketAddress;
-	connect();
-    }
-
-    private void connect() throws IOException {
-	if (socket != null)
-	    throw new IllegalStateException("already connected");
-
 	Log.i(Constants.LOG_TAG, "trying to connect to server: "
 		+ socketAddress);
 	socket = new Socket();
