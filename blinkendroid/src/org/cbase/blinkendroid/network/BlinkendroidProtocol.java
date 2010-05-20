@@ -43,7 +43,7 @@ public class BlinkendroidProtocol {
     private BufferedReader in;
     private Socket socket;
     private GlobalTimerThread globalTimerThread;
-    private RecieverThread recieverThread;
+    private ReceiverThread receiverThread;
 
     private final HashMap<String, ICommandHandler> handlers = new HashMap<String, ICommandHandler>();
 
@@ -69,8 +69,8 @@ public class BlinkendroidProtocol {
 	}
 	this.server = server;
 	// if(!server)
-	recieverThread = new RecieverThread();
-	recieverThread.start();
+	receiverThread = new ReceiverThread();
+	receiverThread.start();
     }
 
     public void registerHandler(String proto, ICommandHandler handler) {
@@ -103,7 +103,7 @@ public class BlinkendroidProtocol {
     public void shutdown() {
 	if (null != globalTimerThread)
 	    globalTimerThread.shutdown();
-	recieverThread.shutdown();
+	receiverThread.shutdown();
 	Log.i(Constants.LOG_TAG, "Protocol shutdown.");
 	close();
     }
@@ -112,7 +112,7 @@ public class BlinkendroidProtocol {
     /**
      * A thread that receives information from a Blinkendroid server.
      */
-    private class RecieverThread extends Thread {
+    private class ReceiverThread extends Thread {
 
 	private boolean running = true;
 
@@ -126,7 +126,7 @@ public class BlinkendroidProtocol {
 		while (running && (inputLine = in.readLine()) != null) {
 		    if (!running) // fast exit
 			break;
-		    Log.i(Constants.LOG_TAG, "InputThread recieved: "
+		    Log.i(Constants.LOG_TAG, "InputThread received: "
 			    + inputLine);
 		    final String proto = inputLine.substring(0, 1);
 		    ICommandHandler handler = handlers.get(proto);
@@ -153,7 +153,7 @@ public class BlinkendroidProtocol {
 	public void shutdown() {
 	    running = false;
 	    interrupt();
-	    Log.d(Constants.LOG_TAG, "RecieverThread initiating shutdown");
+	    Log.d(Constants.LOG_TAG, "ReceiverThread initiating shutdown");
 	}
     }
 

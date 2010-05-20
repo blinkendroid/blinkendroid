@@ -32,7 +32,7 @@ public class BlinkendroidProtocolHandler implements ICommandHandler {
     }
 
     public void handle(byte[] data) {
-	Log.i(Constants.LOG_TAG, "BlinkendroidProtocolHandler recieved "
+	Log.i(Constants.LOG_TAG, "BlinkendroidProtocolHandler received "
 		+ new String(data));
 	String input = new String(data);
 	if (input.startsWith(BlinkendroidProtocol.COMMAND_PLAYER_TIME)) {
