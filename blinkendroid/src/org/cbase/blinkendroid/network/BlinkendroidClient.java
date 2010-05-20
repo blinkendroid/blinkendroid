@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.util.StringTokenizer;
+import java.util.concurrent.atomic.AtomicReference;
 
 import org.cbase.blinkendroid.Constants;
 import org.cbase.blinkendroid.network.BlinkendroidProtocol.ConnectionClosedListener;
@@ -30,11 +31,11 @@ import android.util.Log;
 public class BlinkendroidClient implements ICommandHandler,
 	ConnectionClosedListener {
 
-    final private String ip;
-    final private int port;
+    private final String ip;
+    private final int port;
     private Socket socket;
     private BlinkendroidProtocol protocol;
-    private BlinkendroidListener listener;
+    private final AtomicReference<BlinkendroidListener> listenerRef = new AtomicReference<BlinkendroidListener>();
 
     public BlinkendroidClient(final String ip, final int port)
 	    throws IOException {
@@ -80,10 +81,9 @@ public class BlinkendroidClient implements ICommandHandler,
 
     public void registerListener(final BlinkendroidListener listener) {
 
-	if (this.listener != null)
+	boolean expected = listenerRef.compareAndSet(null, listener);
+	if (!expected)
 	    throw new IllegalStateException("can only register one listener");
-
-	this.listener = listener;
 
 	protocol.registerHandler(BlinkendroidProtocol.PROTOCOL_PLAYER, this);
     }
@@ -92,12 +92,15 @@ public class BlinkendroidClient implements ICommandHandler,
 
 	protocol.unregisterHandler(this);
 
-	this.listener = null;
+	boolean expected = listenerRef.compareAndSet(listener, null);
+	if (!expected)
+	    throw new IllegalStateException("listener has not been registered");
     }
 
     public void handle(byte[] data) {
 	Log.d(Constants.LOG_TAG, "BlinkendroidProtocolHandler received "
 		+ new String(data));
+	final BlinkendroidListener listener = listenerRef.get();
 	if (listener != null) {
 	    final String input = new String(data);
 	    if (input.startsWith(BlinkendroidProtocol.COMMAND_PLAYER_TIME)) {
