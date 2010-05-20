@@ -7,13 +7,9 @@ import android.util.Log;
 
 public class PlayerManager {
 
-    PlayerClient[][] clients = new PlayerClient[10][10];
-    int maxX = 1, maxY = 1;
-    long startTime = 0;
-
-    public void PlayerManager() {
-
-    }
+    private PlayerClient[][] clients = new PlayerClient[10][10];
+    private int maxX = 1, maxY = 1;
+    private long startTime = 0;
 
     public void addClient(BlinkendroidProtocol blinkendroidProtocol) {
 	if (startTime == 0)
@@ -86,15 +82,19 @@ public class PlayerManager {
 	clip();
     }
 
-    private void arrow(PlayerClient pClient) {
-	arrow(pClient, -1, 0, 180);
+    private void arrow(final PlayerClient pClient) {
+	arrow(pClient, 0, 1, 0);
+	arrow(pClient, -1, 1, 45);
+	arrow(pClient, -1, 0, 90);
 	arrow(pClient, -1, -1, 135);
-	arrow(pClient, 0, -1, 90);
-	arrow(pClient, -1, +1, 225);
-
+	arrow(pClient, 0, -1, 180);
+	arrow(pClient, +1, -1, 225);
+	arrow(pClient, +1, 0, 270);
+	arrow(pClient, +1, 1, 315);
     }
 
-    private void arrow(PlayerClient pClient, int dy, int dx, int deg) {
+    private void arrow(final PlayerClient pClient, final int dx, final int dy,
+	    final int deg) {
 	if (pClient.y + dy >= 0 && pClient.x + dx >= 0
 		&& null != clients[pClient.y + dy][pClient.x + dx]) {
 	    clients[pClient.y + dy][pClient.x + dx].arrow(deg);
