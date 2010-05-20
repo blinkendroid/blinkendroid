@@ -32,6 +32,7 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
+import android.widget.Toast;
 
 /**
  * @author Andreas Schildbach
@@ -170,6 +171,18 @@ public class PlayerActivity extends Activity implements BlinkendroidListener,
 	});
     }
 
+    public void connectionLost() {
+	Log.i(Constants.LOG_TAG, "connection lost");
+	runOnUiThread(new Runnable() {
+	    public void run() {
+		Toast.makeText(PlayerActivity.this,
+			"connection to server lost", Toast.LENGTH_LONG).show();
+		handler.removeCallbacks(this);
+		playerView.stopPlaying();
+	    }
+	});
+    }
+
     public void run() {
 
 	arrowScale += 0.5f;
@@ -182,11 +195,5 @@ public class PlayerActivity extends Activity implements BlinkendroidListener,
 	    handler.postDelayed(this, 20);
 	else
 	    arrowView.setVisibility(View.INVISIBLE);
-    }
-
-    public void connectionClosed() {
-	Log.i(Constants.LOG_TAG, "connectionClosed");
-	// Toast.makeText(getBaseContext(), "connectionClosed",
-	// Toast.LENGTH_LONG).show();
     }
 }

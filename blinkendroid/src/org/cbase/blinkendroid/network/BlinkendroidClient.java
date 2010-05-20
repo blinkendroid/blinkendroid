@@ -71,6 +71,10 @@ public class BlinkendroidClient implements ICommandHandler,
 
     public void connectionClosed() {
 	try {
+	    final BlinkendroidListener listener = listenerRef.get();
+	    if (listener != null)
+		listener.connectionLost();
+
 	    shutdown();
 	} catch (IOException x) {
 	    Log

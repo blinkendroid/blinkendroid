@@ -29,4 +29,6 @@ public interface BlinkendroidListener {
     void clip(float startX, float startY, float endX, float endY);
 
     void arrow(long duration, float angle);
+
+    void connectionLost();
 }
