@@ -88,14 +88,11 @@ public class LoginActivity extends Activity {
 	super.onResume();
 
 	receiverThread = new ReceiverThread();
-	Log.d(Constants.LOG_TAG, "resuming Thread: " + receiverThread.getId());
 	receiverThread.addHandler(new IServerHandler() {
 	    public void foundServer(final String serverName,
 		    final String serverIp) {
 		runOnUiThread(new Runnable() {
 		    public void run() {
-			Log.d(Constants.LOG_TAG, "=== " + serverName + " "
-				+ serverIp);
 
 			final ListEntry entry = new ListEntry(serverName,
 				serverIp);
@@ -138,7 +135,7 @@ public class LoginActivity extends Activity {
 	}
 	case R.id.login_options_connect_to_ip: {
 	    final Dialog dialog = new Dialog(this);
-	    dialog.setTitle("Enter IP");
+	    dialog.setTitle("Enter server IP:");
 	    dialog.setContentView(R.layout.login_connect_to_ip_dialog_content);
 	    dialog.show();
 	    final EditText ip = (EditText) dialog
