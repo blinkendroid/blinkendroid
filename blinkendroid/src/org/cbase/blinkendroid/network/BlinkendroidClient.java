@@ -31,16 +31,14 @@ import android.util.Log;
 public class BlinkendroidClient implements ICommandHandler,
 	ConnectionClosedListener {
 
-    private final String ip;
-    private final int port;
+    private final InetSocketAddress socketAddress;
     private Socket socket;
     private BlinkendroidProtocol protocol;
     private final AtomicReference<BlinkendroidListener> listenerRef = new AtomicReference<BlinkendroidListener>();
 
-    public BlinkendroidClient(final String ip, final int port)
+    public BlinkendroidClient(final InetSocketAddress socketAddress)
 	    throws IOException {
-	this.ip = ip;
-	this.port = port;
+	this.socketAddress = socketAddress;
 	connect();
     }
 
@@ -48,11 +46,10 @@ public class BlinkendroidClient implements ICommandHandler,
 	if (socket != null)
 	    throw new IllegalStateException("already connected");
 
-	Log.i(Constants.LOG_TAG, "trying to connect to server: '" + ip + "':"
-		+ port);
+	Log.i(Constants.LOG_TAG, "trying to connect to server: "
+		+ socketAddress);
 	socket = new Socket();
-	socket.connect(new InetSocketAddress(ip, port),
-		Constants.SERVER_SOCKET_CONNECT_TIMEOUT);
+	socket.connect(socketAddress, Constants.SERVER_SOCKET_CONNECT_TIMEOUT);
 	Log.i(Constants.LOG_TAG, "connected");
 	protocol = new BlinkendroidProtocol(socket, false);
 	protocol.setConnectionClosedListener(this);

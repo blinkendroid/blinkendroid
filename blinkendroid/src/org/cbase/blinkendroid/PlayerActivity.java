@@ -18,6 +18,7 @@
 package org.cbase.blinkendroid;
 
 import java.io.IOException;
+import java.net.InetSocketAddress;
 
 import org.cbase.blinkendroid.network.BlinkendroidClient;
 import org.cbase.blinkendroid.network.BlinkendroidListener;
@@ -75,9 +76,10 @@ public class PlayerActivity extends Activity implements BlinkendroidListener,
 	super.onResume();
 
 	try {
-	    blinkendroidClient = new BlinkendroidClient(getIntent()
-		    .getStringExtra(INTENT_EXTRA_IP), getIntent().getIntExtra(
-		    INTENT_EXTRA_PORT, Constants.SERVER_PORT));
+	    blinkendroidClient = new BlinkendroidClient(new InetSocketAddress(
+		    getIntent().getStringExtra(INTENT_EXTRA_IP), getIntent()
+			    .getIntExtra(INTENT_EXTRA_PORT,
+				    Constants.SERVER_PORT)));
 	} catch (final IOException x) {
 	    Log.w(Constants.LOG_TAG, "exception while connecting to server", x);
 	    new AlertDialog.Builder(this).setIcon(
