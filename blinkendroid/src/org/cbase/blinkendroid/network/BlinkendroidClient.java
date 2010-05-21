@@ -110,6 +110,11 @@ public class BlinkendroidClient extends Thread {
     public void shutdown() {
 	running = false;
 	interrupt();
-	System.out.println("initiating shutdown");
+	try {
+	    join();
+	} catch (final InterruptedException x) {
+	    throw new RuntimeException(x);
+	}
+	System.out.println("shutdown completed");
     }
 }
