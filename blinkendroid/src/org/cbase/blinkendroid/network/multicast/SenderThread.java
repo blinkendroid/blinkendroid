@@ -59,7 +59,7 @@ public class SenderThread extends Thread {
 			Constants.BROADCAST_CLIENT_PORT);
 		socket.send(initPacket);
 
-		Log.i(Constants.LOG_TAG, "Broadcasting: " + message);
+		Log.d(Constants.LOG_TAG, "Broadcasting: " + message);
 		Thread.currentThread().sleep(5000);
 	    }
 	} catch (InterruptedException ie) {

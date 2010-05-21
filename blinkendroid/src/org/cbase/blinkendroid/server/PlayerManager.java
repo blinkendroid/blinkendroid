@@ -1,7 +1,7 @@
 package org.cbase.blinkendroid.server;
 
 import org.cbase.blinkendroid.Constants;
-import org.cbase.blinkendroid.network.BlinkendroidProtocol;
+import org.cbase.blinkendroid.network.BlinkendroidServerProtocol;
 
 import android.util.Log;
 
@@ -11,7 +11,7 @@ public class PlayerManager {
     private int maxX = 1, maxY = 1;
     private long startTime = 0;
     private boolean running=true;
-    public synchronized void addClient(BlinkendroidProtocol blinkendroidProtocol) {
+    public synchronized void addClient(BlinkendroidServerProtocol blinkendroidProtocol) {
 	if(!running){
 	    Log.e(Constants.LOG_TAG, "PlayerManager not running ignore addClient ");
 	    return;
@@ -20,9 +20,6 @@ public class PlayerManager {
 	    startTime = System.currentTimeMillis();
 	PlayerClient pClient = new PlayerClient(this, blinkendroidProtocol,
 		startTime);
-	// server starts thread to send globaltime
-	blinkendroidProtocol.startTimerThread();// TODO evtl nur ein timerthread
-	// im server
 
 	// TODO finde freien Platz in der Matrix
 	boolean found = false;
@@ -65,7 +62,8 @@ public class PlayerManager {
 	    clip(false);
 	    pClient.clip();
 	}
-
+	// server starts thread to send globaltime
+	blinkendroidProtocol.startTimerThread();// TODO evtl nur ein timerthread
     }
 
     private void arrow(final PlayerClient pClient) {

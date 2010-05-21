@@ -23,7 +23,8 @@ import java.net.Socket;
 import java.net.SocketException;
 
 import org.cbase.blinkendroid.Constants;
-import org.cbase.blinkendroid.network.BlinkendroidProtocol;
+import org.cbase.blinkendroid.network.BlinkendroidServerProtocol;
+import org.cbase.blinkendroid.network.ConnectionListener;
 
 import android.util.Log;
 
@@ -33,8 +34,9 @@ public class BlinkendroidServer extends Thread {
     volatile private ServerSocket serverSocket;
     private int port = -1;
     private PlayerManager playerManager;
-
-    public BlinkendroidServer(int port) {
+    private ConnectionListener connectionListener;
+    public BlinkendroidServer(ConnectionListener connectionListener, int port) {
+	this.connectionListener=connectionListener;
 	this.port = port;
     }
 
@@ -67,8 +69,8 @@ public class BlinkendroidServer extends Thread {
 		    break;
 		Log.i(Constants.LOG_TAG, "BlinkendroidServer got connection "
 			+ clientSocket.getRemoteSocketAddress().toString());
-		final BlinkendroidProtocol blinkendroidProtocol = new BlinkendroidProtocol(
-			clientSocket);
+		final BlinkendroidServerProtocol blinkendroidProtocol = new BlinkendroidServerProtocol(
+			clientSocket,connectionListener);
 		playerManager.addClient(blinkendroidProtocol);
 	    } catch (final IOException x) {
 		Log.e(Constants.LOG_TAG, "BlinkendroidServer could not accept",

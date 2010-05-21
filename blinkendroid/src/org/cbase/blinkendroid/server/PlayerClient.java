@@ -1,25 +1,27 @@
 package org.cbase.blinkendroid.server;
 
-import org.cbase.blinkendroid.R;
-import org.cbase.blinkendroid.network.BlinkendroidProtocol;
-import org.cbase.blinkendroid.network.BlinkendroidProtocol.ConnectionClosedListener;
+import java.net.SocketAddress;
 
-public class PlayerClient implements ConnectionClosedListener {
+import org.cbase.blinkendroid.R;
+import org.cbase.blinkendroid.network.BlinkendroidServerProtocol;
+import org.cbase.blinkendroid.network.ConnectionListener;
+
+public class PlayerClient implements ConnectionListener {
 
     //position
     int x,y;
     //clipping
     float startX,endX,startY,endY;
     //protocol
-    BlinkendroidProtocol blinkendroidProtocol;
+    BlinkendroidServerProtocol blinkendroidProtocol;
     long startTime;
     PlayerManager playerManager;
     
-    public PlayerClient(PlayerManager playerManager, BlinkendroidProtocol blinkendroidProtocol, long startTime) {
+    public PlayerClient(PlayerManager playerManager, BlinkendroidServerProtocol blinkendroidProtocol, long startTime) {
 	this.playerManager=playerManager;
 	this.blinkendroidProtocol=blinkendroidProtocol;
 	this.startTime=startTime;
-	blinkendroidProtocol.setConnectionClosedListener(this);
+	blinkendroidProtocol.addConnectionClosedListener(this);
     }
 
     public void shutdown() {
@@ -35,7 +37,15 @@ public class PlayerClient implements ConnectionClosedListener {
 	blinkendroidProtocol.arrow(degrees);
     }
     public void connectionClosed() {
+
+    }
+
+    public void connectionClosed(SocketAddress socketAddress) {
 	shutdown();
 	playerManager.removeClient(this);
+    }
+
+    public void connectionOpened(SocketAddress socketAddress) {
+
     }
 }

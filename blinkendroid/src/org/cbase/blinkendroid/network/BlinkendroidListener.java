@@ -20,11 +20,7 @@ package org.cbase.blinkendroid.network;
 /**
  * @author Andreas Schildbach
  */
-public interface BlinkendroidListener {
-
-    void connectionOpened();
-
-    void connectionClosed();
+public interface BlinkendroidListener extends ConnectionListener{
     
     void connectionFailed(String message);
 

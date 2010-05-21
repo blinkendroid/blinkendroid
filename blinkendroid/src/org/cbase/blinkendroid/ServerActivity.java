@@ -1,5 +1,8 @@
 package org.cbase.blinkendroid;
 
+import java.net.SocketAddress;
+
+import org.cbase.blinkendroid.network.ConnectionListener;
 import org.cbase.blinkendroid.network.multicast.SenderThread;
 import org.cbase.blinkendroid.server.BlinkendroidServer;
 import org.cbase.blinkendroid.utils.NetworkUtils;
@@ -11,8 +14,9 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
-public class ServerActivity extends Activity {
+public class ServerActivity extends Activity implements ConnectionListener{
 
     private SenderThread senderThread;
     private BlinkendroidServer blinkendroidServer;
@@ -37,7 +41,7 @@ public class ServerActivity extends Activity {
 			.toString());
 		senderThread.start();
 
-		blinkendroidServer = new BlinkendroidServer(
+		blinkendroidServer = new BlinkendroidServer(ServerActivity.this,
 			Constants.SERVER_PORT);
 		blinkendroidServer.start();
 
@@ -93,5 +97,23 @@ public class ServerActivity extends Activity {
 	}
 
 	super.onDestroy();
+    }
+
+    public void connectionClosed(SocketAddress socketAddress) {
+	runOnUiThread(new ToastPost("removed "+socketAddress.toString(),Toast.LENGTH_SHORT));
+    }
+
+    public void connectionOpened(SocketAddress socketAddress) {
+	runOnUiThread(new ToastPost("joined "+socketAddress.toString(),Toast.LENGTH_SHORT));
+    }
+    private class ToastPost implements Runnable{
+	String toast; int length;
+	public ToastPost(String toast, int length){
+	    this.toast=toast;
+	    this.length=length;
+	}
+	public void run() {
+		Toast.makeText(ServerActivity.this, toast, length).show();
+	}
     }
 }

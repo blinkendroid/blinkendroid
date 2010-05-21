@@ -1,6 +1,6 @@
 package org.cbase.blinkendroid.network;
 
-public interface ICommandHandler {
+public interface CommandHandler {
 
     void handle(String command);
 }
