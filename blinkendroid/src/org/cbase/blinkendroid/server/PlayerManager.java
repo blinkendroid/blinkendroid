@@ -136,7 +136,6 @@ public class PlayerManager {
     public void removeClient(PlayerClient playerClient) {
 	Log.i(Constants.LOG_TAG, "removeClient " + playerClient.x + ":"
 		+ playerClient.y);
-	playerClient.shutdown();
 	clients[playerClient.y][playerClient.x] = null;
 	// boolean newMaxX=true;
 	// for (int i = 0; i < maxY; i++) {
