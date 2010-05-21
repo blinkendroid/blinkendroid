@@ -52,6 +52,7 @@ public class PlayerActivity extends Activity implements BlinkendroidListener,
 
     private PlayerView playerView;
     private ArrowView arrowView;
+    private TextView ownerView;
     private BlinkendroidClient blinkendroidClient;
     private BLM blm;
     private boolean playing = false;
@@ -71,7 +72,7 @@ public class PlayerActivity extends Activity implements BlinkendroidListener,
 
 	playerView = (PlayerView) findViewById(R.id.player_image);
 	arrowView = (ArrowView) findViewById(R.id.player_arrow);
-	final TextView ownerView = (TextView) findViewById(R.id.player_owner);
+	ownerView = (TextView) findViewById(R.id.player_owner);
 
 	playerView.setOnTouchListener(new OnTouchListener() {
 
@@ -209,6 +210,7 @@ public class PlayerActivity extends Activity implements BlinkendroidListener,
 			.show();
 		handler.removeCallbacks(this);
 		playerView.stopPlaying();
+		ownerView.setVisibility(View.INVISIBLE);
 	    }
 	});
     }
@@ -219,6 +221,7 @@ public class PlayerActivity extends Activity implements BlinkendroidListener,
 		Log.w(Constants.LOG_TAG, "connection failed: " + message);
 		handler.removeCallbacks(this);
 		playerView.stopPlaying();
+		ownerView.setVisibility(View.INVISIBLE);
 		new AlertDialog.Builder(PlayerActivity.this).setIcon(
 			android.R.drawable.ic_dialog_alert).setTitle(
 			"Cannot connect to server").setMessage(message)
