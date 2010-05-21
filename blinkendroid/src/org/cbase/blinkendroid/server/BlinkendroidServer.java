@@ -20,6 +20,7 @@ package org.cbase.blinkendroid.server;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
 
 import org.cbase.blinkendroid.Constants;
 import org.cbase.blinkendroid.network.BlinkendroidProtocol;
@@ -28,7 +29,8 @@ import android.util.Log;
 
 public class BlinkendroidServer extends Thread {
 
-    private boolean running = false;
+    volatile private boolean running = false;
+    volatile private ServerSocket serverSocket;
     private int port = -1;
     private PlayerManager playerManager;
 
@@ -43,9 +45,9 @@ public class BlinkendroidServer extends Thread {
 	Log.i(Constants.LOG_TAG, "BlinkendroidServer Thread started");
 
 	try {
-	    final ServerSocket serverSocket = new ServerSocket(port);
+	    serverSocket = new ServerSocket(port);
 	    playerManager = new PlayerManager();
-	    acceptLoop(serverSocket);
+	    acceptLoop();
 	    playerManager.shutdown();
 	    serverSocket.close();
 	} catch (final IOException x) {
@@ -56,11 +58,11 @@ public class BlinkendroidServer extends Thread {
 	Log.i(Constants.LOG_TAG, "BlinkendroidServer Thread ended");
     }
 
-    private void acceptLoop(final ServerSocket serverSocket) {
+    private void acceptLoop() {
 
 	while (running) {
 	    try {
-		final Socket clientSocket = serverSocket.accept();
+		final Socket clientSocket = accept();
 		if (!running) // fast exit
 		    break;
 		Log.i(Constants.LOG_TAG, "BlinkendroidServer got connection "
@@ -75,8 +77,24 @@ public class BlinkendroidServer extends Thread {
 	}
     }
 
+    private Socket accept() throws IOException {
+	try {
+	    return serverSocket.accept();
+	} catch (final SocketException x) {
+	    // swallow, this is expected after interruption by closing socket
+	    return null;
+	}
+    }
+
     public void shutdown() {
 	running = false;
-	interrupt();
+	try {
+	    serverSocket.close(); // interrupt thread blocked in accept()
+	    join();
+	} catch (final IOException x) {
+	    throw new RuntimeException(x);
+	} catch (final InterruptedException x) {
+	    throw new RuntimeException(x);
+	}
     }
 }
