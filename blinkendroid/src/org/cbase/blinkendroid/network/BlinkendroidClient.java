@@ -22,14 +22,13 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.InetSocketAddress;
 import java.net.Socket;
-import java.net.SocketException;
 import java.util.StringTokenizer;
 
 import org.cbase.blinkendroid.Constants;
 
 public class BlinkendroidClient extends Thread {
 
-    private boolean running = false;
+    volatile private boolean running = false;
     private final InetSocketAddress socketAddress;
     private final BlinkendroidListener listener;
 
@@ -111,7 +110,6 @@ public class BlinkendroidClient extends Thread {
     public void shutdown() {
 	running = false;
 	interrupt();
-	listener.connectionClosed();
 	System.out.println("initiating shutdown");
     }
 }
