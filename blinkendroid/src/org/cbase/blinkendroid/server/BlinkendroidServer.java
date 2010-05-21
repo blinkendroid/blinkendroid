@@ -30,7 +30,7 @@ public class BlinkendroidServer extends Thread {
 
     private boolean running = false;
     private int port = -1;
-    private final PlayerManager playerManager = new PlayerManager();
+    private PlayerManager playerManager;
 
     public BlinkendroidServer(int port) {
 	this.port = port;
@@ -39,12 +39,14 @@ public class BlinkendroidServer extends Thread {
     @Override
     public void run() {
 
-	Log.i(Constants.LOG_TAG, "BlinkendroidServer Thread started");
 	running = true;
+	Log.i(Constants.LOG_TAG, "BlinkendroidServer Thread started");
 
 	try {
 	    final ServerSocket serverSocket = new ServerSocket(port);
+	    playerManager = new PlayerManager();
 	    acceptLoop(serverSocket);
+	    playerManager.shutdown();
 	    serverSocket.close();
 	} catch (final IOException x) {
 	    Log.e(Constants.LOG_TAG, "Could not create Socket", x);
@@ -59,6 +61,8 @@ public class BlinkendroidServer extends Thread {
 	while (running) {
 	    try {
 		final Socket clientSocket = serverSocket.accept();
+		if (!running) // fast exit
+		    break;
 		Log.i(Constants.LOG_TAG, "BlinkendroidServer got connection "
 			+ clientSocket.getRemoteSocketAddress().toString());
 		final BlinkendroidProtocol blinkendroidProtocol = new BlinkendroidProtocol(
@@ -74,11 +78,5 @@ public class BlinkendroidServer extends Thread {
     public void shutdown() {
 	running = false;
 	interrupt();
-	if (playerManager != null)
-	    playerManager.shutdown();
-    }
-
-    public boolean isRunning() {
-	return running;
     }
 }
