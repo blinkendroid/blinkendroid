@@ -75,6 +75,8 @@ public class BlinkendroidClient extends Thread {
 	    listener.connectionFailed(x.getClass().getName() + ": "
 		    + x.getMessage());
 	}
+
+	System.out.println("client thread ended normally");
     }
 
     private void handle(final String command) {
