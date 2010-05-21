@@ -90,7 +90,7 @@ public class BlinkendroidProtocol {
     public void close() {
 	out.close();
 	try {
-	    in.close();
+//	    in.close();
 	    socket.close();
 	    Log.d(Constants.LOG_TAG, "BlinkendroidProtocol: Socket closed.");
 	} catch (IOException e) {
