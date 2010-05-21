@@ -40,22 +40,31 @@ public class BMLConverter {
 	File bmlDir = new File("bml");
 	File[] bmls = bmlDir.listFiles();
 	for (int i = 0; i < bmls.length; i++) {
+	    if(!bmls[i].getName().endsWith(".bml"))
+		continue;
 	    System.out.println("convert " + bmls[i].getName());
-	    String tname=bmls[i].getName().substring(0, bmls[i].getName().length()-4).replace("-", "");
+	    String tname=bmls[i].getName().substring(0, bmls[i].getName().length()-4)/*.replace("-", "")*/;
+	    tname=tname.toLowerCase();
 	    BLM blm = conv.convert("bml/" + bmls[i].getName(), "bbm/"+tname+".bbm");
 	    compress( "bbm/"+tname+".bbm","bbmz/" +tname+ ".bbmz");
 	    //die infofiles für den server
-//	    ObjectOutput out = new ObjectOutputStream(new FileOutputStream(bbmfile));
-//	    out.writeObject(blm);
+	    ObjectOutput out = new ObjectOutputStream(new FileOutputStream("bbmz/" +tname+ ".info"));
+	    out.writeObject(blm.header);
+	    out.flush();
+	    out.close();
 	}
     }
 
     public BLM convert(String bmlfile, String bbmfile) throws IOException {
 	BMLParser p = new BMLParser(new MXParser());
 	BLM blm = p.parseBLM(new FileReader(bmlfile));
+	if(null==blm.header.title)
+	    blm.header.title=bmlfile.substring(4,bmlfile.length()-4);
 	// write blm to binary blinkelights movie bbm
 	ObjectOutput out = new ObjectOutputStream(new FileOutputStream(bbmfile));
 	out.writeObject(blm);
+	out.flush();
+	out.close();
 	return blm;
     }
 
