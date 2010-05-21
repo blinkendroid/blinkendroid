@@ -65,9 +65,10 @@ public class BlinkendroidProtocol {
 	this.in = new BufferedReader(new InputStreamReader(socket
 		.getInputStream()));
 	this.server = server;
-	// if(!server)
-	receiverThread = new ReceiverThread();
-	receiverThread.start();
+	if(!server){
+        	receiverThread = new ReceiverThread();
+        	receiverThread.start();
+	}
     }
 
     public void registerHandler(String proto, ICommandHandler handler) {
@@ -100,7 +101,8 @@ public class BlinkendroidProtocol {
     public void shutdown() {
 	if (null != globalTimerThread)
 	    globalTimerThread.shutdown();
-	receiverThread.shutdown();
+	if(null!=receiverThread)
+	    receiverThread.shutdown();
 	Log.i(Constants.LOG_TAG, "Protocol shutdown.");
 	close();
     }
