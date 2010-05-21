@@ -68,7 +68,7 @@ public class BlinkendroidServer extends Thread {
 		Log.i(Constants.LOG_TAG, "BlinkendroidServer got connection "
 			+ clientSocket.getRemoteSocketAddress().toString());
 		final BlinkendroidProtocol blinkendroidProtocol = new BlinkendroidProtocol(
-			clientSocket, true);
+			clientSocket);
 		playerManager.addClient(blinkendroidProtocol);
 	    } catch (final IOException x) {
 		Log.e(Constants.LOG_TAG, "BlinkendroidServer could not accept",

@@ -38,7 +38,6 @@ public class BlinkendroidProtocol {
     public static final String COMMAND_PLAY = "P";
     public static final String COMMAND_INIT = "I";
 
-    private boolean server;
     private PrintWriter out;
     private BufferedReader in;
     private Socket socket;
@@ -58,17 +57,15 @@ public class BlinkendroidProtocol {
 	this.connectionClosedListener = connectionClosedListener;
     }
 
-    public BlinkendroidProtocol(final Socket socket, final boolean server)
-	    throws IOException {
+    public BlinkendroidProtocol(final Socket socket) throws IOException {
 	this.socket = socket;
 	this.out = new PrintWriter(socket.getOutputStream(), true);
 	this.in = new BufferedReader(new InputStreamReader(socket
 		.getInputStream()));
-	this.server = server;
-//	if(!server){ Receiverthread wird beim server benötigt um zu wissen wann client weg ist
-        	receiverThread = new ReceiverThread();
-        	receiverThread.start();
-//	}
+	// Receiverthread wird beim server benötigt um zu wissen wann client weg
+	// ist
+	receiverThread = new ReceiverThread();
+	receiverThread.start();
     }
 
     public void registerHandler(String proto, ICommandHandler handler) {
@@ -90,7 +87,7 @@ public class BlinkendroidProtocol {
     public void close() {
 	out.close();
 	try {
-//	    in.close();
+	    // in.close();
 	    socket.close();
 	    Log.d(Constants.LOG_TAG, "BlinkendroidProtocol: Socket closed.");
 	} catch (IOException e) {
@@ -101,7 +98,7 @@ public class BlinkendroidProtocol {
     public void shutdown() {
 	if (null != globalTimerThread)
 	    globalTimerThread.shutdown();
-	if(null!=receiverThread)
+	if (null != receiverThread)
 	    receiverThread.shutdown();
 	Log.i(Constants.LOG_TAG, "Protocol shutdown.");
 	close();
@@ -118,8 +115,7 @@ public class BlinkendroidProtocol {
 	@Override
 	public void run() {
 	    running = true;
-	    Log.i(Constants.LOG_TAG, "InputThread started "
-		    + (server ? "server" : "client"));
+	    Log.i(Constants.LOG_TAG, "server InputThread started");
 	    String inputLine;
 	    try {
 		while (running && (inputLine = in.readLine()) != null) {
@@ -135,14 +131,11 @@ public class BlinkendroidProtocol {
 	    } catch (SocketException e) {
 		Log.d(Constants.LOG_TAG, "Socket closed.");
 	    } catch (NumberFormatException e) {
-		Log.e(Constants.LOG_TAG, "InputThread fucked "
-			+ (server ? "server" : "client"), e);
+		Log.e(Constants.LOG_TAG, "server InputThread fucked ", e);
 	    } catch (IOException e) {
-		Log.e(Constants.LOG_TAG, "InputThread fucked "
-			+ (server ? "server" : "client"), e);
+		Log.e(Constants.LOG_TAG, "server InputThread fucked ", e);
 	    }
-	    Log.i(Constants.LOG_TAG, "InputThread ended!!!!!!! "
-		    + (server ? "server" : "client"));
+	    Log.i(Constants.LOG_TAG, "server InputThread ended!!!!!!! ");
 
 	    // wenn auf serverseite dann PlayerManager remove
 	    if (connectionClosedListener != null)
