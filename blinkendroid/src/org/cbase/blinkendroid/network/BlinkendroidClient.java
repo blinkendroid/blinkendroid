@@ -27,8 +27,6 @@ import java.util.StringTokenizer;
 
 import org.cbase.blinkendroid.Constants;
 
-import android.util.Log;
-
 public class BlinkendroidClient extends Thread {
 
     private boolean running = false;
@@ -46,13 +44,13 @@ public class BlinkendroidClient extends Thread {
 
 	running = true;
 
-	Log.i(Constants.LOG_TAG, "trying to connect to server: "
+	System.out.println( "trying to connect to server: "
 		+ socketAddress);
 	try {
 	    final Socket socket = new Socket();
 	    socket.connect(socketAddress,
 		    Constants.SERVER_SOCKET_CONNECT_TIMEOUT);
-	    Log.i(Constants.LOG_TAG, "connected");
+	    System.out.println( "connected");
 	    final BufferedReader in = new BufferedReader(new InputStreamReader(
 		    socket.getInputStream()));
 	    listener.connectionOpened();
@@ -63,25 +61,26 @@ public class BlinkendroidClient extends Thread {
 		    break;
 		if (inputLine == null)
 		    break;
-		Log.d(Constants.LOG_TAG, "received: " + inputLine);
+		System.out.println("received: " + inputLine);
 		handle(inputLine.substring(1));
 	    }
 
-	    Log.i(Constants.LOG_TAG, "closing connection");
+	    System.out.println( "closing connection");
 
 	    listener.connectionClosed();
 
 	    in.close();
 	    socket.close();
 	} catch (SocketException e) {
-	    Log.d(Constants.LOG_TAG, "Socket closed.");
+	    System.out.println( "Socket closed.");
 	} catch (IOException e) {
-	    Log.e(Constants.LOG_TAG, "InputThread fucked ", e);
+	    System.out.println( "InputThread fucked ");
+	    e.printStackTrace();
 	}
     }
 
     private void handle(final String command) {
-	Log.d(Constants.LOG_TAG, "received: " + command);
+	System.out.println( "received: " + command);
 	if (listener != null) {
 	    if (command.startsWith(BlinkendroidProtocol.COMMAND_PLAYER_TIME)) {
 		listener.serverTime(Long.parseLong(command.substring(1)));
@@ -113,6 +112,7 @@ public class BlinkendroidClient extends Thread {
     public void shutdown() {
 	running = false;
 	interrupt();
-	Log.d(Constants.LOG_TAG, "initiating shutdown");
+	listener.connectionClosed();
+	System.out.println( "initiating shutdown");
     }
 }
