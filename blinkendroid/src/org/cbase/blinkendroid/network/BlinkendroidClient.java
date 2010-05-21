@@ -100,7 +100,7 @@ public class BlinkendroidClient extends Thread {
 		final long serverTime = Long.parseLong(tokenizer.nextToken());
 		final long startTime = Long.parseLong(tokenizer.nextToken());
 		listener.serverTime(serverTime);
-		listener.play(resId, startTime);
+		listener.play(x, y, resId, startTime);
 	    } else if (command.startsWith(BlinkendroidProtocol.COMMAND_INIT)) {
 		final int degrees = Integer.parseInt(command.substring(1));
 		listener.arrow(2500, degrees);

@@ -30,7 +30,7 @@ public interface BlinkendroidListener {
 
     void serverTime(long serverTime);
 
-    void play(int resId, long startTime);
+    void play(int x, int y, int resId, long startTime2);
 
     void clip(float startX, float startY, float endX, float endY);
 

@@ -145,7 +145,7 @@ public class PlayerActivity extends Activity implements BlinkendroidListener,
 	});
     }
 
-    public void play(final int resId, final long startTime) {
+    public void play(int x, int y, final int resId, final long startTime) {
 	Log.i(Constants.LOG_TAG, "play " + startTime);
 	runOnUiThread(new Runnable() {
 	    public void run() {
