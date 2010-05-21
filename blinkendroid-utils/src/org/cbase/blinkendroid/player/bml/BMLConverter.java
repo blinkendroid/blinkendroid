@@ -42,20 +42,24 @@ public class BMLConverter {
 	for (int i = 0; i < bmls.length; i++) {
 	    System.out.println("convert " + bmls[i].getName());
 	    String tname=bmls[i].getName().substring(0, bmls[i].getName().length()-4).replace("-", "");
-	    conv.convert("bml/" + bmls[i].getName(), "bbm/"+tname+".bbm");
-	    decompress( "bbm/"+tname+".bbm","bbmz/" +tname+ ".bbmz");
+	    BLM blm = conv.convert("bml/" + bmls[i].getName(), "bbm/"+tname+".bbm");
+	    compress( "bbm/"+tname+".bbm","bbmz/" +tname+ ".bbmz");
+	    //die infofiles für den server
+//	    ObjectOutput out = new ObjectOutputStream(new FileOutputStream(bbmfile));
+//	    out.writeObject(blm);
 	}
     }
 
-    public void convert(String bmlfile, String bbmfile) throws IOException {
+    public BLM convert(String bmlfile, String bbmfile) throws IOException {
 	BMLParser p = new BMLParser(new MXParser());
 	BLM blm = p.parseBLM(new FileReader(bmlfile));
 	// write blm to binary blinkelights movie bbm
 	ObjectOutput out = new ObjectOutputStream(new FileOutputStream(bbmfile));
 	out.writeObject(blm);
+	return blm;
     }
 
-    public static void decompress(String filein, String fileout) {
+    public static void compress(String filein, String fileout) {
 	FileInputStream fis = null;
 	FileOutputStream fos = null;
 	try {

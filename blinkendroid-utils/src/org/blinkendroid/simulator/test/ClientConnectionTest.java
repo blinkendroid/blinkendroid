@@ -86,6 +86,8 @@ public class ClientConnectionTest extends TestCase {
 	    BlinkendroidClient client = new BlinkendroidClient(new InetSocketAddress(IP,Constants.SERVER_PORT), testListener);
 	    client.start();
 	    Thread.sleep(2000);
+	    //calc expected positions
+	    int maxX = (int)Math.floor(Math.sqrt(i));
 	    assertFalse(testListener.connectionClosed);
 	    assertTrue(testListener.startTime>0);
 	    assertTrue(testListener.serverTime>0);
