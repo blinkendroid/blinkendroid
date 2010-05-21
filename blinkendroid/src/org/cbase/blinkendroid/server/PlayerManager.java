@@ -7,11 +7,15 @@ import android.util.Log;
 
 public class PlayerManager {
 
-    private PlayerClient[][] clients = new PlayerClient[10][10];
+    private PlayerClient[][] clients = new PlayerClient[20][20];
     private int maxX = 1, maxY = 1;
     private long startTime = 0;
-
-    public void addClient(BlinkendroidProtocol blinkendroidProtocol) {
+    private boolean running=true;
+    public synchronized void addClient(BlinkendroidProtocol blinkendroidProtocol) {
+	if(!running){
+	    Log.e(Constants.LOG_TAG, "PlayerManager not running ignore addClient ");
+	    return;
+	}
 	if (startTime == 0)
 	    startTime = System.currentTimeMillis();
 	PlayerClient pClient = new PlayerClient(this, blinkendroidProtocol,
@@ -53,33 +57,11 @@ public class PlayerManager {
 		+ pClient.y);
 	clients[pClient.y][pClient.x] = pClient;
 
-	// Testing arrow allocation:
-	// int posOffsets[] = { -1, 0, +1 };
-	//
-	// for (int i = 0; i < posOffsets.length; i++) {
-	// int xOffset = posOffsets[i];
-	//
-	// for (int j = 0; j < posOffsets.length; j++) {
-	// int yOffset = posOffsets[j];
-	// if (!(xOffset == 0 && yOffset == 0)
-	// && pClient.x + xOffset < clients.length && pClient.x + xOffset >= 0
-	// && pClient.y + yOffset < clients[pClient.x].length
-	// && pClient.y + yOffset >= 0) {
-	// if (clients[i][j] != null) {
-	// //TODO change to a variable value:
-	// clients[i][j].arrow(360);
-	// Log.d(Constants.LOG_TAG, "Arrow set to " + 360 + " degrees.");
-	// }
-	// // System.out.println("Adding " + (position.x + xOffset) +
-	// // ";" + (position.y + yOffset) + " as neightbour");
-	// }
-	// }
-	// }
 	arrow(pClient);
 	// Play
 	pClient.play();
-
-	clip();
+	if(!found)
+	    clip();
     }
 
     private void arrow(final PlayerClient pClient) {
@@ -121,7 +103,9 @@ public class PlayerManager {
 	}
     }
 
-    public void shutdown() {
+    public synchronized void shutdown() {
+	running=false;
+	Log.i(Constants.LOG_TAG, "PlayerManager.shutdown() start");
 	for (int i = 0; i < maxY; i++) {
 	    for (int j = 0; j < maxY; j++) {
 		if (null != clients[i][j]) {
@@ -131,9 +115,16 @@ public class PlayerManager {
 		}
 	    }
 	}
+	Log.i(Constants.LOG_TAG, "PlayerManager.shutdown() end!!!");
+
     }
 
-    public void removeClient(PlayerClient playerClient) {
+    public synchronized void removeClient(PlayerClient playerClient) {
+	if(!running){
+	    Log.e(Constants.LOG_TAG, "PlayerManager not running ignore removeClient");
+	    return;
+	}
+
 	Log.i(Constants.LOG_TAG, "removeClient " + playerClient.x + ":"
 		+ playerClient.y);
 	clients[playerClient.y][playerClient.x] = null;
@@ -160,7 +151,7 @@ public class PlayerManager {
 	// maxY--;
 	// Log.i(Constants.LOG_TAG, "newMaxY "+maxY);
 	// }
-	clip();
+//	clip();
     }
     //TODO
 }

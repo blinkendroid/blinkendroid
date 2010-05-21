@@ -26,7 +26,7 @@ public class PlayerClient implements ConnectionClosedListener {
 	blinkendroidProtocol.shutdown();
     }
     public void clip() {
-	blinkendroidProtocol.clip(startX, startY, endX, endY);
+	 blinkendroidProtocol.clip(startX, startY, endX, endY);
     }
     public void play() {
 	blinkendroidProtocol.play(x,y,R.raw.allyourbase,System.currentTimeMillis(),startTime);
