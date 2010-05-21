@@ -15,41 +15,41 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.cbase.blinkendroid.network;
+package org.cbase.blinkendroid.server;
 
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
 import org.cbase.blinkendroid.Constants;
-import org.cbase.blinkendroid.server.PlayerManager;
+import org.cbase.blinkendroid.network.BlinkendroidProtocol;
 
 import android.util.Log;
 
 public class BlinkendroidServer extends Thread {
+
     private boolean running = false;
     private int port = -1;
-    PlayerManager playerManager;
+    private final PlayerManager playerManager = new PlayerManager();
 
     public BlinkendroidServer(int port) {
 	this.port = port;
-	playerManager = new PlayerManager();
     }
 
     @Override
     public void run() {
+	running = true;
 	ServerSocket serverSocket;
 	try {
 	    serverSocket = new ServerSocket(port);
 	} catch (IOException e) {
 	    Log.e(Constants.LOG_TAG, "Could not create Socket", e);
 	    return;
-	} 
-	running = true;
+	}
 	Log.i(Constants.LOG_TAG, "BlinkendroidServer Thread started");
 	try {
 	    while (running) {
-		Socket clientSocket = serverSocket.accept();
+		final Socket clientSocket = serverSocket.accept();
 		Log.i(Constants.LOG_TAG, "BlinkendroidServer got connection "
 			+ clientSocket.getRemoteSocketAddress().toString());
 		BlinkendroidProtocol blinkendroidProtocol = new BlinkendroidProtocol(
@@ -68,7 +68,7 @@ public class BlinkendroidServer extends Thread {
 		Log.e(Constants.LOG_TAG, "Could not close in finally: ", e);
 	    }
 	}
-	
+
 	Log.i(Constants.LOG_TAG, "BlinkendroidServer Thread closed");
     }
 
@@ -84,8 +84,4 @@ public class BlinkendroidServer extends Thread {
     public boolean isRunning() {
 	return running;
     }
-
-    // public BlinkendroidProtocol getProtocol() {
-    // return blinkendroidProtocol;
-    // }
 }

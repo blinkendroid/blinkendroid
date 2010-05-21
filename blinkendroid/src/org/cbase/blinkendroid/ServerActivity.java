@@ -1,7 +1,7 @@
 package org.cbase.blinkendroid;
 
-import org.cbase.blinkendroid.network.BlinkendroidServer;
 import org.cbase.blinkendroid.network.multicast.SenderThread;
+import org.cbase.blinkendroid.server.BlinkendroidServer;
 import org.cbase.blinkendroid.utils.NetworkUtils;
 
 import android.app.Activity;
