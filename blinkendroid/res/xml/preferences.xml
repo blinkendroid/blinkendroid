@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+	<EditTextPreference android:key="owner" android:title="Owner Name"
+		android:summary="In order to identify your phone in the matrix, enter your name here" />
+
+</PreferenceScreen>
