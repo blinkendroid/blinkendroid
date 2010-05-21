@@ -57,11 +57,15 @@ public class PlayerManager {
 		+ pClient.y);
 	clients[pClient.y][pClient.x] = pClient;
 
-	arrow(pClient);
-	// Play
 	pClient.play();
+	arrow(pClient);
 	if(!found)
-	    clip();
+	    clip(true);
+	else{
+	    clip(false);
+	    pClient.clip();
+	}
+
     }
 
     private void arrow(final PlayerClient pClient) {
@@ -83,7 +87,7 @@ public class PlayerManager {
 	}
     }
 
-    private void clip() {
+    private void clip(boolean clipAll) {
 	// clipping für alle berechnen
 	// Log.i(Constants.LOG_TAG, "clip maxX "+i+":"+j);
 	float startY = 0;
@@ -95,7 +99,8 @@ public class PlayerManager {
 		    clients[i][j].startY = startY;
 		    clients[i][j].endX = startX + (float) (1.0 / maxX);
 		    clients[i][j].endY = startY + (float) (1.0 / maxY);
-		    clients[i][j].clip();
+		    if(clipAll)
+			clients[i][j].clip();
 		}
 		startX = startX + (float) (1.0 / maxX);
 	    }
