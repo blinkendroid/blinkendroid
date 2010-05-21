@@ -36,7 +36,7 @@ import android.util.Log;
 public class ReceiverThread extends Thread {
 
     private InetAddress group;
-    private boolean running = true;
+    volatile private boolean running = true;
 
     private List<IServerHandler> handlers = Collections
 	    .synchronizedList(new ArrayList<IServerHandler>());
@@ -81,7 +81,8 @@ public class ReceiverThread extends Thread {
     @Override
     public void run() {
 	try {
-	    DatagramSocket s = new DatagramSocket(Constants.BROADCAST_CLIENT_PORT);
+	    DatagramSocket s = new DatagramSocket(
+		    Constants.BROADCAST_CLIENT_PORT);
 	    byte[] buf;
 
 	    while (running) {
@@ -92,7 +93,8 @@ public class ReceiverThread extends Thread {
 		Log.d(Constants.LOG_TAG, "received something via broadcast");
 		String[] receivedData = new String(recv.getData()).split(" ");
 
-		if (receivedData.length != 3 || !receivedData[0]
+		if (receivedData.length != 3
+			|| !receivedData[0]
 				.equals(Constants.SERVER_BROADCAST_COMMAND)) {
 		    continue;
 		}
@@ -117,8 +119,8 @@ public class ReceiverThread extends Thread {
     }
 
     public void shutdown() {
-	handlers.clear();
 	running = false;
+	handlers.clear();
 	interrupt();
 	Log.d(Constants.LOG_TAG, "ReceiverThread: shutdown complete");
     }

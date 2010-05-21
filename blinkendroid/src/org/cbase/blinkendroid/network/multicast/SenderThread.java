@@ -33,7 +33,7 @@ public class SenderThread extends Thread {
 
     private String message;
     private InetAddress group;
-    private boolean running = true;
+    volatile private boolean running = true;
     private DatagramSocket socket;
 
     /**
@@ -72,9 +72,8 @@ public class SenderThread extends Thread {
     }
     
     public void shutdown() {
-	socket.close();
 	running = false;
+	socket.close();
 	interrupt();
     }
-
 }
