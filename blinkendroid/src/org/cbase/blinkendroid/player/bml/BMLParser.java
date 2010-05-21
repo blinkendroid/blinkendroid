@@ -22,7 +22,6 @@ import java.io.Reader;
 import java.util.ArrayList;
 
 import org.cbase.blinkendroid.player.bml.BLM.Frame;
-import org.cbase.blinkendroid.player.bml.BLM.Header;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
@@ -34,6 +33,10 @@ public class BMLParser {
     private static final String BLM_ATTR_BITS = "bits";
     private static final String HEADER = "header";
     private static final String TITLE = "title";
+    private static final String CREATOR = "creator";
+    private static final String AUTHOR = "author";
+    private static final String EMAIL = "email";
+    private static final String DESCRIPTION = "description";
     private static final String FRAME = "frame";
     private static final String FRAME_ATTR_DURATION = "duration";
     private static final String ROW = "row";
@@ -77,12 +80,12 @@ public class BMLParser {
 	    throws XmlPullParserException, IOException {
 
 	final BLM blm = new BLM();
-
-	blm.width = Integer.parseInt(parser.getAttributeValue(null,
+	blm.header= new BLMHeader();
+	blm.header.width = Integer.parseInt(parser.getAttributeValue(null,
 		BLM_ATTR_WIDTH));
-	blm.height = Integer.parseInt(parser.getAttributeValue(null,
+	blm.header.height = Integer.parseInt(parser.getAttributeValue(null,
 		BLM_ATTR_HEIGHT));
-	blm.bits = Integer.parseInt(parser.getAttributeValue(null,
+	blm.header.bits = Integer.parseInt(parser.getAttributeValue(null,
 		BLM_ATTR_BITS));
 	blm.frames = new ArrayList<Frame>();
 	int eventType = parser.next();
@@ -92,9 +95,9 @@ public class BMLParser {
 	    switch (eventType) {
 	    case XmlPullParser.START_TAG:
 		if (parser.getName().equalsIgnoreCase(HEADER)) {
-		    blm.header = parseHeader(parser);
+		    blm.header = parseHeader(parser,blm.header);
 		} else if (parser.getName().equalsIgnoreCase(FRAME)) {
-		    blm.frames.add(parseFrame(parser, blm.width, blm.height));
+		    blm.frames.add(parseFrame(parser, blm.header.width, blm.header.height));
 		}
 		break;
 	    case XmlPullParser.END_TAG:
@@ -106,10 +109,8 @@ public class BMLParser {
 	}
     }
 
-    private Header parseHeader(final XmlPullParser parser)
+    private BLMHeader parseHeader(final XmlPullParser parser,  BLMHeader header)
 	    throws XmlPullParserException, IOException {
-
-	final Header header = new Header();
 
 	int eventType = parser.next();
 	String name = null;
@@ -118,9 +119,30 @@ public class BMLParser {
 	    case XmlPullParser.START_TAG:
 		name = parser.getName();
 		if (name.equalsIgnoreCase(TITLE)) {
-		    parser.next();
-		    header.title = parser.getText();
-		    parser.next();
+		    if(parser.next()==XmlPullParser.TEXT){
+			header.title = parser.getText();
+		    	parser.next();
+		    }
+		}else if (name.equalsIgnoreCase(CREATOR)) {
+		    if(parser.next()==XmlPullParser.TEXT){
+			header.creator = parser.getText();
+		    	parser.next();
+		    }
+		}else if (name.equalsIgnoreCase(AUTHOR)) {
+		    if(parser.next()==XmlPullParser.TEXT){
+			header.author = parser.getText();
+		    	parser.next();
+		    }
+		}else if (name.equalsIgnoreCase(EMAIL)) {
+		    if(parser.next()==XmlPullParser.TEXT){
+			header.email = parser.getText();
+		    	parser.next();
+		    }
+		}else if (name.equalsIgnoreCase(DESCRIPTION)) {
+		    if(parser.next()==XmlPullParser.TEXT){
+			header.description = parser.getText();
+		    	parser.next();
+		    }
 		}
 		break;
 	    case XmlPullParser.END_TAG:

@@ -31,7 +31,7 @@ public class PlayerClient implements ConnectionListener {
 	 blinkendroidProtocol.clip(startX, startY, endX, endY);
     }
     public void play() {
-	blinkendroidProtocol.play(x,y,R.raw.allyourbase,System.currentTimeMillis(),startTime);
+	blinkendroidProtocol.play(x,y,R.raw.spinarcade,System.currentTimeMillis(),startTime);
     }
     public void arrow(int degrees) {
 	blinkendroidProtocol.arrow(degrees);

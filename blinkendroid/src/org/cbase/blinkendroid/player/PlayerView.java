@@ -53,8 +53,8 @@ public class PlayerView extends View implements Runnable {
 
     public void setBLM(final BLM blm) {
 	this.blm = blm;
-	this.endX = blm.width;
-	this.endY = blm.height;
+	this.endX = blm.header.width;
+	this.endY = blm.header.height;
 	this.numFrames = blm.frames.size();
 	long t = 0;
 	frameTime = new long[numFrames + 1];
@@ -111,7 +111,7 @@ public class PlayerView extends View implements Runnable {
 		final byte[] row = matrix[y];
 		for (int x = startX; x < endX; x++) {
 		    final int clippedX = x - startX;
-		    final int value = row[x] << blm.bits;
+		    final int value = row[x] <<  blm.header.bits;
 		    paint.setColor(Color.argb(255, value, value, value));
 		    canvas
 			    .drawRect(

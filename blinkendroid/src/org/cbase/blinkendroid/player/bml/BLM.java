@@ -20,24 +20,12 @@ package org.cbase.blinkendroid.player.bml;
 import java.io.Serializable;
 import java.util.List;
 
-public class BLM implements Serializable{
+public class BLM implements Serializable {
 
-    public int width;
-    public int height;
-    public int bits;
-    public Header header;
+    public BLMHeader header;
     public List<Frame> frames;
 
-    public static class Header implements Serializable{
-	public String title;
-	public String description;
-	public String creator;
-	public String author;
-	public String email;
-	public boolean loop;
-    }
-
-    public static class Frame implements Serializable{
+    public static class Frame implements Serializable {
 	public int duration;
 	public byte matrix[][];
     }

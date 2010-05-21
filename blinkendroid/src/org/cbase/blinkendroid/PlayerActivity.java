@@ -20,7 +20,7 @@ package org.cbase.blinkendroid;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 
-import org.cbase.blinkendroid.network.BlinkendroidClient;
+import org.cbase.blinkendroid.network.BlinkendroidClient2;
 import org.cbase.blinkendroid.network.BlinkendroidListener;
 import org.cbase.blinkendroid.player.ArrowView;
 import org.cbase.blinkendroid.player.PlayerView;
@@ -54,7 +54,7 @@ public class PlayerActivity extends Activity implements BlinkendroidListener,
     private PlayerView playerView;
     private ArrowView arrowView;
     private TextView ownerView;
-    private BlinkendroidClient blinkendroidClient;
+    private BlinkendroidClient2 blinkendroidClient;
     private BLM blm;
     private boolean playing = false;
     private long arrowDuration;
@@ -97,7 +97,7 @@ public class PlayerActivity extends Activity implements BlinkendroidListener,
 
 	super.onResume();
 
-	blinkendroidClient = new BlinkendroidClient(
+	blinkendroidClient = new BlinkendroidClient2(
 		new InetSocketAddress(getIntent().getStringExtra(
 			INTENT_EXTRA_IP), getIntent().getIntExtra(
 			INTENT_EXTRA_PORT, Constants.SERVER_PORT)), this);
@@ -170,10 +170,10 @@ public class PlayerActivity extends Activity implements BlinkendroidListener,
 	    public void run() {
 		Log.i(Constants.LOG_TAG, "ui clip start " + startX + ","
 			+ startY + "," + endX + "," + endY);
-		final int absStartX = (int) (blm.width * startX);
-		final int absStartY = (int) (blm.height * startY);
-		final int absEndX = (int) (blm.width * endX);
-		final int absEndY = (int) (blm.height * endY);
+		final int absStartX = (int) (blm.header.width * startX);
+		final int absStartY = (int) (blm.header.height * startY);
+		final int absEndX = (int) (blm.header.width * endX);
+		final int absEndY = (int) (blm.header.height * endY);
 		playerView.setClipping(absStartX, absStartY, absEndX, absEndY);
 		Log.i(Constants.LOG_TAG, "ui clip end " + startX + "," + startY
 			+ "," + endX + "," + endY);

@@ -25,6 +25,7 @@ import java.net.SocketException;
 import org.cbase.blinkendroid.Constants;
 import org.cbase.blinkendroid.network.BlinkendroidServerProtocol;
 import org.cbase.blinkendroid.network.ConnectionListener;
+import org.cbase.blinkendroid.player.bml.BLMHeader;
 
 import android.util.Log;
 
@@ -98,5 +99,13 @@ public class BlinkendroidServer extends Thread {
 	} catch (final InterruptedException x) {
 	    throw new RuntimeException(x);
 	}
+    }
+
+    public boolean isRunning() {
+	return running;
+    }
+
+    public void switchMovie(BLMHeader blmHeader) {
+	playerManager.switchMovie(blmHeader);
     }
 }

@@ -2,6 +2,7 @@ package org.cbase.blinkendroid.server;
 
 import org.cbase.blinkendroid.Constants;
 import org.cbase.blinkendroid.network.BlinkendroidServerProtocol;
+import org.cbase.blinkendroid.player.bml.BLMHeader;
 
 import android.util.Log;
 
@@ -157,4 +158,8 @@ public class PlayerManager {
 //	clip();
     }
     //TODO
+
+    public void switchMovie(BLMHeader blmHeader) {
+	Log.i(Constants.LOG_TAG,"switch to movie "+blmHeader.title);
+    }
 }
