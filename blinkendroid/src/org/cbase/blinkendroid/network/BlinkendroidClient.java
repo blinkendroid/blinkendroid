@@ -17,82 +17,71 @@
 
 package org.cbase.blinkendroid.network;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.StringTokenizer;
-import java.util.concurrent.atomic.AtomicReference;
 
 import org.cbase.blinkendroid.Constants;
-import org.cbase.blinkendroid.network.BlinkendroidProtocol.ConnectionClosedListener;
 
 import android.util.Log;
 
-public class BlinkendroidClient implements ICommandHandler,
-	ConnectionClosedListener {
+public class BlinkendroidClient extends Thread {
 
-    private Socket socket;
-    private BlinkendroidProtocol protocol;
-    private final AtomicReference<BlinkendroidListener> listenerRef = new AtomicReference<BlinkendroidListener>();
+    private boolean running = false;
+    private final InetSocketAddress socketAddress;
+    private final BlinkendroidListener listener;
 
-    public BlinkendroidClient(final InetSocketAddress socketAddress)
-	    throws IOException {
+    public BlinkendroidClient(final InetSocketAddress socketAddress,
+	    final BlinkendroidListener listener) {
+	this.socketAddress = socketAddress;
+	this.listener = listener;
+    }
+
+    @Override
+    public void run() {
+
+	running = true;
+
 	Log.i(Constants.LOG_TAG, "trying to connect to server: "
 		+ socketAddress);
-	socket = new Socket();
-	socket.connect(socketAddress, Constants.SERVER_SOCKET_CONNECT_TIMEOUT);
-	Log.i(Constants.LOG_TAG, "connected");
-	protocol = new BlinkendroidProtocol(socket, false);
-	protocol.setConnectionClosedListener(this);
-    }
-
-    public void shutdown() throws IOException {
-	if (protocol != null) {
-	    protocol.shutdown();
-	    protocol = null;
-	}
-	if (socket != null) {
-	    socket.close();
-	    socket = null;
-	}
-    }
-
-    public void connectionClosed() {
 	try {
-	    final BlinkendroidListener listener = listenerRef.get();
-	    if (listener != null)
-		listener.connectionLost();
+	    final Socket socket = new Socket();
+	    socket.connect(socketAddress,
+		    Constants.SERVER_SOCKET_CONNECT_TIMEOUT);
+	    Log.i(Constants.LOG_TAG, "connected");
+	    final BufferedReader in = new BufferedReader(new InputStreamReader(
+		    socket.getInputStream()));
+	    listener.connectionOpened();
 
-	    shutdown();
-	} catch (IOException x) {
-	    Log
-		    .w(Constants.LOG_TAG,
-			    "exception after connection was closed", x);
+	    while (running) {
+		final String inputLine = in.readLine();
+		if (!running) // fast exit
+		    break;
+		if (inputLine == null)
+		    break;
+		Log.d(Constants.LOG_TAG, "received: " + inputLine);
+		handle(inputLine.substring(1));
+	    }
+
+	    Log.i(Constants.LOG_TAG, "closing connection");
+
+	    listener.connectionClosed();
+
+	    in.close();
+	    socket.close();
+	} catch (SocketException e) {
+	    Log.d(Constants.LOG_TAG, "Socket closed.");
+	} catch (IOException e) {
+	    Log.e(Constants.LOG_TAG, "InputThread fucked ", e);
 	}
     }
 
-    public void registerListener(final BlinkendroidListener listener) {
-
-	boolean expected = listenerRef.compareAndSet(null, listener);
-	if (!expected)
-	    throw new IllegalStateException("can only register one listener");
-
-	protocol.registerHandler(BlinkendroidProtocol.PROTOCOL_PLAYER, this);
-    }
-
-    public void unregisterListener(final BlinkendroidListener listener) {
-
-	protocol.unregisterHandler(this);
-
-	boolean expected = listenerRef.compareAndSet(listener, null);
-	if (!expected)
-	    throw new IllegalStateException("listener has not been registered");
-    }
-
-    public void handle(final String command) {
-	Log.d(Constants.LOG_TAG, "BlinkendroidProtocolHandler received "
-		+ command);
-	final BlinkendroidListener listener = listenerRef.get();
+    private void handle(final String command) {
+	Log.d(Constants.LOG_TAG, "received: " + command);
 	if (listener != null) {
 	    if (command.startsWith(BlinkendroidProtocol.COMMAND_PLAYER_TIME)) {
 		listener.serverTime(Long.parseLong(command.substring(1)));
@@ -119,5 +108,11 @@ public class BlinkendroidClient implements ICommandHandler,
 		listener.arrow(2500, degrees);
 	    }
 	}
+    }
+
+    public void shutdown() {
+	running = false;
+	interrupt();
+	Log.d(Constants.LOG_TAG, "initiating shutdown");
     }
 }

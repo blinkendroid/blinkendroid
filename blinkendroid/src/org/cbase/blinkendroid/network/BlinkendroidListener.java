@@ -22,6 +22,12 @@ package org.cbase.blinkendroid.network;
  */
 public interface BlinkendroidListener {
 
+    void connectionOpened();
+
+    void connectionClosed();
+    
+    void connectionFailed(String message);
+
     void serverTime(long serverTime);
 
     void play(int resId, long serverTime);
@@ -29,6 +35,4 @@ public interface BlinkendroidListener {
     void clip(float startX, float startY, float endX, float endY);
 
     void arrow(long duration, float angle);
-
-    void connectionLost();
 }

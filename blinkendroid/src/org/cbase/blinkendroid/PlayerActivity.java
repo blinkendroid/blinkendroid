@@ -17,7 +17,6 @@
 
 package org.cbase.blinkendroid;
 
-import java.io.IOException;
 import java.net.InetSocketAddress;
 
 import org.cbase.blinkendroid.network.BlinkendroidClient;
@@ -75,27 +74,13 @@ public class PlayerActivity extends Activity implements BlinkendroidListener,
 
 	super.onResume();
 
-	try {
-	    blinkendroidClient = new BlinkendroidClient(new InetSocketAddress(
-		    getIntent().getStringExtra(INTENT_EXTRA_IP), getIntent()
-			    .getIntExtra(INTENT_EXTRA_PORT,
-				    Constants.SERVER_PORT)));
-	} catch (final IOException x) {
-	    Log.w(Constants.LOG_TAG, "exception while connecting to server", x);
-	    new AlertDialog.Builder(this).setIcon(
-		    android.R.drawable.ic_dialog_alert).setTitle(
-		    "Cannot connect to server").setMessage(
-		    x.getClass().getName() + ": " + x.getMessage())
-		    .setOnCancelListener(new OnCancelListener() {
-			public void onCancel(DialogInterface dialog) {
-			    finish();
-			}
-		    }).create().show();
-	}
+	blinkendroidClient = new BlinkendroidClient(
+		new InetSocketAddress(getIntent().getStringExtra(
+			INTENT_EXTRA_IP), getIntent().getIntExtra(
+			INTENT_EXTRA_PORT, Constants.SERVER_PORT)), this);
+	blinkendroidClient.start();
 
 	if (blinkendroidClient != null) {
-
-	    blinkendroidClient.registerListener(this);
 
 	    if (playing)
 		playerView.startPlaying();
@@ -117,11 +102,7 @@ public class PlayerActivity extends Activity implements BlinkendroidListener,
 	playerView.stopPlaying();
 
 	if (blinkendroidClient != null) {
-	    try {
-		blinkendroidClient.shutdown();
-	    } catch (final IOException x) {
-		Log.w(Constants.LOG_TAG, "exception while shutting down", x);
-	    }
+	    blinkendroidClient.shutdown();
 	    blinkendroidClient = null;
 	}
 
@@ -189,14 +170,42 @@ public class PlayerActivity extends Activity implements BlinkendroidListener,
 	});
     }
 
-    public void connectionLost() {
-	Log.i(Constants.LOG_TAG, "connection lost");
+    public void connectionOpened() {
+	runOnUiThread(new Runnable() {
+	    public void run() {
+		Toast.makeText(PlayerActivity.this, "connected",
+			Toast.LENGTH_SHORT).show();
+	    }
+	});
+    }
+
+    public void connectionClosed() {
+	Log.i(Constants.LOG_TAG, "connection closed");
 	runOnUiThread(new Runnable() {
 	    public void run() {
 		Toast.makeText(PlayerActivity.this,
-			"connection to server lost", Toast.LENGTH_LONG).show();
+			"connection to server closed", Toast.LENGTH_LONG)
+			.show();
 		handler.removeCallbacks(this);
 		playerView.stopPlaying();
+	    }
+	});
+    }
+
+    public void connectionFailed(final String message) {
+	runOnUiThread(new Runnable() {
+	    public void run() {
+		Log.w(Constants.LOG_TAG, "connection failed: " + message);
+		handler.removeCallbacks(this);
+		playerView.stopPlaying();
+		new AlertDialog.Builder(PlayerActivity.this).setIcon(
+			android.R.drawable.ic_dialog_alert).setTitle(
+			"Cannot connect to server").setMessage(message)
+			.setOnCancelListener(new OnCancelListener() {
+			    public void onCancel(DialogInterface dialog) {
+				finish();
+			    }
+			}).create().show();
 	    }
 	});
     }
