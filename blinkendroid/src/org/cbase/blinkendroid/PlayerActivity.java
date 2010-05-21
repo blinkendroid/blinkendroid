@@ -32,9 +32,13 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
+import android.view.View.OnTouchListener;
+import android.widget.TextView;
 import android.widget.Toast;
 
 /**
@@ -67,6 +71,23 @@ public class PlayerActivity extends Activity implements BlinkendroidListener,
 
 	playerView = (PlayerView) findViewById(R.id.player_image);
 	arrowView = (ArrowView) findViewById(R.id.player_arrow);
+	final TextView ownerView = (TextView) findViewById(R.id.player_owner);
+
+	playerView.setOnTouchListener(new OnTouchListener() {
+
+	    public boolean onTouch(View v, MotionEvent event) {
+		ownerView.setVisibility(View.VISIBLE);
+		handler.postDelayed(new Runnable() {
+		    public void run() {
+			ownerView.setVisibility(View.INVISIBLE);
+		    }
+		}, Constants.SHOW_OWNER_DURATION);
+		return false;
+	    }
+	});
+
+	ownerView.setText(PreferenceManager.getDefaultSharedPreferences(this)
+		.getString("owner", null));
     }
 
     @Override

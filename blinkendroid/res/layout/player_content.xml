@@ -9,4 +9,8 @@
 	<org.cbase.blinkendroid.player.ArrowView android:id="@+id/player_arrow"
 		android:layout_width="fill_parent" android:layout_height="fill_parent" android:visibility="invisible" />
 
+	<TextView android:id="@+id/player_owner" android:textSize="48sp" android:textStyle="bold" android:textColor="#ffffff"
+		android:shadowColor="#000000" android:shadowRadius="4" android:visibility="invisible" android:layout_width="wrap_content"
+		android:layout_height="wrap_content" android:layout_gravity="center" />
+
 </FrameLayout>
