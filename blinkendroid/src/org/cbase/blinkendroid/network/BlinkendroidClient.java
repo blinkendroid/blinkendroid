@@ -44,13 +44,12 @@ public class BlinkendroidClient extends Thread {
 
 	running = true;
 
-	System.out.println( "trying to connect to server: "
-		+ socketAddress);
+	System.out.println("trying to connect to server: " + socketAddress);
 	try {
 	    final Socket socket = new Socket();
 	    socket.connect(socketAddress,
 		    Constants.SERVER_SOCKET_CONNECT_TIMEOUT);
-	    System.out.println( "connected");
+	    System.out.println("connected");
 	    final BufferedReader in = new BufferedReader(new InputStreamReader(
 		    socket.getInputStream()));
 	    listener.connectionOpened();
@@ -65,22 +64,22 @@ public class BlinkendroidClient extends Thread {
 		handle(inputLine.substring(1));
 	    }
 
-	    System.out.println( "closing connection");
+	    System.out.println("closing connection");
 
 	    listener.connectionClosed();
 
 	    in.close();
 	    socket.close();
-	} catch (SocketException e) {
-	    System.out.println( "Socket closed.");
-	} catch (IOException e) {
-	    System.out.println( "InputThread fucked ");
-	    e.printStackTrace();
+	} catch (final IOException x) {
+	    System.out.println("connection failed");
+	    x.printStackTrace();
+	    listener.connectionFailed(x.getClass().getName() + ": "
+		    + x.getMessage());
 	}
     }
 
     private void handle(final String command) {
-	System.out.println( "received: " + command);
+	System.out.println("received: " + command);
 	if (listener != null) {
 	    if (command.startsWith(BlinkendroidProtocol.COMMAND_PLAYER_TIME)) {
 		listener.serverTime(Long.parseLong(command.substring(1)));
@@ -113,6 +112,6 @@ public class BlinkendroidClient extends Thread {
 	running = false;
 	interrupt();
 	listener.connectionClosed();
-	System.out.println( "initiating shutdown");
+	System.out.println("initiating shutdown");
     }
 }
