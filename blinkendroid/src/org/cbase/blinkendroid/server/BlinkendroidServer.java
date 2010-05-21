@@ -38,50 +38,44 @@ public class BlinkendroidServer extends Thread {
 
     @Override
     public void run() {
-	running = true;
-	ServerSocket serverSocket;
-	try {
-	    serverSocket = new ServerSocket(port);
-	} catch (IOException e) {
-	    Log.e(Constants.LOG_TAG, "Could not create Socket", e);
-	    return;
-	}
+
 	Log.i(Constants.LOG_TAG, "BlinkendroidServer Thread started");
+	running = true;
+
 	try {
-	    while (running) {
+	    final ServerSocket serverSocket = new ServerSocket(port);
+	    acceptLoop(serverSocket);
+	    serverSocket.close();
+	} catch (final IOException x) {
+	    Log.e(Constants.LOG_TAG, "Could not create Socket", x);
+	    throw new RuntimeException(x);
+	}
+
+	Log.i(Constants.LOG_TAG, "BlinkendroidServer Thread ended");
+    }
+
+    private void acceptLoop(final ServerSocket serverSocket) {
+
+	while (running) {
+	    try {
 		final Socket clientSocket = serverSocket.accept();
 		Log.i(Constants.LOG_TAG, "BlinkendroidServer got connection "
 			+ clientSocket.getRemoteSocketAddress().toString());
 		final BlinkendroidProtocol blinkendroidProtocol = new BlinkendroidProtocol(
 			clientSocket, true);
 		playerManager.addClient(blinkendroidProtocol);
-	    }
-	} catch (IOException e) {
-	    Log.e(Constants.LOG_TAG, "BlinkendroidServer Could not accept", e);
-	} finally {
-	    try {
-		serverSocket.close();
-		Log.d(Constants.LOG_TAG, "Closed serverSocket.");
-	    } catch (IOException e) {
-		Log.e(Constants.LOG_TAG, "Could not close in finally: ", e);
+	    } catch (final IOException x) {
+		Log.e(Constants.LOG_TAG, "BlinkendroidServer could not accept",
+			x);
 	    }
 	}
-
-	if (playerManager != null) {
-	    playerManager.shutdown();
-	}
-	running = false;
-
-	Log.i(Constants.LOG_TAG, "BlinkendroidServer Thread closed");
     }
 
     public void shutdown() {
-	if (playerManager != null) {
-	    playerManager.shutdown();
-	}
 	running = false;
-	Log.i(Constants.LOG_TAG, "BlinkendroidServer Thread ended");
 	interrupt();
+	if (playerManager != null)
+	    playerManager.shutdown();
     }
 
     public boolean isRunning() {
