@@ -58,15 +58,12 @@ public class BlinkendroidProtocol {
 	this.connectionClosedListener = connectionClosedListener;
     }
 
-    public BlinkendroidProtocol(final Socket socket, final boolean server) {
+    public BlinkendroidProtocol(final Socket socket, final boolean server)
+	    throws IOException {
 	this.socket = socket;
-	try {
-	    this.out = new PrintWriter(socket.getOutputStream(), true);
-	    this.in = new BufferedReader(new InputStreamReader(socket
-		    .getInputStream()));
-	} catch (final IOException x) {
-	    throw new RuntimeException(x);
-	}
+	this.out = new PrintWriter(socket.getOutputStream(), true);
+	this.in = new BufferedReader(new InputStreamReader(socket
+		.getInputStream()));
 	this.server = server;
 	// if(!server)
 	receiverThread = new ReceiverThread();
@@ -114,7 +111,7 @@ public class BlinkendroidProtocol {
      */
     private class ReceiverThread extends Thread {
 
-	private boolean running = true;
+	volatile private boolean running = true;
 
 	@Override
 	public void run() {
@@ -161,7 +158,8 @@ public class BlinkendroidProtocol {
      * This thread sends the global time to connected devices.
      */
     private class GlobalTimerThread extends Thread {
-	private boolean running = true;
+
+	volatile private boolean running = true;
 
 	@Override
 	public void run() {
