@@ -67,6 +67,11 @@ public class BlinkendroidServer extends Thread {
 	    }
 	}
 
+	if (playerManager != null) {
+	    playerManager.shutdown();
+	}
+	running = false;
+
 	Log.i(Constants.LOG_TAG, "BlinkendroidServer Thread closed");
     }
 
