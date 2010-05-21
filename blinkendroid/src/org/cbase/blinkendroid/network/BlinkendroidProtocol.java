@@ -65,10 +65,10 @@ public class BlinkendroidProtocol {
 	this.in = new BufferedReader(new InputStreamReader(socket
 		.getInputStream()));
 	this.server = server;
-	if(!server){
+//	if(!server){ Receiverthread wird beim server benötigt um zu wissen wann client weg ist
         	receiverThread = new ReceiverThread();
         	receiverThread.start();
-	}
+//	}
     }
 
     public void registerHandler(String proto, ICommandHandler handler) {
@@ -147,6 +147,7 @@ public class BlinkendroidProtocol {
 	    // wenn auf serverseite dann PlayerManager remove
 	    if (connectionClosedListener != null)
 		connectionClosedListener.connectionClosed();
+	    close();
 	}
 
 	public void shutdown() {
