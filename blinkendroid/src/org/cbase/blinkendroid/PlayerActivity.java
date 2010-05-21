@@ -210,7 +210,7 @@ public class PlayerActivity extends Activity implements BlinkendroidListener,
 			.show();
 		handler.removeCallbacks(this);
 		playerView.stopPlaying();
-		ownerView.setVisibility(View.INVISIBLE);
+		ownerView.setVisibility(View.VISIBLE);
 	    }
 	});
     }
@@ -221,7 +221,7 @@ public class PlayerActivity extends Activity implements BlinkendroidListener,
 		Log.w(Constants.LOG_TAG, "connection failed: " + message);
 		handler.removeCallbacks(this);
 		playerView.stopPlaying();
-		ownerView.setVisibility(View.INVISIBLE);
+		ownerView.setVisibility(View.VISIBLE);
 		new AlertDialog.Builder(PlayerActivity.this).setIcon(
 			android.R.drawable.ic_dialog_alert).setTitle(
 			"Cannot connect to server").setMessage(message)
