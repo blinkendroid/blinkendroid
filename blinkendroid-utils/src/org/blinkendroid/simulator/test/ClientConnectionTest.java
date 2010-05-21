@@ -71,7 +71,7 @@ public class ClientConnectionTest extends TestCase {
 	Thread.sleep(5001);
 	assertTrue(serverTime<testListener.serverTime);
 	client.shutdown();
-	Thread.sleep(2000);
+	Thread.sleep(1000);
 	assertTrue(testListener.connectionClosed);
     }
 }
