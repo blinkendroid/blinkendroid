@@ -27,7 +27,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
+import android.preference.PreferenceManager;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -39,6 +39,7 @@ import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.TextView.OnEditorActionListener;
 
@@ -80,6 +81,15 @@ public class LoginActivity extends Activity {
 		startActivity(intent);
 	    }
 	});
+
+	final String owner = PreferenceManager
+		.getDefaultSharedPreferences(this).getString("owner", null);
+	if (owner == null)
+	    Toast
+		    .makeText(
+			    this,
+			    "Hint: Setting an owner name in the preferences helps identifying your phone in the matrix.",
+			    Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -131,7 +141,7 @@ public class LoginActivity extends Activity {
 	switch (item.getItemId()) {
 	case R.id.login_options_start_server: {
 	    startActivity(new Intent(LoginActivity.this, ServerActivity.class));
-	    break;
+	    return true;
 	}
 	case R.id.login_options_connect_to_ip: {
 	    final Dialog dialog = new Dialog(this);
@@ -155,7 +165,12 @@ public class LoginActivity extends Activity {
 		    return true;
 		}
 	    });
-	    break;
+	    return true;
+	}
+	case R.id.login_options_preferences: {
+	    startActivity(new Intent(getBaseContext(),
+		    PreferencesActivity.class));
+	    return true;
 	}
 	}
 
