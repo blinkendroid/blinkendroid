@@ -24,8 +24,12 @@ import org.cbase.blinkendroid.network.multicast.IServerHandler;
 import org.cbase.blinkendroid.network.multicast.ReceiverThread;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.DialogInterface.OnClickListener;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.KeyEvent;
@@ -99,21 +103,54 @@ public class LoginActivity extends Activity {
 
 	receiverThread = new ReceiverThread();
 	receiverThread.addHandler(new IServerHandler() {
+
 	    public void foundServer(final String serverName,
-		    final String serverIp) {
+		    final String serverIp, final int protocolVersion) {
 		runOnUiThread(new Runnable() {
 		    public void run() {
-
 			final ListEntry entry = new ListEntry(serverName,
 				serverIp);
-
 			if (!serverList.contains(entry)) {
 			    serverList.add(entry);
 			    serverListAdapter.notifyDataSetChanged();
 			    serverListView.setVisibility(View.VISIBLE);
 			}
+
 		    }
 		});
+	    }
+
+	    public void foundUnknownServer(int protocolVersion) {
+		runOnUiThread(new Runnable() {
+		    public void run() {
+			new AlertDialog.Builder(LoginActivity.this)
+				.setIcon(android.R.drawable.ic_dialog_alert)
+				.setTitle("Warning")
+				.setMessage(
+					"New Release available. Some servers won't be discovered.")
+				.setPositiveButton("Check for update",
+					new OnClickListener() {
+					    public void onClick(
+						    DialogInterface dialog,
+						    int which) {
+						startActivity(new Intent(
+							Intent.ACTION_VIEW,
+							Uri
+								.parse(Constants.DOWNLOAD_URL)));
+						finish();
+
+					    }
+					}).setNegativeButton("Ignore",
+					new OnClickListener() {
+					    public void onClick(
+						    DialogInterface dialog,
+						    int which) {
+						dialog.dismiss();
+					    }
+					}).create().show();
+		    }
+		});
+
 	    }
 	});
 	receiverThread.start();

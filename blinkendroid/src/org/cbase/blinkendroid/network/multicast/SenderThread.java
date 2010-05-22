@@ -31,20 +31,21 @@ import android.util.Log;
  */
 public class SenderThread extends Thread {
 
-    private String message;
+    final private String message;
     private InetAddress group;
     volatile private boolean running = true;
     private DatagramSocket socket;
 
     /**
      * Creates a new {@link SenderThread}
-     * @param serverName The server's name.
+     * 
+     * @param serverName
+     *            The server's name.
      */
-    public SenderThread(String serverName) {
-	message = Constants.SERVER_BROADCAST_COMMAND + " " + serverName + " ";
+    public SenderThread(final String serverName) {
+	message = Constants.BROADCAST_PROTOCOL_VERSION + " "
+		+ Constants.SERVER_BROADCAST_COMMAND + " " + serverName;
     }
-    
-
 
     @Override
     public void run() {
@@ -54,13 +55,14 @@ public class SenderThread extends Thread {
 	    Log.i(Constants.LOG_TAG, "Server ip: " + group.toString());
 
 	    while (running) {
-		DatagramPacket initPacket = new DatagramPacket(message
-			.getBytes(), message.length(), group,
+		final byte[] messageBytes = message.getBytes("UTF-8");
+		final DatagramPacket initPacket = new DatagramPacket(
+			messageBytes, messageBytes.length, group,
 			Constants.BROADCAST_CLIENT_PORT);
 		socket.send(initPacket);
 
 		Log.d(Constants.LOG_TAG, "Broadcasting: " + message);
-		Thread.currentThread().sleep(5000);
+		Thread.sleep(5000);
 	    }
 	} catch (InterruptedException ie) {
 	    Log.d(Constants.LOG_TAG, "Stopping SenderThread: ", ie);
@@ -70,7 +72,7 @@ public class SenderThread extends Thread {
 	    Log.e(Constants.LOG_TAG, "Oooops: ", e);
 	}
     }
-    
+
     public void shutdown() {
 	running = false;
 	socket.close();

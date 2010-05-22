@@ -1,7 +1,8 @@
 package org.cbase.blinkendroid.network.multicast;
 
 public interface IServerHandler {
-    
-    public void foundServer(String serverName, String serverIp);
 
+    void foundServer(String serverName, String serverIp, int protocolVersion);
+
+    void foundUnknownServer(int protocolVersion);
 }

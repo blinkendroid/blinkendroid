@@ -30,4 +30,6 @@ public final class Constants {
     public static final int SERVER_PORT = 9876;
     public static final int SERVER_SOCKET_CONNECT_TIMEOUT = 2000;
     public static final int SHOW_OWNER_DURATION = 1500;
+    public static final int BROADCAST_PROTOCOL_VERSION = 1;
+    public static final String DOWNLOAD_URL = "http://code.google.com/p/blinkendroid/downloads/list";
 }

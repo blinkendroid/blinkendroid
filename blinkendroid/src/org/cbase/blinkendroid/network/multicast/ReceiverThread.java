@@ -21,7 +21,6 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -35,28 +34,13 @@ import android.util.Log;
  */
 public class ReceiverThread extends Thread {
 
-    private InetAddress group;
     volatile private boolean running = true;
 
     private List<IServerHandler> handlers = Collections
 	    .synchronizedList(new ArrayList<IServerHandler>());
 
     /**
-     * Creates a {@link ReceiverThread}
-     */
-    public ReceiverThread() {
-	try {
-	    group = InetAddress.getByName(Constants.MULTICAST_GROUP);
-	} catch (UnknownHostException e) {
-	    Log.e(Constants.LOG_TAG, e.getMessage());
-	    e.printStackTrace();
-	}
-    }
-
-    /**
      * Adds a handler to the {@link ReceiverThread}.
-     * 
-     * @param handler
      */
     public void addHandler(IServerHandler handler) {
 	handlers.add(handler);
@@ -68,44 +52,59 @@ public class ReceiverThread extends Thread {
 
     /**
      * Notifies the registered handlers
-     * 
-     * @param serverName
-     * @param serverIp
      */
-    private void notifyHandlers(String serverName, String serverIp) {
+    private void notifyHandlers(final int protocolVersion, String serverName,
+	    String serverIp) {
 	for (IServerHandler h : handlers) {
-	    h.foundServer(serverName, serverIp);
+	    h.foundServer(serverName, serverIp, protocolVersion);
+	}
+    }
+
+    private void notifyHandlers(final int protocolVersion) {
+	for (IServerHandler h : handlers) {
+	    h.foundUnknownServer(protocolVersion);
 	}
     }
 
     @Override
     public void run() {
 	try {
-	    DatagramSocket s = new DatagramSocket(
+	    final DatagramSocket s = new DatagramSocket(
 		    Constants.BROADCAST_CLIENT_PORT);
 	    byte[] buf;
 
 	    while (running) {
 
-		buf = new byte[500];
-		DatagramPacket recv = new DatagramPacket(buf, buf.length);
-		s.receive(recv);
+		buf = new byte[512];
+		final DatagramPacket packet = new DatagramPacket(buf,
+			buf.length);
+		s.receive(packet);
 		Log.d(Constants.LOG_TAG, "received something via broadcast");
-		String[] receivedData = new String(recv.getData()).split(" ");
+		final String receivedString = new String(packet.getData(), 0,
+			packet.getLength(), "UTF-8");
+		final String[] receivedParts = receivedString.split(" ");
 
-		if (receivedData.length != 3
-			|| !receivedData[0]
-				.equals(Constants.SERVER_BROADCAST_COMMAND)) {
-		    continue;
+		final int protocolVersion = Integer.parseInt(receivedParts[0]);
+		if (protocolVersion <= Constants.BROADCAST_PROTOCOL_VERSION) {
+
+		    if (receivedParts.length < 3
+			    || !receivedParts[1]
+				    .equals(Constants.SERVER_BROADCAST_COMMAND)) {
+			continue;
+		    }
+
+		    final InetAddress address = packet.getAddress();
+		    final String serverName = receivedParts[2];
+
+		    notifyHandlers(protocolVersion, serverName, address
+			    .getHostAddress());
+
+		    Log.i(Constants.LOG_TAG, receivedString + " "
+			    + packet.getAddress() + " Thread: "
+			    + Thread.currentThread().getId());
+		} else {
+		    notifyHandlers(protocolVersion);
 		}
-		InetAddress address = recv.getAddress();
-		String serverName = receivedData[1];
-
-		notifyHandlers(serverName, address.getHostAddress());
-
-		Log.i(Constants.LOG_TAG, receivedData.toString() + " "
-			+ recv.getAddress() + " Thread: "
-			+ Thread.currentThread().getId());
 	    }
 	    s.close();
 	    Log.i(Constants.LOG_TAG,
