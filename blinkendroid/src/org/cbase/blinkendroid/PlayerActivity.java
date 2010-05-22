@@ -193,21 +193,16 @@ public class PlayerActivity extends Activity implements BlinkendroidListener,
 	});
     }
 
-    public void connectionOpened(SocketAddress socketAddress) {
-	runOnUiThread(new ToastPost("removed "+socketAddress.toString(),Toast.LENGTH_SHORT));
-    }
-    private class ToastPost implements Runnable{
-	String toast; int length;
-	public ToastPost(String toast, int length){
-	    this.toast=toast;
-	    this.length=length;
-	}
-	public void run() {
-		Toast.makeText(PlayerActivity.this, toast, length);
-	}
+    public void connectionOpened(final SocketAddress socketAddress) {
+	runOnUiThread(new Runnable() {
+	    public void run() {
+		Toast.makeText(PlayerActivity.this, "connected",
+			Toast.LENGTH_SHORT).show();
+	    }
+	});
     }
 
-    public void connectionClosed(SocketAddress socketAddress) {
+    public void connectionClosed(final SocketAddress socketAddress) {
 	Log.i(Constants.LOG_TAG, "connection closed");
 	runOnUiThread(new Runnable() {
 	    public void run() {
