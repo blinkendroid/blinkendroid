@@ -12,6 +12,7 @@ import org.cbase.blinkendroid.utils.NetworkUtils;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -45,6 +46,9 @@ public class ServerActivity extends Activity implements ConnectionListener,
 	final Button stopButton = (Button) findViewById(R.id.server_stop);
 	final Button clientButton = (Button) findViewById(R.id.server_client);
 	final ListView clientList = (ListView) findViewById(R.id.server_client_list);
+
+	serverNameView.setText(PreferenceManager.getDefaultSharedPreferences(
+		this).getString("owner", null));
 
 	movieAdapter = new ArrayAdapter<String>(this,
 		android.R.layout.simple_spinner_item);
