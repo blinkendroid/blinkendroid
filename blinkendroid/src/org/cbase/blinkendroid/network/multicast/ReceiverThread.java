@@ -84,20 +84,22 @@ public class ReceiverThread extends Thread {
 
 		final String receivedString = new String(packet.getData(), 0,
 			packet.getLength(), "UTF-8");
-		Log.d(Constants.LOG_TAG, "received via broadcast: " + receivedString);
+		Log.d(Constants.LOG_TAG, "received via broadcast: '"
+			+ receivedString + "'");
 		final String[] receivedParts = receivedString.split(" ");
+		System.out.println(receivedParts.length);
 
 		final int protocolVersion = Integer.parseInt(receivedParts[0]);
 		if (protocolVersion <= Constants.BROADCAST_PROTOCOL_VERSION) {
 
-		    if (receivedParts.length < 3
-			    || !receivedParts[1]
-				    .equals(Constants.SERVER_BROADCAST_COMMAND)) {
+		    if (!receivedParts[1]
+			    .equals(Constants.SERVER_BROADCAST_COMMAND)) {
 			continue;
 		    }
 
 		    final InetAddress address = packet.getAddress();
-		    final String serverName = receivedParts[2];
+		    final String serverName = receivedParts.length >= 3 ? receivedParts[2]
+			    : "";
 
 		    notifyHandlers(protocolVersion, serverName, address
 			    .getHostAddress());
