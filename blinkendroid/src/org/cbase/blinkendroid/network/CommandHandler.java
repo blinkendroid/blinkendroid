@@ -1,6 +1,8 @@
 package org.cbase.blinkendroid.network;
 
+import java.io.BufferedInputStream;
+
 public interface CommandHandler {
 
-    void handle(String command);
+    void handle(BufferedInputStream bis);
 }

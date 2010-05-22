@@ -49,28 +49,43 @@ public class BlinkendroidServerProtocol extends AbstractBlinkendroidProtocol {
     }
 
     public void play(int x, int y, int resId, long l, long startTime) {
-	final String cmd = PROTOCOL_PLAYER + COMMAND_PLAY + Integer.toString(x)
-		+ "," + Integer.toString(y) + "," + Integer.toString(resId)
-		+ "," + Long.toString(l) + "," + Long.toString(startTime)
-		+ '\n';
-	out.write(cmd);
-	out.flush();
-	Log.i(Constants.LOG_TAG, cmd);
+	writeInt(out,PROTOCOL_PLAYER);
+	writeInt(out,COMMAND_PLAY);
+	writeInt(out,x);
+	writeInt(out,y);
+	writeInt(out,resId);
+	writeLong(out,l);
+	writeLong(out,startTime);
+	try {
+	    out.flush();
+	} catch (IOException e) {
+	    Log.e(Constants.LOG_TAG,"play failed ",e);
+	}
     }
 
     public void arrow(int degrees) {
-	final String cmd = PROTOCOL_PLAYER + COMMAND_INIT + degrees + "\n";
-	out.write(cmd);
-	out.flush();
-	Log.i(Constants.LOG_TAG, cmd);
+	writeInt(out,PROTOCOL_PLAYER);
+	writeInt(out,COMMAND_INIT);
+	writeInt(out,degrees);
+	try {
+	    out.flush();
+	} catch (IOException e) {
+	    Log.e(Constants.LOG_TAG,"arrow failed ",e);
+	}
     }
 
     public void clip(float startX, float startY, float endX, float endY) {
-	final String cmd = PROTOCOL_PLAYER + COMMAND_CLIP + startX + ","
-		+ startY + "," + endX + "," + endY + '\n';
-	out.write(cmd);
-	out.flush();
-	Log.i(Constants.LOG_TAG, cmd);
+	writeInt(out,PROTOCOL_PLAYER);
+	writeInt(out,COMMAND_CLIP);
+	writeFloat(out,startX);
+	writeFloat(out,startY);
+	writeFloat(out,endX);
+	writeFloat(out,endY);
+	try {
+	    out.flush();
+	} catch (IOException e) {
+	    Log.e(Constants.LOG_TAG,"arrow failed ",e);
+	}
     }
     
     /**
@@ -93,10 +108,14 @@ public class BlinkendroidServerProtocol extends AbstractBlinkendroidProtocol {
 		    break;
 
 		long t = System.currentTimeMillis();
-		Log.i(Constants.LOG_TAG, "GlobalTimerThread ping " + t);
-		out.write(PROTOCOL_PLAYER + COMMAND_PLAYER_TIME
-			+ Long.toString(t) + '\n');
-		out.flush();
+		writeInt(out,PROTOCOL_PLAYER);
+		writeInt(out,COMMAND_PLAYER_TIME);
+		writeLong(out,t);
+		try {
+		    out.flush();
+		} catch (IOException e) {
+		    Log.e(Constants.LOG_TAG,"GlobalTimerThread failed ",e);
+		}
 	    }
 	    Log.d(Constants.LOG_TAG, "GlobalTimerThread stopped");
 	}

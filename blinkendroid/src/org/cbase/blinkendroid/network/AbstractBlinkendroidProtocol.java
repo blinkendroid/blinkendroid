@@ -1,31 +1,33 @@
 package org.cbase.blinkendroid.network;
 
-import java.io.BufferedReader;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.SocketAddress;
 import java.net.SocketException;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 import org.cbase.blinkendroid.Constants;
 
+import android.util.Log;
+
 
 public class AbstractBlinkendroidProtocol {
 
-    public static final String PROTOCOL_PLAYER = "P";
-    public static final String COMMAND_PLAYER_TIME = "T";
-    public static final String COMMAND_CLIP = "C";
-    public static final String COMMAND_PLAY = "P";
-    public static final String COMMAND_INIT = "I";
-    protected PrintWriter out;
-    protected BufferedReader in;
+    public static final Integer PROTOCOL_PLAYER = 42;
+    public static final Integer COMMAND_PLAYER_TIME = 23;
+    public static final Integer COMMAND_CLIP = 17;
+    public static final Integer COMMAND_PLAY = 11;
+    public static final Integer COMMAND_INIT = 77;
+    protected BufferedOutputStream out;
+    protected BufferedInputStream in;
     protected Socket socket;
     protected ReceiverThread receiverThread;
-    protected final HashMap<String, CommandHandler> handlers = new HashMap<String, CommandHandler>();
+    protected final HashMap<Integer, CommandHandler> handlers = new HashMap<Integer, CommandHandler>();
     private List<ConnectionListener> connectionListener = new ArrayList<ConnectionListener>();
     private boolean server;
 
@@ -34,9 +36,8 @@ public class AbstractBlinkendroidProtocol {
 	    throws IOException {
 	this.socket = socket;
 	this.server = server;
-	this.out = new PrintWriter(socket.getOutputStream(), true);
-	this.in = new BufferedReader(new InputStreamReader(socket
-		.getInputStream()));
+	this.out = new BufferedOutputStream(socket.getOutputStream());
+	this.in = new BufferedInputStream(socket.getInputStream());
 	this.connectionListener.add(connectionListener);
 	receiverThread = new ReceiverThread();
 	receiverThread.start();
@@ -47,7 +48,7 @@ public class AbstractBlinkendroidProtocol {
 	this.connectionListener.add(connectionListener);
     }
 
-    public void registerHandler(String proto, CommandHandler handler) {
+    public void registerHandler(Integer proto, CommandHandler handler) {
 	handlers.put(proto, handler);
     }
 
@@ -68,8 +69,8 @@ public class AbstractBlinkendroidProtocol {
     }
 
     public void close() {
-	out.close();
 	try {
+	    out.close();
 	    if (!server)// TODO ugly hack, server needs to long
 		in.close();
 	    socket.close();
@@ -100,18 +101,21 @@ public class AbstractBlinkendroidProtocol {
 	public void run() {
 	    running = true;
 	    System.out.println( getMyName() + " InputThread started");
-	    String inputLine;
+	    int inputLine;
 	    connectionOpened(socket.getRemoteSocketAddress());
 	    try {
-		while (running && (inputLine = in.readLine()) != null) {
+		while (running) {
+		    byte[] buffer	=	new byte[4];
+		    in.read(buffer);
+		    inputLine= ByteBuffer.wrap(buffer).getInt();
 		    if (!running) // fast exit
 			break;
 		    System.out.println( getMyName()
 			    + " InputThread received: " + inputLine);
-		    final String proto = inputLine.substring(0, 1);
-		    CommandHandler handler = handlers.get(proto);
+		  
+		    CommandHandler handler = handlers.get(inputLine);
 		    if (null != handler)
-			handler.handle(inputLine.substring(1));
+			handler.handle(in);
 		}
 	    } catch (SocketException e) {
 		 System.out.println( getMyName() + " Socket closed.");
@@ -140,4 +144,63 @@ public class AbstractBlinkendroidProtocol {
 	else
 	    return "Client " + socket.getRemoteSocketAddress();
     }
+    protected long readLong(BufferedInputStream in) {
+	byte[] buffer	=	new byte[8];
+	try {
+	    in.read(buffer);
+	} catch (IOException e) {
+	    Log.e(Constants.LOG_TAG,"readLong failed ",e);
+	}
+	return ByteBuffer.wrap(buffer).getLong();
+    }    
+    
+    protected int readInt(BufferedInputStream in) {
+	byte[] buffer	=	new byte[4];
+	try {
+	    in.read(buffer);
+	} catch (IOException e) {
+	    Log.e(Constants.LOG_TAG,"readLong failed ",e);
+	}
+	return ByteBuffer.wrap(buffer).getInt();
+    }    
+    
+    protected float readFloat(BufferedInputStream in) {
+	byte[] buffer	=	new byte[16];
+	try {
+	    in.read(buffer);
+	} catch (IOException e) {
+	    Log.e(Constants.LOG_TAG,"readLong failed ",e);
+	}
+	return ByteBuffer.wrap(buffer).getFloat();
+    }  
+    
+    protected void writeInt(BufferedOutputStream out, int i) {
+	byte[] buffer	=	new byte[4];
+	ByteBuffer.wrap(buffer).putInt(i);
+	try {
+	    out.write(buffer);
+	} catch (IOException e) {
+	    Log.e(Constants.LOG_TAG,"writeInt failed ",e);
+	}
+    }    
+    
+    protected void writeFloat(BufferedOutputStream out, float f) {
+	byte[] buffer	=	new byte[16];
+	ByteBuffer.wrap(buffer).putFloat(f);
+	try {
+	    out.write(buffer);
+	} catch (IOException e) {
+	    Log.e(Constants.LOG_TAG,"writeFloat failed ",e);
+	}
+    }   
+    
+    protected void writeLong(BufferedOutputStream out, long l) {
+	byte[] buffer	=	new byte[8];
+	ByteBuffer.wrap(buffer).putLong(l);
+	try {
+	    out.write(buffer);
+	} catch (IOException e) {
+	    Log.e(Constants.LOG_TAG,"writeLong failed ",e);
+	}
+    }   
 }

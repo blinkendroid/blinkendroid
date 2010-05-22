@@ -80,6 +80,7 @@ public class BlinkendroidClient extends Thread {
     }
 
     private void handle(final String command) {
+	/*
 	System.out.println("received: " + command);
 	if (listener != null) {
 	    if (command.startsWith(AbstractBlinkendroidProtocol.COMMAND_PLAYER_TIME)) {
@@ -107,6 +108,7 @@ public class BlinkendroidClient extends Thread {
 		listener.arrow(2500, degrees);
 	    }
 	}
+	*/
     }
 
     public void shutdown() {

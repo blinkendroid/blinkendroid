@@ -1,8 +1,8 @@
 package org.cbase.blinkendroid.network;
 
+import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.net.Socket;
-import java.util.StringTokenizer;
 
 public class BlinkendroidClientProtocol extends AbstractBlinkendroidProtocol implements CommandHandler{
     BlinkendroidListener listener;
@@ -13,33 +13,31 @@ public class BlinkendroidClientProtocol extends AbstractBlinkendroidProtocol imp
 	registerHandler(PROTOCOL_PLAYER, this);   
     }
 
-    public void handle(final String command) {
+    //TLV
+    public void handle(BufferedInputStream in) {
+	Integer command = readInt(in);
 	System.out.println("received: " + command);
 	if (listener != null) {
-	    if (command.startsWith(AbstractBlinkendroidProtocol.COMMAND_PLAYER_TIME)) {
-		listener.serverTime(Long.parseLong(command.substring(1)));
-	    } else if (command.startsWith(AbstractBlinkendroidProtocol.COMMAND_CLIP)) {
-		final StringTokenizer tokenizer = new StringTokenizer(command
-			.substring(1), ",");
-		final float startX = Float.parseFloat(tokenizer.nextToken());
-		final float startY = Float.parseFloat(tokenizer.nextToken());
-		final float endX = Float.parseFloat(tokenizer.nextToken());
-		final float endY = Float.parseFloat(tokenizer.nextToken());
+	    if (command==COMMAND_PLAYER_TIME) {
+		listener.serverTime(readLong(in));
+	    } else if (command==COMMAND_CLIP) {
+		final float startX =	readFloat(in);
+		final float startY = readFloat(in);
+		final float endX =readFloat(in);
+		final float endY = readFloat(in);
 		listener.clip(startX, startY, endX, endY);
-	    } else if (command.startsWith(AbstractBlinkendroidProtocol.COMMAND_PLAY)) {
-		final StringTokenizer tokenizer = new StringTokenizer(command
-			.substring(1), ",");
-		final int x = Integer.parseInt(tokenizer.nextToken());
-		final int y = Integer.parseInt(tokenizer.nextToken());
-		final int resId = Integer.parseInt(tokenizer.nextToken());
-		final long serverTime = Long.parseLong(tokenizer.nextToken());
-		final long startTime = Long.parseLong(tokenizer.nextToken());
+	    } else if (command==COMMAND_PLAY) {
+		final int x = readInt(in);
+		final int y = readInt(in);
+		final int resId = readInt(in);
+		final long serverTime = readLong(in);
+		final long startTime =readLong(in);
 		listener.serverTime(serverTime);
 		listener.play(x, y, resId, startTime);
-	    } else if (command.startsWith(AbstractBlinkendroidProtocol.COMMAND_INIT)) {
-		final int degrees = Integer.parseInt(command.substring(1));
+	    } else if (command==COMMAND_INIT) {
+		final int degrees = readInt(in);
 		listener.arrow(2500, degrees);
-	    }
-	}
+	    }                      
+	}                          
     }
 }
