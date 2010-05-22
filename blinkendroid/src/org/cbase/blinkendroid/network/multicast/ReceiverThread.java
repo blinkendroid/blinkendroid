@@ -82,9 +82,9 @@ public class ReceiverThread extends Thread {
 		if (!running) // fast exit
 		    break;
 
-		Log.d(Constants.LOG_TAG, "received something via broadcast");
 		final String receivedString = new String(packet.getData(), 0,
 			packet.getLength(), "UTF-8");
+		Log.d(Constants.LOG_TAG, "received via broadcast: " + receivedString);
 		final String[] receivedParts = receivedString.split(" ");
 
 		final int protocolVersion = Integer.parseInt(receivedParts[0]);
