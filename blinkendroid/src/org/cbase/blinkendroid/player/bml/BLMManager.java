@@ -15,13 +15,15 @@ import android.widget.ArrayAdapter;
 public class BLMManager {
     private List<BLMHeader> blmHeader = new ArrayList<BLMHeader>();
     BLMManagerListener listener;
+
     public interface BLMManagerListener {
 	public void moviesReady();
     }
 
     public void readMovies(final BLMManagerListener listener) {
-	this.listener=listener;
+	this.listener = listener;
 	new Thread() {
+	    @Override
 	    public void run() {
 		File blinkendroidDir = new File(Environment
 			.getExternalStorageDirectory().getPath()
