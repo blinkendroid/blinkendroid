@@ -17,10 +17,10 @@
 
 package org.cbase.blinkendroid.network.multicast;
 
+import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.net.SocketException;
 
 import org.cbase.blinkendroid.Constants;
 
@@ -62,20 +62,28 @@ public class SenderThread extends Thread {
 		socket.send(initPacket);
 
 		Log.d(Constants.LOG_TAG, "Broadcasting: " + message);
-		Thread.sleep(5000);
+		try {
+		    Thread.sleep(5000);
+		} catch (final InterruptedException x) {
+		    // swallow, this is expected when being interrupted
+		}
 	    }
-	} catch (InterruptedException ie) {
-	    Log.d(Constants.LOG_TAG, "Stopping SenderThread: ", ie);
-	} catch (SocketException e) {
-	    Log.e(Constants.LOG_TAG, "Closing SenderSocket: ", e);
-	} catch (Exception e) {
-	    Log.e(Constants.LOG_TAG, "Oooops: ", e);
+
+	    socket.close();
+
+	} catch (final IOException x) {
+	    Log.e(Constants.LOG_TAG, "problem sending", x);
 	}
     }
 
     public void shutdown() {
+	Log.d(Constants.LOG_TAG, "SenderThread: initiating shutdown");
 	running = false;
-	socket.close();
 	interrupt();
+	try {
+	    join();
+	} catch (final InterruptedException x) {
+	    throw new RuntimeException(x);
+	}
     }
 }

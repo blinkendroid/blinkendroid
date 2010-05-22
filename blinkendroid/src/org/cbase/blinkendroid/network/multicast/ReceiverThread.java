@@ -17,6 +17,7 @@
 
 package org.cbase.blinkendroid.network.multicast;
 
+import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
@@ -35,9 +36,9 @@ import android.util.Log;
 public class ReceiverThread extends Thread {
 
     volatile private boolean running = true;
-
     private List<IServerHandler> handlers = Collections
 	    .synchronizedList(new ArrayList<IServerHandler>());
+    private DatagramSocket socket;
 
     /**
      * Adds a handler to the {@link ReceiverThread}.
@@ -69,16 +70,18 @@ public class ReceiverThread extends Thread {
     @Override
     public void run() {
 	try {
-	    final DatagramSocket s = new DatagramSocket(
-		    Constants.BROADCAST_CLIENT_PORT);
-	    byte[] buf;
+	    socket = new DatagramSocket(Constants.BROADCAST_CLIENT_PORT);
 
 	    while (running) {
 
-		buf = new byte[512];
+		final byte[] buf = new byte[512];
 		final DatagramPacket packet = new DatagramPacket(buf,
 			buf.length);
-		s.receive(packet);
+		receive(packet);
+
+		if (!running) // fast exit
+		    break;
+
 		Log.d(Constants.LOG_TAG, "received something via broadcast");
 		final String receivedString = new String(packet.getData(), 0,
 			packet.getLength(), "UTF-8");
@@ -106,21 +109,31 @@ public class ReceiverThread extends Thread {
 		    notifyHandlers(protocolVersion);
 		}
 	    }
-	    s.close();
-	    Log.i(Constants.LOG_TAG,
-		    "Finished receiving broadcast packets. Thread: "
-			    + Thread.currentThread().getId());
-	} catch (SocketException e) {
-	    Log.e(Constants.LOG_TAG, "Closing Receiver Socket: ", e);
-	} catch (Exception e) {
-	    Log.e(Constants.LOG_TAG, "", e);
+	    socket.close();
+	    Log.d(Constants.LOG_TAG, "ReceiverThread: shutdown complete");
+	} catch (final IOException x) {
+	    Log.e(Constants.LOG_TAG, "problem receiving", x);
+	}
+    }
+
+    private void receive(final DatagramPacket packet) throws IOException {
+	try {
+	    socket.receive(packet);
+	} catch (final SocketException x) {
+	    // swallow, this is expected when being interrupted by
+	    // socket.close()
 	}
     }
 
     public void shutdown() {
+	Log.d(Constants.LOG_TAG, "ReceiverThread: initiating shutdown");
 	running = false;
 	handlers.clear();
-	interrupt();
-	Log.d(Constants.LOG_TAG, "ReceiverThread: shutdown complete");
+	socket.close(); // interrupt
+	try {
+	    join();
+	} catch (final InterruptedException x) {
+	    throw new RuntimeException(x);
+	}
     }
 }
