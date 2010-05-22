@@ -42,7 +42,9 @@ public class SenderThread extends Thread {
      * @param serverName
      *            The server's name.
      */
-    public SenderThread(final String serverName) {
+    public SenderThread(String serverName) {
+	// workaround: remove spaces, as those currently break the protocol
+	serverName = serverName.replaceAll("\\s", "");
 	message = Constants.BROADCAST_PROTOCOL_VERSION + " "
 		+ Constants.SERVER_BROADCAST_COMMAND + " " + serverName;
     }
@@ -61,7 +63,7 @@ public class SenderThread extends Thread {
 			Constants.BROADCAST_CLIENT_PORT);
 		socket.send(initPacket);
 
-		Log.d(Constants.LOG_TAG, "Broadcasting: " + message);
+		Log.d(Constants.LOG_TAG, "Broadcasting: '" + message + "'");
 		try {
 		    Thread.sleep(5000);
 		} catch (final InterruptedException x) {
