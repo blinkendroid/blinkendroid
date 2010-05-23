@@ -194,6 +194,7 @@ public class PlayerActivity extends Activity implements BlinkendroidListener,
     }
 
     public void connectionOpened(final SocketAddress socketAddress) {
+	Log.d(Constants.LOG_TAG,"PlayerActivity connectionOpened "+socketAddress.toString());
 	runOnUiThread(new Runnable() {
 	    public void run() {
 		Toast.makeText(PlayerActivity.this, "connected",
@@ -203,7 +204,7 @@ public class PlayerActivity extends Activity implements BlinkendroidListener,
     }
 
     public void connectionClosed(final SocketAddress socketAddress) {
-	Log.i(Constants.LOG_TAG, "connection closed");
+	Log.d(Constants.LOG_TAG,"PlayerActivity connectionClosed "+socketAddress.toString());
 	runOnUiThread(new Runnable() {
 	    public void run() {
 		Toast.makeText(PlayerActivity.this,
