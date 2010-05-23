@@ -51,6 +51,7 @@ public class BlinkendroidServer extends Thread {
 	    serverSocket = new ServerSocket(port);
 	    playerManager = new PlayerManager();
 	    acceptLoop();
+	    Log.d(Constants.LOG_TAG, "after acceptLoop");
 	    playerManager.shutdown();
 	    serverSocket.close();
 	} catch (final IOException x) {
@@ -85,6 +86,7 @@ public class BlinkendroidServer extends Thread {
 	    return serverSocket.accept();
 	} catch (final SocketException x) {
 	    // swallow, this is expected after interruption by closing socket
+	    Log.e(Constants.LOG_TAG, "serverSocket.accept failed", x);
 	    return null;
 	}
     }
