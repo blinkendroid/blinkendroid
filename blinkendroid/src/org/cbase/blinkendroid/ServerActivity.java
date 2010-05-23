@@ -13,6 +13,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -147,6 +148,7 @@ public class ServerActivity extends Activity implements ConnectionListener,
     }
 
     public void connectionOpened(final SocketAddress socketAddress) {
+	Log.d(Constants.LOG_TAG,"ServerActivity connectionOpened "+socketAddress.toString());
 	runOnUiThread(new Runnable() {
 	    public void run() {
 		clientAdapter.add(socketAddress.toString());
@@ -155,6 +157,7 @@ public class ServerActivity extends Activity implements ConnectionListener,
     }
 
     public void connectionClosed(final SocketAddress socketAddress) {
+	Log.d(Constants.LOG_TAG,"ServerActivity connectionClosed "+socketAddress.toString());
 	runOnUiThread(new Runnable() {
 	    public void run() {
 		clientAdapter.remove(socketAddress.toString());
