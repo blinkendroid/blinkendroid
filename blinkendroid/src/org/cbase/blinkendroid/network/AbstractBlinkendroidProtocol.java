@@ -77,14 +77,16 @@ public class AbstractBlinkendroidProtocol {
 	    System.out.println( getMyName()
 		    + " BlinkendroidProtocol: Socket closed.");
 	} catch (IOException e) {
+	    System.out.println( getMyName()
+		    + " BlinkendroidProtocol: closed failed ");
 	    e.printStackTrace();
 	}
     }
 
     public void shutdown() {
-	if (null != receiverThread)
+	if (null != receiverThread){
 	    receiverThread.shutdown();
-	// join
+	}
 	System.out.println( getMyName() + " Protocol shutdown.");
 	close();
     }
@@ -104,12 +106,12 @@ public class AbstractBlinkendroidProtocol {
 	    int inputLine;
 	    connectionOpened(socket.getRemoteSocketAddress());
 	    try {
-		while (running) {
-		    byte[] buffer	=	new byte[4];
-		    in.read(buffer);
+		byte[] buffer	=	new byte[4];
+		while (running &&  in.read(buffer) != -1) {
 		    inputLine= ByteBuffer.wrap(buffer).getInt();
 		    if (!running) // fast exit
 			break;
+		    
 		    System.out.println( getMyName()
 			    + " InputThread received: " + inputLine);
 		  
@@ -132,9 +134,18 @@ public class AbstractBlinkendroidProtocol {
 
 	public void shutdown() {
 	    System.out.println( getMyName()
-		    + " ReceiverThread initiating shutdown");
+		    + " ReceiverThread shutdown start");
 	    running = false;
 	    interrupt();
+	    try {
+		join();
+	    } catch (InterruptedException e) {
+		 System.out.println( getMyName()
+			    + " ReceiverThread join failed");
+		e.printStackTrace();
+	    }
+	    System.out.println( getMyName()
+		    + " ReceiverThread shutdown end");
 	}
     }
 
