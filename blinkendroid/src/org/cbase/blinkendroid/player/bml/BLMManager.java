@@ -55,6 +55,9 @@ public class BLMManager {
 	for (BLMHeader header : blmHeader) {
 	    String title = header.title + "(" + header.width + "*"
 		    + header.height + ")";
+	    if(null==header.title)
+		 title =header.filename.substring(20) + "(" + header.width + "*"
+		    + header.height + ")";
 	    Log.d(Constants.LOG_TAG, "added " + title);
 	    adapter.add(title);
 	}

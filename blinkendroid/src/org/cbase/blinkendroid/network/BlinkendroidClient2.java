@@ -58,4 +58,9 @@ public class BlinkendroidClient2 extends Thread {
 	    protocol.shutdown();
 	System.out.println("client shutdown completed");
     }
+
+    public void touch() {
+	// TODO Auto-generated method stub
+	
+    }
 }

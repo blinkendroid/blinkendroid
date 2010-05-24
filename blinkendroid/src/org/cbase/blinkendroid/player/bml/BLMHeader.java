@@ -12,6 +12,7 @@ public class BLMHeader implements Serializable{
     public String author;
     public String email;
     public boolean loop;
+    public boolean color;
     public transient String filename;
 
     public BLMHeader() {

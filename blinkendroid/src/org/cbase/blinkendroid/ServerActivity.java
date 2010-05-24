@@ -71,8 +71,7 @@ public class ServerActivity extends Activity implements ConnectionListener,
 	    public void onItemSelected(AdapterView<?> arg0, View arg1,
 		    int arg2, long arg3) {
 		// already running?
-		if (null != blinkendroidServer
-			&& blinkendroidServer.isRunning()) {
+		if (null != blinkendroidServer) {
 		    blinkendroidServer.switchMovie(blmManager
 			    .getBLMHeader(arg2-2));
 		}

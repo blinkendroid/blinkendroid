@@ -82,6 +82,7 @@ public class PlayerActivity extends Activity implements BlinkendroidListener,
 		handler.postDelayed(new Runnable() {
 		    public void run() {
 			ownerView.setVisibility(View.INVISIBLE);
+			blinkendroidClient.touch();
 		    }
 		}, Constants.SHOW_OWNER_DURATION);
 		return false;
@@ -155,7 +156,7 @@ public class PlayerActivity extends Activity implements BlinkendroidListener,
 		Log.i(Constants.LOG_TAG, "ui play start " + startTime);
 		if (null == blm)
 		    blm = new BBMZParser().parseBBMZ(getResources()
-			    .openRawResource(R.raw.pacattack));
+			    .openRawResource(R.raw.blinkendroid6));
 		if (null == blm){
 		    Log.e(Constants.LOG_TAG, "got no Movie");
 		    playing = false;

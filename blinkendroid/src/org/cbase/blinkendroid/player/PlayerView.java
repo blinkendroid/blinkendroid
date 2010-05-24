@@ -17,6 +17,7 @@
 
 package org.cbase.blinkendroid.player;
 
+import org.cbase.blinkendroid.Constants;
 import org.cbase.blinkendroid.player.bml.BLM;
 
 import android.content.Context;
@@ -25,6 +26,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Handler;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 
 /**
@@ -111,8 +113,17 @@ public class PlayerView extends View implements Runnable {
 		final byte[] row = matrix[y];
 		for (int x = startX; x < endX; x++) {
 		    final int clippedX = x - startX;
-		    final int value = row[x] <<  blm.header.bits;
-		    paint.setColor(Color.argb(255, value, value, value));
+		    final int value = row[x] << (8-blm.header.bits);
+		    if (blm.header.color) {
+			int r = ((row[x] & 48) >> 4) * 64;
+			int g = ((row[x] & 12) >> 2) * 64;
+			int b = (row[x] & 3) * 64;
+			// Log.d(Constants.LOG_TAG, r+","+g+","+b+":"+
+			// row[x]+";");
+			paint.setColor(Color.argb(255, r, g, b));
+		    }else{
+			paint.setColor(Color.argb(255, value, value, value));
+		    }
 		    canvas
 			    .drawRect(
 				    pixelWidth * clippedX + PIXEL_PADDING,
