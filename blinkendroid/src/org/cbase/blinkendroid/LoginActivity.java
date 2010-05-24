@@ -22,6 +22,7 @@ import java.util.List;
 
 import org.cbase.blinkendroid.network.multicast.IServerHandler;
 import org.cbase.blinkendroid.network.multicast.ReceiverThread;
+import org.cbase.blinkendroid.utils.NetworkUtils;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -187,6 +188,7 @@ public class LoginActivity extends Activity {
 	    dialog.show();
 	    final EditText ip = (EditText) dialog
 		    .findViewById(R.id.login_connect_to_ip_dialog_ip);
+	    ip.setText(NetworkUtils.getLocalIpAddress());
 	    ip.setOnEditorActionListener(new OnEditorActionListener() {
 
 		public boolean onEditorAction(final TextView v,
