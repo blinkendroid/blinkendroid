@@ -35,7 +35,6 @@ public class BMLConverter {
      * @throws IOException
      */
     public static void main(String[] args) throws IOException {
-	BMLConverter conv = new BMLConverter();
 	// get all files in bml convert them to bbm
 	File bmlDir = new File("bml");
 	File[] bmls = bmlDir.listFiles();
@@ -45,7 +44,7 @@ public class BMLConverter {
 	    System.out.println("convert " + bmls[i].getName());
 	    String tname=bmls[i].getName().substring(0, bmls[i].getName().length()-4)/*.replace("-", "")*/;
 	    tname=tname.toLowerCase();
-	    BLM blm = conv.convert("bml/" + bmls[i].getName(), "bbm/"+tname+".bbm");
+	    BLM blm = convert("bml/" + bmls[i].getName(), "bbm/"+tname+".bbm");
 	    compress( "bbm/"+tname+".bbm","bbmz/" +tname+ ".bbmz");
 	    //die infofiles für den server
 	    ObjectOutput out = new ObjectOutputStream(new FileOutputStream("bbmz/" +tname+ ".info"));
@@ -55,7 +54,7 @@ public class BMLConverter {
 	}
     }
 
-    public BLM convert(String bmlfile, String bbmfile) throws IOException {
+    public static BLM convert(String bmlfile, String bbmfile) throws IOException {
 	BMLParser p = new BMLParser(new MXParser());
 	BLM blm = p.parseBLM(new FileReader(bmlfile));
 	if(null==blm.header.title)
