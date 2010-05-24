@@ -17,6 +17,8 @@
 
 package org.cbase.blinkendroid.network;
 
+import org.cbase.blinkendroid.player.bml.BLM;
+
 /**
  * @author Andreas Schildbach
  */
@@ -26,7 +28,7 @@ public interface BlinkendroidListener extends ConnectionListener{
 
     void serverTime(long serverTime);
 
-    void play(int x, int y, int resId, long startTime2);
+    void play(int x, int y, long startTime, BLM blm);
 
     void clip(float startX, float startY, float endX, float endY);
 

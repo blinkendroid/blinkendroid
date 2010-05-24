@@ -146,13 +146,21 @@ public class PlayerActivity extends Activity implements BlinkendroidListener,
 	});
     }
 
-    public void play(int x, int y, final int resId, final long startTime) {
+    public void play(int x, int y, final long startTime, BLM movie) {
 	Log.i(Constants.LOG_TAG, "play " + startTime);
+	this.blm = movie;
+
 	runOnUiThread(new Runnable() {
 	    public void run() {
 		Log.i(Constants.LOG_TAG, "ui play start " + startTime);
-		blm = new BBMZParser().parseBBMZ(getResources()
-			.openRawResource(resId));
+		if (null == blm)
+		    blm = new BBMZParser().parseBBMZ(getResources()
+			    .openRawResource(R.raw.pacattack));
+		if (null == blm){
+		    Log.e(Constants.LOG_TAG, "got no Movie");
+		    playing = false;
+		    return;
+		}
 		playerView.setBLM(blm);
 		playerView.setStartTime(startTime);
 		playerView.startPlaying();
@@ -166,6 +174,11 @@ public class PlayerActivity extends Activity implements BlinkendroidListener,
 	    final float endY) {
 	Log.i(Constants.LOG_TAG, "clip " + startX + "," + startY + "," + endX
 		+ "," + endY);
+	if(!playing){
+	    Log.i(Constants.LOG_TAG, "ignore clip !running");
+	    return;
+	}
+	
 	runOnUiThread(new Runnable() {
 	    public void run() {
 		Log.i(Constants.LOG_TAG, "ui clip start " + startX + ","
@@ -194,7 +207,8 @@ public class PlayerActivity extends Activity implements BlinkendroidListener,
     }
 
     public void connectionOpened(final SocketAddress socketAddress) {
-	Log.d(Constants.LOG_TAG,"PlayerActivity connectionOpened "+socketAddress.toString());
+	Log.d(Constants.LOG_TAG, "PlayerActivity connectionOpened "
+		+ socketAddress.toString());
 	runOnUiThread(new Runnable() {
 	    public void run() {
 		Toast.makeText(PlayerActivity.this, "connected",
@@ -204,7 +218,8 @@ public class PlayerActivity extends Activity implements BlinkendroidListener,
     }
 
     public void connectionClosed(final SocketAddress socketAddress) {
-	Log.d(Constants.LOG_TAG,"PlayerActivity connectionClosed "+socketAddress.toString());
+	Log.d(Constants.LOG_TAG, "PlayerActivity connectionClosed "
+		+ socketAddress.toString());
 	runOnUiThread(new Runnable() {
 	    public void run() {
 		Toast.makeText(PlayerActivity.this,

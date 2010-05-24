@@ -11,10 +11,13 @@ public class PlayerManager {
     private PlayerClient[][] clients = new PlayerClient[20][20];
     private int maxX = 1, maxY = 1;
     private long startTime = 0;
-    private boolean running=true;
-    public synchronized void addClient(BlinkendroidServerProtocol blinkendroidProtocol) {
-	if(!running){
-	    Log.e(Constants.LOG_TAG, "PlayerManager not running ignore addClient ");
+    private boolean running = true;
+    private String filename=null;
+    public synchronized void addClient(
+	    BlinkendroidServerProtocol blinkendroidProtocol) {
+	if (!running) {
+	    Log.e(Constants.LOG_TAG,
+		    "PlayerManager not running ignore addClient ");
 	    return;
 	}
 	if (startTime == 0)
@@ -55,16 +58,16 @@ public class PlayerManager {
 		+ pClient.y);
 	clients[pClient.y][pClient.x] = pClient;
 
-	pClient.play();
+	pClient.play(filename);
 	arrow(pClient);
-	if(!found)
+	if (!found)
 	    clip(true);
-	else{
+	else {
 	    clip(false);
 	    pClient.clip();
 	}
 	// server starts thread to send globaltime
-	blinkendroidProtocol.startTimerThread();// TODO evtl nur ein timerthread
+	blinkendroidProtocol.startTimerThread();
     }
 
     private void arrow(final PlayerClient pClient) {
@@ -98,7 +101,7 @@ public class PlayerManager {
 		    clients[i][j].startY = startY;
 		    clients[i][j].endX = startX + (float) (1.0 / maxX);
 		    clients[i][j].endY = startY + (float) (1.0 / maxY);
-		    if(clipAll)
+		    if (clipAll)
 			clients[i][j].clip();
 		}
 		startX = startX + (float) (1.0 / maxX);
@@ -108,7 +111,7 @@ public class PlayerManager {
     }
 
     public synchronized void shutdown() {
-	running=false;
+	running = false;
 	Log.i(Constants.LOG_TAG, "PlayerManager.shutdown() start");
 	for (int i = 0; i < maxY; i++) {
 	    for (int j = 0; j < maxY; j++) {
@@ -124,8 +127,9 @@ public class PlayerManager {
     }
 
     public synchronized void removeClient(PlayerClient playerClient) {
-	if(!running){
-	    Log.e(Constants.LOG_TAG, "PlayerManager not running ignore removeClient");
+	if (!running) {
+	    Log.e(Constants.LOG_TAG,
+		    "PlayerManager not running ignore removeClient");
 	    return;
 	}
 
@@ -155,11 +159,22 @@ public class PlayerManager {
 	// maxY--;
 	// Log.i(Constants.LOG_TAG, "newMaxY "+maxY);
 	// }
-//	clip();
+	// clip();
     }
-    //TODO
+
+    // TODO
 
     public void switchMovie(BLMHeader blmHeader) {
-	Log.i(Constants.LOG_TAG,"switch to movie "+blmHeader.title);
+	this.filename=blmHeader.filename;
+	Log.i(Constants.LOG_TAG, "switch to movie " + blmHeader.title);
+	for (int i = 0; i < maxY; i++) {
+	    for (int j = 0; j < maxY; j++) {
+		if (null != clients[i][j]) {
+		    Log.i(Constants.LOG_TAG, "play PlayerClient " + i + ":"
+			    + j+" "+filename);
+		    clients[i][j].play(filename);
+		}
+	    }
+	}
     }
 }

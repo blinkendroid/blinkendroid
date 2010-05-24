@@ -88,7 +88,7 @@ public class AbstractBlinkendroidProtocol {
 	    receiverThread.shutdown();
 	}
 	System.out.println( getMyName() + " Protocol shutdown.");
-	close();
+//	close();
     }
 
     // Inner classes:
@@ -137,6 +137,8 @@ public class AbstractBlinkendroidProtocol {
 		    + " ReceiverThread shutdown start");
 	    running = false;
 	    interrupt();
+	    System.out.println( getMyName()
+		    + " ReceiverThread shutdown interrupted");
 	    try {
 		join();
 	    } catch (InterruptedException e) {
@@ -145,7 +147,7 @@ public class AbstractBlinkendroidProtocol {
 		e.printStackTrace();
 	    }
 	    System.out.println( getMyName()
-		    + " ReceiverThread shutdown end");
+		    + " ReceiverThread shutdown joined & end");
 	}
     }
 

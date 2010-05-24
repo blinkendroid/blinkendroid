@@ -30,8 +30,8 @@ public class PlayerClient implements ConnectionListener {
     public void clip() {
 	 blinkendroidProtocol.clip(startX, startY, endX, endY);
     }
-    public void play() {
-	blinkendroidProtocol.play(x,y,R.raw.spinarcade,System.currentTimeMillis(),startTime);
+    public void play(String filename) {
+	blinkendroidProtocol.play(x,y,System.currentTimeMillis(),startTime,filename);
     }
     public void arrow(int degrees) {
 	blinkendroidProtocol.arrow(degrees);

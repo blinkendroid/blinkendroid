@@ -3,41 +3,61 @@ package org.cbase.blinkendroid.network;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.nio.ByteBuffer;
 
-public class BlinkendroidClientProtocol extends AbstractBlinkendroidProtocol implements CommandHandler{
+import org.cbase.blinkendroid.player.bml.BBMZParser;
+import org.cbase.blinkendroid.player.bml.BLM;
+
+public class BlinkendroidClientProtocol extends AbstractBlinkendroidProtocol
+	implements CommandHandler {
     BlinkendroidListener listener;
+
     protected BlinkendroidClientProtocol(Socket socket,
 	    BlinkendroidListener listener) throws IOException {
-	super(socket, listener,false);
-	this.listener=listener;
-	registerHandler(PROTOCOL_PLAYER, this);   
+	super(socket, listener, false);
+	this.listener = listener;
+	registerHandler(PROTOCOL_PLAYER, this);
     }
 
-    //TLV
     public void handle(BufferedInputStream in) {
 	Integer command = readInt(in);
 	System.out.println("received: " + command);
 	if (listener != null) {
-	    if (command==COMMAND_PLAYER_TIME) {
+	    if (command == COMMAND_PLAYER_TIME) {
 		listener.serverTime(readLong(in));
-	    } else if (command==COMMAND_CLIP) {
-		final float startX =	readFloat(in);
+	    } else if (command == COMMAND_CLIP) {
+		final float startX = readFloat(in);
 		final float startY = readFloat(in);
-		final float endX =readFloat(in);
+		final float endX = readFloat(in);
 		final float endY = readFloat(in);
 		listener.clip(startX, startY, endX, endY);
-	    } else if (command==COMMAND_PLAY) {
+	    } else if (command == COMMAND_PLAY) {
 		final int x = readInt(in);
 		final int y = readInt(in);
-		final int resId = readInt(in);
 		final long serverTime = readLong(in);
-		final long startTime =readLong(in);
+		final long startTime = readLong(in);
+		final long length = readLong(in);
+
+		BBMZParser parser = new BBMZParser();
+		BLM blm = null;
+		// if length == 0 play default
+		if (length == 0) {
+		}
+		// else read BLM
+		else {
+		    blm = parser.parseBBMZ(in);
+		    // while (in.read(buffer) != -1) {
+		    // inputLine= ByteBuffer.wrap(buffer).getInt();
+		    // if (!running) // fast exit
+		    // break;
+		    // }
+		}
 		listener.serverTime(serverTime);
-		listener.play(x, y, resId, startTime);
-	    } else if (command==COMMAND_INIT) {
+		listener.play(x, y, startTime, blm);
+	    } else if (command == COMMAND_INIT) {
 		final int degrees = readInt(in);
 		listener.arrow(2500, degrees);
-	    }                      
-	}                          
+	    }
+	}
     }
 }

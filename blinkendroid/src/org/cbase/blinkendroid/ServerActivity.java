@@ -74,7 +74,7 @@ public class ServerActivity extends Activity implements ConnectionListener,
 		if (null != blinkendroidServer
 			&& blinkendroidServer.isRunning()) {
 		    blinkendroidServer.switchMovie(blmManager
-			    .getBLMHeader(arg2));
+			    .getBLMHeader(arg2-2));
 		}
 	    }
 

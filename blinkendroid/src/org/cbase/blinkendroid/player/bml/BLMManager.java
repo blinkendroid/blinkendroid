@@ -39,8 +39,10 @@ public class BLMManager {
 			if (!files[i].getName().endsWith(".info"))
 			    continue;
 			BLMHeader header = getBLMHeader(files[i]);
-			if (null != header)
+			if (null != header){
+			    header.filename=files[i].getAbsolutePath().substring(0,files[i].getAbsolutePath().length()-5 )+".bbmz";
 			    blmHeader.add(header);
+			}
 		    }
 		    listener.moviesReady();
 		}
@@ -75,6 +77,11 @@ public class BLMManager {
     public BLMHeader getBLMHeader(int pos) {
 	if (null != blmHeader.get(pos))
 	    return blmHeader.get(pos);
+	return null;
+    }
+
+    public String getFilename(int arg2) {
+	// TODO Auto-generated method stub
 	return null;
     }
 }
