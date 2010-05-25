@@ -115,7 +115,7 @@ public class PlayerManager {
 	running = false;
 	Log.i(Constants.LOG_TAG, "PlayerManager.shutdown() start");
 	for (int i = 0; i < maxY; i++) {
-	    for (int j = 0; j < maxY; j++) {
+	    for (int j = 0; j < maxX; j++) {
 		if (null != clients[i][j]) {
 		    Log.i(Constants.LOG_TAG, "shutdown PlayerClient " + i + ":"
 			    + j);
@@ -170,7 +170,7 @@ public class PlayerManager {
 	this.filename = blmHeader.filename;
 	Log.i(Constants.LOG_TAG, "switch to movie " + blmHeader.title);
 	for (int i = 0; i < maxY; i++) {
-	    for (int j = 0; j < maxY; j++) {
+	    for (int j = 0; j < maxX; j++) {
 		if (null != clients[i][j]) {
 		    Log.i(Constants.LOG_TAG, "play PlayerClient " + i + ":" + j
 			    + " " + filename);
