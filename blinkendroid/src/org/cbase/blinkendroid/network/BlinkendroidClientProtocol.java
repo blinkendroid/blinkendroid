@@ -56,7 +56,7 @@ public class BlinkendroidClientProtocol extends AbstractBlinkendroidProtocol
 		listener.play(x, y, startTime, blm);
 	    } else if (command == COMMAND_INIT) {
 		final int degrees = readInt(in);
-		listener.arrow(2500, degrees);
+		listener.arrow(4000, degrees);
 	    }
 	}
     }
