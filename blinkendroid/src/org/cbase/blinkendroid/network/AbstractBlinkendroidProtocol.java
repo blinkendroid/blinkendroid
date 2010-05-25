@@ -3,6 +3,7 @@ package org.cbase.blinkendroid.network;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.Socket;
 import java.net.SocketAddress;
 import java.net.SocketException;
@@ -36,11 +37,13 @@ public class AbstractBlinkendroidProtocol {
 	    throws IOException {
 	this.socket = socket;
 	this.server = server;
+	long t	=	System.currentTimeMillis();
 	this.out = new BufferedOutputStream(socket.getOutputStream());
 	this.in = new BufferedInputStream(socket.getInputStream());
 	this.connectionListener.add(connectionListener);
 	receiverThread = new ReceiverThread();
 	receiverThread.start();
+	System.out.println("AbstractBlinkendroidProtocol constructor "+(System.currentTimeMillis()-t));
     }
 
     public void addConnectionClosedListener(
@@ -56,15 +59,15 @@ public class AbstractBlinkendroidProtocol {
 	handlers.remove(handler);
     }
 
-    protected void connectionClosed(SocketAddress socketAddress) {
+    protected void connectionClosed(InetAddress inetAddress) {
 	for (ConnectionListener listener : connectionListener) {
-	    listener.connectionClosed(socketAddress);
+	    listener.connectionClosed(inetAddress);
 	}
     }
 
-    protected void connectionOpened(SocketAddress socketAddress) {
+    protected void connectionOpened(InetAddress inetAddress) {
 	for (ConnectionListener listener : connectionListener) {
-	    listener.connectionOpened(socketAddress);
+	    listener.connectionOpened(inetAddress);
 	}
     }
 
@@ -104,7 +107,7 @@ public class AbstractBlinkendroidProtocol {
 	    running = true;
 	    System.out.println( getMyName() + " InputThread started");
 	    int inputLine;
-	    connectionOpened(socket.getRemoteSocketAddress());
+	    connectionOpened(socket.getInetAddress());
 	    try {
 		byte[] buffer	=	new byte[4];
 		while (running &&  in.read(buffer) != -1) {
@@ -128,7 +131,7 @@ public class AbstractBlinkendroidProtocol {
 	    System.out.println(getMyName()
 			    + " InputThread ended!!!!!!! ");
 
-	    connectionClosed(socket.getRemoteSocketAddress());
+	    connectionClosed( socket.getInetAddress());
 	    close();
 	}
 
@@ -153,9 +156,9 @@ public class AbstractBlinkendroidProtocol {
 
     protected String getMyName() {
 	if (server)
-	    return "Server " + socket.getRemoteSocketAddress();
+	    return "Server ";// + socket.getRemoteSocketAddress();
 	else
-	    return "Client " + socket.getRemoteSocketAddress();
+	    return "Client ";// + socket.getRemoteSocketAddress();
     }
     protected long readLong(BufferedInputStream in) throws IOException {
 	byte[] buffer	=	new byte[8];

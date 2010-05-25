@@ -1,9 +1,9 @@
 package org.cbase.blinkendroid.network;
 
-import java.net.SocketAddress;
+import java.net.InetAddress;
 
 public interface ConnectionListener {
 
-    public abstract void connectionClosed(SocketAddress socketAddress);
-    public abstract void connectionOpened(SocketAddress socketAddress);
+    void connectionClosed(InetAddress inetAddress);
+    void connectionOpened(InetAddress inetAddress);
 }

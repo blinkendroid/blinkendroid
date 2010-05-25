@@ -1,9 +1,8 @@
 package org.cbase.blinkendroid.server;
 
-import java.net.SocketAddress;
+import java.net.InetAddress;
 
 import org.cbase.blinkendroid.Constants;
-import org.cbase.blinkendroid.R;
 import org.cbase.blinkendroid.network.BlinkendroidServerProtocol;
 import org.cbase.blinkendroid.network.ConnectionListener;
 
@@ -43,13 +42,13 @@ public class PlayerClient implements ConnectionListener {
 	blinkendroidProtocol.arrow(degrees);
     }
 
-    public void connectionClosed(SocketAddress socketAddress) {
+    public void connectionClosed(InetAddress inetAddress) {
 	shutdown();
 	playerManager.removeClient(this);
 	Log.i(Constants.LOG_TAG, "PlayerClient connectionClosed  "+x+":"+y);
     }
 
-    public void connectionOpened(SocketAddress socketAddress) {
+    public void connectionOpened(InetAddress inetAddress) {
 	Log.i(Constants.LOG_TAG, "PlayerClient connectionOpened  "+x+":"+y);
     }
 }

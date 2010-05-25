@@ -70,7 +70,7 @@ public class BlinkendroidServer extends Thread {
 		if (!running) // fast exit
 		    break;
 		Log.i(Constants.LOG_TAG, "BlinkendroidServer got connection "
-			+ clientSocket.getRemoteSocketAddress().toString());
+			/*+ clientSocket.getRemoteSocketAddress().toString()*/);
 		final BlinkendroidServerProtocol blinkendroidProtocol = new BlinkendroidServerProtocol(
 			clientSocket,connectionListener);
 		playerManager.addClient(blinkendroidProtocol);
