@@ -1,4 +1,4 @@
-package org.cbase.blinkendroid.network.multicast;
+package org.cbase.blinkendroid.network.broadcast;
 
 public interface IServerHandler {
 

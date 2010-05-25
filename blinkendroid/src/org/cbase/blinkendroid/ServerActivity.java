@@ -3,7 +3,7 @@ package org.cbase.blinkendroid;
 import java.net.SocketAddress;
 
 import org.cbase.blinkendroid.network.ConnectionListener;
-import org.cbase.blinkendroid.network.multicast.SenderThread;
+import org.cbase.blinkendroid.network.broadcast.SenderThread;
 import org.cbase.blinkendroid.player.bml.BLMManager;
 import org.cbase.blinkendroid.player.bml.BLMManager.BLMManagerListener;
 import org.cbase.blinkendroid.server.BlinkendroidServer;

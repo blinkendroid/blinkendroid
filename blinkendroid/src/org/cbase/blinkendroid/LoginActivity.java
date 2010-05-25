@@ -20,8 +20,8 @@ package org.cbase.blinkendroid;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.cbase.blinkendroid.network.multicast.IServerHandler;
-import org.cbase.blinkendroid.network.multicast.ReceiverThread;
+import org.cbase.blinkendroid.network.broadcast.IServerHandler;
+import org.cbase.blinkendroid.network.broadcast.ReceiverThread;
 import org.cbase.blinkendroid.utils.NetworkUtils;
 
 import android.app.Activity;

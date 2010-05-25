@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.cbase.blinkendroid.network.multicast;
+package org.cbase.blinkendroid.network.broadcast;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
