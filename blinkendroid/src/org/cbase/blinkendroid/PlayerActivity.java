@@ -147,21 +147,16 @@ public class PlayerActivity extends Activity implements BlinkendroidListener,
 	});
     }
 
-    public void play(int x, int y, final long startTime, BLM movie) {
+    public void play(final int x, final int y, final long startTime,
+	    final BLM movie) {
 	Log.i(Constants.LOG_TAG, "play " + startTime);
-	this.blm = movie;
-
 	runOnUiThread(new Runnable() {
 	    public void run() {
 		Log.i(Constants.LOG_TAG, "ui play start " + startTime);
-		if (null == blm)
+		blm = movie;
+		if (blm == null)
 		    blm = new BBMZParser().parseBBMZ(getResources()
 			    .openRawResource(R.raw.blinkendroid6));
-		if (null == blm){
-		    Log.e(Constants.LOG_TAG, "got no Movie");
-		    playing = false;
-		    return;
-		}
 		playerView.setBLM(blm);
 		playerView.setStartTime(startTime);
 		playerView.startPlaying();
@@ -175,7 +170,7 @@ public class PlayerActivity extends Activity implements BlinkendroidListener,
 	    final float endY) {
 	Log.i(Constants.LOG_TAG, "clip " + startX + "," + startY + "," + endX
 		+ "," + endY);
-	
+
 	runOnUiThread(new Runnable() {
 	    public void run() {
 		Log.i(Constants.LOG_TAG, "ui clip start " + startX + ","
