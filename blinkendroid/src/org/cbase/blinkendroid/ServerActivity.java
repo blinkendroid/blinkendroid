@@ -1,6 +1,6 @@
 package org.cbase.blinkendroid;
 
-import java.net.SocketAddress;
+import java.net.InetAddress;
 
 import org.cbase.blinkendroid.network.ConnectionListener;
 import org.cbase.blinkendroid.network.broadcast.SenderThread;
@@ -58,7 +58,7 @@ public class ServerActivity extends Activity implements ConnectionListener,
 	movieSpinner.setAdapter(movieAdapter);
 	// add default video
 	movieAdapter.add("Blinkendroid");
-//	movieAdapter.add("Random");//#7
+	// movieAdapter.add("Random");//#7
 	blmManager = new BLMManager();
 	blmManager.readMovies(this);
 
@@ -73,7 +73,7 @@ public class ServerActivity extends Activity implements ConnectionListener,
 		// already running?
 		if (null != blinkendroidServer) {
 		    blinkendroidServer.switchMovie(blmManager
-			    .getBLMHeader(arg2-1));
+			    .getBLMHeader(arg2 - 1));
 		}
 	    }
 
@@ -146,20 +146,22 @@ public class ServerActivity extends Activity implements ConnectionListener,
 	super.onDestroy();
     }
 
-    public void connectionOpened(final SocketAddress socketAddress) {
-	Log.d(Constants.LOG_TAG,"ServerActivity connectionOpened "+socketAddress.toString());
+    public void connectionOpened(final InetAddress inetAddress) {
+	Log.d(Constants.LOG_TAG, "ServerActivity connectionOpened "
+		+ inetAddress.toString());
 	runOnUiThread(new Runnable() {
 	    public void run() {
-		clientAdapter.add(socketAddress.toString());
+		clientAdapter.add(inetAddress.toString());
 	    }
 	});
     }
 
-    public void connectionClosed(final SocketAddress socketAddress) {
-	Log.d(Constants.LOG_TAG,"ServerActivity connectionClosed "+socketAddress.toString());
+    public void connectionClosed(final InetAddress inetAddress) {
+	Log.d(Constants.LOG_TAG, "ServerActivity connectionClosed "
+		+ inetAddress.toString());
 	runOnUiThread(new Runnable() {
 	    public void run() {
-		clientAdapter.remove(socketAddress.toString());
+		clientAdapter.remove(inetAddress.toString());
 	    }
 	});
     }
