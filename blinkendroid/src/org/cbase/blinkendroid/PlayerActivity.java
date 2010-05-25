@@ -82,7 +82,7 @@ public class PlayerActivity extends Activity implements BlinkendroidListener,
 		handler.postDelayed(new Runnable() {
 		    public void run() {
 			ownerView.setVisibility(View.INVISIBLE);
-			blinkendroidClient.touch();
+//			blinkendroidClient.touch();
 		    }
 		}, Constants.SHOW_OWNER_DURATION);
 		return false;
