@@ -19,7 +19,7 @@ public class BlinkendroidClientProtocol extends AbstractBlinkendroidProtocol
 	registerHandler(PROTOCOL_PLAYER, this);
     }
 
-    public void handle(BufferedInputStream in) {
+    public void handle(BufferedInputStream in) throws IOException {
 	Integer command = readInt(in);
 	System.out.println("received: " + command);
 	if (listener != null) {

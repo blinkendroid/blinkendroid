@@ -157,63 +157,63 @@ public class AbstractBlinkendroidProtocol {
 	else
 	    return "Client " + socket.getRemoteSocketAddress();
     }
-    protected long readLong(BufferedInputStream in) {
+    protected long readLong(BufferedInputStream in) throws IOException {
 	byte[] buffer	=	new byte[8];
-	try {
+//	try {
 	    in.read(buffer);
-	} catch (IOException e) {
-	    Log.e(Constants.LOG_TAG,"readLong failed ",e);
-	}
+//	} catch (IOException e) {
+//	    Log.e(Constants.LOG_TAG,"readLong failed ",e);
+//	}
 	return ByteBuffer.wrap(buffer).getLong();
     }    
     
-    protected int readInt(BufferedInputStream in) {
+    protected int readInt(BufferedInputStream in) throws IOException {
 	byte[] buffer	=	new byte[4];
-	try {
+//	try {
 	    in.read(buffer);
-	} catch (IOException e) {
-	    Log.e(Constants.LOG_TAG,"readLong failed ",e);
-	}
+//	} catch (IOException e) {
+//	    Log.e(Constants.LOG_TAG,"readLong failed ",e);
+//	}
 	return ByteBuffer.wrap(buffer).getInt();
     }    
     
-    protected float readFloat(BufferedInputStream in) {
+    protected float readFloat(BufferedInputStream in) throws IOException {
 	byte[] buffer	=	new byte[16];
-	try {
+//	try {
 	    in.read(buffer);
-	} catch (IOException e) {
-	    Log.e(Constants.LOG_TAG,"readLong failed ",e);
-	}
+//	} catch (IOException e) {
+//	    Log.e(Constants.LOG_TAG,"readLong failed ",e);
+//	}
 	return ByteBuffer.wrap(buffer).getFloat();
     }  
     
-    protected void writeInt(BufferedOutputStream out, int i) {
+    protected void writeInt(BufferedOutputStream out, int i) throws IOException {
 	byte[] buffer	=	new byte[4];
 	ByteBuffer.wrap(buffer).putInt(i);
-	try {
+//	try {
 	    out.write(buffer);
-	} catch (IOException e) {
-	    Log.e(Constants.LOG_TAG,"writeInt failed ",e);
-	}
+//	} catch (IOException e) {
+//	    Log.e(Constants.LOG_TAG,"writeInt failed ",e);
+//	}
     }    
     
-    protected void writeFloat(BufferedOutputStream out, float f) {
+    protected void writeFloat(BufferedOutputStream out, float f) throws IOException {
 	byte[] buffer	=	new byte[16];
 	ByteBuffer.wrap(buffer).putFloat(f);
-	try {
+//	try {
 	    out.write(buffer);
-	} catch (IOException e) {
-	    Log.e(Constants.LOG_TAG,"writeFloat failed ",e);
-	}
+//	} catch (IOException e) {
+//	    Log.e(Constants.LOG_TAG,"writeFloat failed ",e);
+//	}
     }   
     
-    protected void writeLong(BufferedOutputStream out, long l) {
+    protected void writeLong(BufferedOutputStream out, long l) throws IOException {
 	byte[] buffer	=	new byte[8];
 	ByteBuffer.wrap(buffer).putLong(l);
-	try {
+//	try {
 	    out.write(buffer);
-	} catch (IOException e) {
-	    Log.e(Constants.LOG_TAG,"writeLong failed ",e);
-	}
+//	} catch (IOException e) {
+//	    Log.e(Constants.LOG_TAG,"writeLong failed ",e);
+//	}
     }   
 }

@@ -53,39 +53,44 @@ public class BlinkendroidServerProtocol extends AbstractBlinkendroidProtocol {
     }
 
     public void play(int x, int y, long l, long startTime, String bbmzFileName) {
-	writeInt(out, PROTOCOL_PLAYER);
-	writeInt(out, COMMAND_PLAY);
-	writeInt(out, x);
-	writeInt(out, y);
-	writeLong(out, l);
-	writeLong(out, startTime);
-	if (null == bbmzFileName) {
-	    writeLong(out, 0);
-	    Log.i(Constants.LOG_TAG,"Play default video ");
-	} else {
-	    File movie = new File(bbmzFileName);
-	    if (null != movie && movie.exists()) {
-		writeLong(out, movie.length());
-		Log.i(Constants.LOG_TAG,"try to read file with bytes " + movie.length());
-		try {
-		    InputStream is = new FileInputStream(movie);
-		    byte[] buffer = new byte[1024];
-		    int allLen=0;
-		    int len;
-		    while ((len = is.read(buffer)) != -1) {
-			out.write(buffer, 0, len);
-			allLen+=len;
-		    }
-		    is.close();
-		    Log.i(Constants.LOG_TAG,"send movie bytes " + movie.length());
-		} catch (IOException ioe) {
-		    Log.e(Constants.LOG_TAG, "sending movie failed", ioe);
-		}
-	    }else{
-		Log.e(Constants.LOG_TAG, "movie not found"+bbmzFileName);
-	    }
-	}
 	try {
+	    writeInt(out, PROTOCOL_PLAYER);
+	    writeInt(out, COMMAND_PLAY);
+	    writeInt(out, x);
+	    writeInt(out, y);
+	    writeLong(out, l);
+	    writeLong(out, startTime);
+
+	    if (null == bbmzFileName) {
+		writeLong(out, 0);
+		Log.i(Constants.LOG_TAG, "Play default video ");
+	    } else {
+		File movie = new File(bbmzFileName);
+		if (null != movie && movie.exists()) {
+
+		    try {
+			writeLong(out, movie.length());
+			Log.i(Constants.LOG_TAG, "try to read file with bytes "
+				+ movie.length());
+			InputStream is = new FileInputStream(movie);
+			byte[] buffer = new byte[1024];
+			int allLen = 0;
+			int len;
+			while ((len = is.read(buffer)) != -1) {
+			    out.write(buffer, 0, len);
+			    allLen += len;
+			}
+			is.close();
+			Log.i(Constants.LOG_TAG, "send movie bytes "
+				+ movie.length());
+		    } catch (IOException ioe) {
+			Log.e(Constants.LOG_TAG, "sending movie failed", ioe);
+		    }
+		} else {
+		    Log.e(Constants.LOG_TAG, "movie not found" + bbmzFileName);
+		}
+	    }
+
 	    out.flush();
 	} catch (IOException e) {
 	    Log.e(Constants.LOG_TAG, "play failed ", e);
@@ -93,10 +98,11 @@ public class BlinkendroidServerProtocol extends AbstractBlinkendroidProtocol {
     }
 
     public void arrow(int degrees) {
-	writeInt(out, PROTOCOL_PLAYER);
-	writeInt(out, COMMAND_INIT);
-	writeInt(out, degrees);
 	try {
+	    writeInt(out, PROTOCOL_PLAYER);
+	    writeInt(out, COMMAND_INIT);
+	    writeInt(out, degrees);
+
 	    out.flush();
 	} catch (IOException e) {
 	    Log.e(Constants.LOG_TAG, "arrow failed ", e);
@@ -104,13 +110,13 @@ public class BlinkendroidServerProtocol extends AbstractBlinkendroidProtocol {
     }
 
     public void clip(float startX, float startY, float endX, float endY) {
-	writeInt(out, PROTOCOL_PLAYER);
-	writeInt(out, COMMAND_CLIP);
-	writeFloat(out, startX);
-	writeFloat(out, startY);
-	writeFloat(out, endX);
-	writeFloat(out, endY);
 	try {
+	    writeInt(out, PROTOCOL_PLAYER);
+	    writeInt(out, COMMAND_CLIP);
+	    writeFloat(out, startX);
+	    writeFloat(out, startY);
+	    writeFloat(out, endX);
+	    writeFloat(out, endY);
 	    out.flush();
 	} catch (IOException e) {
 	    Log.e(Constants.LOG_TAG, "arrow failed ", e);
@@ -137,10 +143,10 @@ public class BlinkendroidServerProtocol extends AbstractBlinkendroidProtocol {
 		    break;
 
 		long t = System.currentTimeMillis();
-		writeInt(out, PROTOCOL_PLAYER);
-		writeInt(out, COMMAND_PLAYER_TIME);
-		writeLong(out, t);
 		try {
+		    writeInt(out, PROTOCOL_PLAYER);
+		    writeInt(out, COMMAND_PLAYER_TIME);
+		    writeLong(out, t);
 		    out.flush();
 		} catch (IOException e) {
 		    Log.e(Constants.LOG_TAG, "GlobalTimerThread failed ", e);
