@@ -91,7 +91,7 @@ public class PlayerActivity extends Activity implements BlinkendroidListener,
 	    }
 	});
 
-	String owner = getOwnerOrPhonenumber();
+	String owner = getPhoneIdentifier();
 	ownerView.setText(owner);
     }
 
@@ -100,11 +100,11 @@ public class PlayerActivity extends Activity implements BlinkendroidListener,
      * phone's primary number
      * @return owner name or phone number
      */
-    private String getOwnerOrPhonenumber() {
+    private String getPhoneIdentifier() {
 	String ownerName = PreferenceManager.getDefaultSharedPreferences(this)
 		.getString("owner", null);
 
-	if (ownerName == null || ownerName.length() == 0) {
+	if (ownerName == null || ownerName.trim().length() == 0) {
 	    TelephonyManager tm = (TelephonyManager) this
 		    .getSystemService(Context.TELEPHONY_SERVICE);
 	    ownerName = tm.getLine1Number();
