@@ -175,6 +175,7 @@ public class PlayerManager {
 		    Log.i(Constants.LOG_TAG, "play PlayerClient " + i + ":" + j
 			    + " " + filename);
 		    clients[i][j].play(filename);
+		    clients[i][j].clip();
 		}
 	    }
 	}
