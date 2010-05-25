@@ -82,7 +82,7 @@ public class PlayerActivity extends Activity implements BlinkendroidListener,
 		handler.postDelayed(new Runnable() {
 		    public void run() {
 			ownerView.setVisibility(View.INVISIBLE);
-//			blinkendroidClient.touch();
+			// blinkendroidClient.touch();
 		    }
 		}, Constants.SHOW_OWNER_DURATION);
 		return false;
@@ -134,25 +134,20 @@ public class PlayerActivity extends Activity implements BlinkendroidListener,
     }
 
     public void serverTime(final long serverTime) {
-	Log.i(Constants.LOG_TAG, "time " + serverTime);
+	Log.d(Constants.LOG_TAG, "*** time " + serverTime);
 	final long timeDelta = System.currentTimeMillis() - serverTime;
 	runOnUiThread(new Runnable() {
 	    public void run() {
-		Log.i(Constants.LOG_TAG, "ui time start " + serverTime + " "
-			+ timeDelta);
 		playerView.setTimeDelta(timeDelta);
-		Log.i(Constants.LOG_TAG, "ui time end " + serverTime + " "
-			+ timeDelta);
 	    }
 	});
     }
 
     public void play(final int x, final int y, final long startTime,
 	    final BLM movie) {
-	Log.i(Constants.LOG_TAG, "play " + startTime);
+	Log.d(Constants.LOG_TAG, "*** play " + startTime);
 	runOnUiThread(new Runnable() {
 	    public void run() {
-		Log.i(Constants.LOG_TAG, "ui play start " + startTime);
 		blm = movie;
 		if (blm == null)
 		    blm = new BBMZParser().parseBBMZ(getResources()
@@ -161,33 +156,27 @@ public class PlayerActivity extends Activity implements BlinkendroidListener,
 		playerView.setStartTime(startTime);
 		playerView.startPlaying();
 		playing = true;
-		Log.i(Constants.LOG_TAG, "ui play end " + startTime);
 	    }
 	});
     }
 
     public void clip(final float startX, final float startY, final float endX,
 	    final float endY) {
-	Log.i(Constants.LOG_TAG, "clip " + startX + "," + startY + "," + endX
-		+ "," + endY);
-
+	Log.d(Constants.LOG_TAG, "*** clip " + startX + "," + startY + ","
+		+ endX + "," + endY);
 	runOnUiThread(new Runnable() {
 	    public void run() {
-		Log.i(Constants.LOG_TAG, "ui clip start " + startX + ","
-			+ startY + "," + endX + "," + endY);
 		final int absStartX = (int) (blm.header.width * startX);
 		final int absStartY = (int) (blm.header.height * startY);
 		final int absEndX = (int) (blm.header.width * endX);
 		final int absEndY = (int) (blm.header.height * endY);
 		playerView.setClipping(absStartX, absStartY, absEndX, absEndY);
-		Log.i(Constants.LOG_TAG, "ui clip end " + startX + "," + startY
-			+ "," + endX + "," + endY);
 	    }
 	});
     }
 
     public void arrow(final long duration, final float angle) {
-	Log.i(Constants.LOG_TAG, "arrow " + angle + " " + duration);
+	Log.d(Constants.LOG_TAG, "*** arrow " + angle + " " + duration);
 	runOnUiThread(new Runnable() {
 	    public void run() {
 		arrowView.setAngle(angle);
@@ -199,7 +188,7 @@ public class PlayerActivity extends Activity implements BlinkendroidListener,
     }
 
     public void connectionOpened(final SocketAddress socketAddress) {
-	Log.d(Constants.LOG_TAG, "PlayerActivity connectionOpened "
+	Log.d(Constants.LOG_TAG, "*** connectionOpened "
 		+ socketAddress.toString());
 	runOnUiThread(new Runnable() {
 	    public void run() {
@@ -210,7 +199,7 @@ public class PlayerActivity extends Activity implements BlinkendroidListener,
     }
 
     public void connectionClosed(final SocketAddress socketAddress) {
-	Log.d(Constants.LOG_TAG, "PlayerActivity connectionClosed "
+	Log.d(Constants.LOG_TAG, "*** connectionClosed "
 		+ socketAddress.toString());
 	runOnUiThread(new Runnable() {
 	    public void run() {
