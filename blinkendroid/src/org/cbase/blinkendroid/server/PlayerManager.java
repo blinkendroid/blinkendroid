@@ -12,7 +12,8 @@ public class PlayerManager {
     private int maxX = 1, maxY = 1;
     private long startTime = 0;
     private boolean running = true;
-    private String filename=null;
+    private String filename = null;
+
     public synchronized void addClient(
 	    BlinkendroidServerProtocol blinkendroidProtocol) {
 	if (!running) {
@@ -136,26 +137,27 @@ public class PlayerManager {
 	Log.i(Constants.LOG_TAG, "removeClient " + playerClient.x + ":"
 		+ playerClient.y);
 	clients[playerClient.y][playerClient.x] = null;
+
 	boolean newMaxX = true;
 	for (int i = 0; i < maxY; i++) {
-	    if (clients[i][maxX-1] != null) {
+	    if (clients[i][maxX - 1] != null) {
 		newMaxX = false;
 		break;
 	    }
 	}
-	if (newMaxX) {
+	if (newMaxX && maxX > 1) {
 	    maxX--;
 	    Log.i(Constants.LOG_TAG, "newMaxX " + maxX);
 	}
 
 	boolean newMaxY = true;
 	for (int i = 0; i < maxX; i++) {
-	    if (clients[maxY-1][i] != null) {
+	    if (clients[maxY - 1][i] != null) {
 		newMaxY = false;
 		break;
 	    }
 	}
-	if (newMaxY) {
+	if (newMaxY && maxY > 1) {
 	    maxY--;
 	    Log.i(Constants.LOG_TAG, "newMaxY " + maxY);
 	}
@@ -165,13 +167,13 @@ public class PlayerManager {
     // TODO
 
     public void switchMovie(BLMHeader blmHeader) {
-	this.filename=blmHeader.filename;
+	this.filename = blmHeader.filename;
 	Log.i(Constants.LOG_TAG, "switch to movie " + blmHeader.title);
 	for (int i = 0; i < maxY; i++) {
 	    for (int j = 0; j < maxY; j++) {
 		if (null != clients[i][j]) {
-		    Log.i(Constants.LOG_TAG, "play PlayerClient " + i + ":"
-			    + j+" "+filename);
+		    Log.i(Constants.LOG_TAG, "play PlayerClient " + i + ":" + j
+			    + " " + filename);
 		    clients[i][j].play(filename);
 		}
 	    }
