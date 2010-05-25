@@ -66,6 +66,7 @@ public class PlayerView extends View implements Runnable {
 	}
 	frameTime[numFrames] = t;
 	duration = t;
+	frame = 0;
     }
 
     public void setStartTime(long startTime) {
