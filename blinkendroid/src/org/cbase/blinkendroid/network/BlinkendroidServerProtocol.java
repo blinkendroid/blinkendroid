@@ -129,7 +129,7 @@ public class BlinkendroidServerProtocol extends AbstractBlinkendroidProtocol {
 	    Log.i(Constants.LOG_TAG, "GlobalTimerThread started");
 	    while (running) {
 		try {
-		    GlobalTimerThread.sleep(5000);
+		    GlobalTimerThread.sleep(1000);
 		} catch (InterruptedException e) {
 		    // swallow
 		}
