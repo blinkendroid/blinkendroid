@@ -119,7 +119,7 @@ public class BlinkendroidServerProtocol extends AbstractBlinkendroidProtocol {
 	    writeFloat(out, endY);
 	    out.flush();
 	} catch (IOException e) {
-	    Log.e(Constants.LOG_TAG, "arrow failed ", e);
+	    Log.e(Constants.LOG_TAG, "clip failed ", e);
 	}
     }
 

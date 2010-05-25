@@ -3,7 +3,6 @@ package org.cbase.blinkendroid.network;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.net.Socket;
-import java.nio.ByteBuffer;
 
 import org.cbase.blinkendroid.player.bml.BBMZParser;
 import org.cbase.blinkendroid.player.bml.BLM;
@@ -30,6 +29,7 @@ public class BlinkendroidClientProtocol extends AbstractBlinkendroidProtocol
 		final float startY = readFloat(in);
 		final float endX = readFloat(in);
 		final float endY = readFloat(in);
+		System.out.println("clip: " + startX+","+startY+","+ endX+","+endY);
 		listener.clip(startX, startY, endX, endY);
 	    } else if (command == COMMAND_PLAY) {
 		final int x = readInt(in);
