@@ -60,7 +60,7 @@ public class BlinkendroidClient extends Thread {
 	System.out.println("client shutdown completed");
     }
 
-    public void touch() {
+    public void locateMe() {
 	// TODO Auto-generated method stub
 	
     }
