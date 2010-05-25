@@ -2,9 +2,12 @@ package org.cbase.blinkendroid.server;
 
 import java.net.SocketAddress;
 
+import org.cbase.blinkendroid.Constants;
 import org.cbase.blinkendroid.R;
 import org.cbase.blinkendroid.network.BlinkendroidServerProtocol;
 import org.cbase.blinkendroid.network.ConnectionListener;
+
+import android.util.Log;
 
 public class PlayerClient implements ConnectionListener {
 
@@ -28,24 +31,25 @@ public class PlayerClient implements ConnectionListener {
 	blinkendroidProtocol.shutdown();
     }
     public void clip() {
-	 blinkendroidProtocol.clip(startX, startY, endX, endY);
+	Log.i(Constants.LOG_TAG, "PlayerClient clip "+x+":"+y); 
+	blinkendroidProtocol.clip(startX, startY, endX, endY);
     }
     public void play(String filename) {
+	Log.i(Constants.LOG_TAG, "PlayerClient play  "+x+":"+y+" filename "+filename); 
 	blinkendroidProtocol.play(x,y,System.currentTimeMillis(),startTime,filename);
     }
     public void arrow(int degrees) {
+	Log.i(Constants.LOG_TAG, "PlayerClient arrow  "+x+":"+y+" degrees "+degrees); 
 	blinkendroidProtocol.arrow(degrees);
-    }
-    public void connectionClosed() {
-
     }
 
     public void connectionClosed(SocketAddress socketAddress) {
 	shutdown();
 	playerManager.removeClient(this);
+	Log.i(Constants.LOG_TAG, "PlayerClient connectionClosed  "+x+":"+y);
     }
 
     public void connectionOpened(SocketAddress socketAddress) {
-
+	Log.i(Constants.LOG_TAG, "PlayerClient connectionOpened  "+x+":"+y);
     }
 }
