@@ -14,17 +14,18 @@ public class ClientConnectionTest extends TestCase {
     private static final String IP = "172.16.82.39";
     private class TestBlinkendroidListener implements BlinkendroidListener{
 	int x,y;
-	float startX, startY, endX,  endY;
+	float startX=-1, startY=-1, endX=-1,  endY=-1;
 	Boolean connectionClosed=null;
 	long startTime=0;
 	long serverTime=0;
 	
 	public void arrow(long duration, float angle) {
-  
+	    System.out.println(x+":"+y+" arrow "+angle);
 	}
 
 
 	public void clip(float startX, float startY, float endX, float endY) {
+	    System.out.println(x+":"+y+" clip "+ startX+","+startY+","+endX+","+endY);
 	    this.startX=startX;
 	    this.startY=startY;
 	    this.endX=endX;
@@ -32,13 +33,16 @@ public class ClientConnectionTest extends TestCase {
 	}
 
 	public void connectionClosed(SocketAddress addr) {
+	    System.out.println(x+":"+y+"connectionClosed");
 	    connectionClosed=true;
 	}
 
 	public void connectionFailed(String message) {
+	    System.out.println(x+":"+y+" connectionFailed");
 	}
 
 	public void connectionOpened(SocketAddress addr) {
+	    System.out.println(x+":"+y+" connectionOpened");
 	    connectionClosed=false;
 	}
 
@@ -46,9 +50,11 @@ public class ClientConnectionTest extends TestCase {
 	    this.x=x;
 	    this.y=y;
 	    this.startTime=startTime;
+	    System.out.println(x+":"+y+" play ");
 	}
 
 	public void serverTime(long serverTime) {
+	    System.out.println(x+":"+y+" serverTime "+serverTime);
 	    this.serverTime=serverTime;
 	}
 	
@@ -136,7 +142,7 @@ public class ClientConnectionTest extends TestCase {
 	assertTrue(testListener2.startTime>0);
 	assertTrue(testListener2.serverTime>0);
 	assertEquals(testListener2.startX,(float)0.5);
-	assertEquals(testListener2.startY,(float)0.5);
+	assertEquals(testListener2.startY,(float)0.0);
 	assertEquals(testListener2.endX,(float)1.0);
 	assertEquals(testListener2.endY,(float)1.0);
 	assertEquals(testListener2.x,1);
@@ -149,7 +155,7 @@ public class ClientConnectionTest extends TestCase {
 	assertEquals(testListener.startX,(float)0.0);
 	assertEquals(testListener.startY,(float)0.0);
 	assertEquals(testListener.endX,(float)0.5);
-	assertEquals(testListener.endY,(float)0.5);
+	assertEquals(testListener.endY,(float)1.0);
 	
 	client.shutdown();
 	Thread.sleep(1000);
