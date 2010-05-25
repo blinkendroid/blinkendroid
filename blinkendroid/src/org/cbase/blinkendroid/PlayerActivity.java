@@ -29,11 +29,13 @@ import org.cbase.blinkendroid.player.bml.BLM;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -89,10 +91,28 @@ public class PlayerActivity extends Activity implements BlinkendroidListener,
 	    }
 	});
 
-	ownerView.setText(PreferenceManager.getDefaultSharedPreferences(this)
-		.getString("owner", null));
+	String owner = getOwnerOrPhonenumber();
+	ownerView.setText(owner);
     }
 
+    /**
+     * Gets the owner's name from the preferences or falls back to the
+     * phone's primary number
+     * @return owner name or phone number
+     */
+    private String getOwnerOrPhonenumber() {
+	String ownerName = PreferenceManager.getDefaultSharedPreferences(this)
+		.getString("owner", null);
+
+	if (ownerName == null || ownerName.length() == 0) {
+	    TelephonyManager tm = (TelephonyManager) this
+		    .getSystemService(Context.TELEPHONY_SERVICE);
+	    ownerName = tm.getLine1Number();
+	}
+
+	return ownerName;
+    }
+    
     @Override
     protected void onResume() {
 
