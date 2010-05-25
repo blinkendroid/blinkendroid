@@ -58,7 +58,7 @@ public class ServerActivity extends Activity implements ConnectionListener,
 	movieSpinner.setAdapter(movieAdapter);
 	// add default video
 	movieAdapter.add("Blinkendroid");
-	movieAdapter.add("Random");
+//	movieAdapter.add("Random");//#7
 	blmManager = new BLMManager();
 	blmManager.readMovies(this);
 
@@ -73,7 +73,7 @@ public class ServerActivity extends Activity implements ConnectionListener,
 		// already running?
 		if (null != blinkendroidServer) {
 		    blinkendroidServer.switchMovie(blmManager
-			    .getBLMHeader(arg2-2));
+			    .getBLMHeader(arg2-1));
 		}
 	    }
 
