@@ -83,6 +83,7 @@ public class BlinkendroidServerProtocol extends AbstractBlinkendroidProtocol {
 			is.close();
 			Log.i(Constants.LOG_TAG, "send movie bytes "
 				+ movie.length());
+			writeLong(out, movie.length());
 		    } catch (IOException ioe) {
 			Log.e(Constants.LOG_TAG, "sending movie failed", ioe);
 		    }
@@ -118,6 +119,7 @@ public class BlinkendroidServerProtocol extends AbstractBlinkendroidProtocol {
 	    writeFloat(out, endX);
 	    writeFloat(out, endY);
 	    out.flush();
+	    Log.d(Constants.LOG_TAG, "clip flushed ");
 	} catch (IOException e) {
 	    Log.e(Constants.LOG_TAG, "clip failed ", e);
 	}

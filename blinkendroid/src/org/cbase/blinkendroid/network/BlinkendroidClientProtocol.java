@@ -52,6 +52,8 @@ public class BlinkendroidClientProtocol extends AbstractBlinkendroidProtocol
 		    // break;
 		    // }
 		}
+		long length2=readLong(in);
+		System.out.println("play length1 "+length+" length2:"+length2);
 		listener.serverTime(serverTime);
 		listener.play(x, y, startTime, blm);
 	    } else if (command == COMMAND_INIT) {
