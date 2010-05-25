@@ -17,10 +17,10 @@
 
 package org.cbase.blinkendroid;
 
+import java.net.InetAddress;
 import java.net.InetSocketAddress;
-import java.net.SocketAddress;
 
-import org.cbase.blinkendroid.network.BlinkendroidClient2;
+import org.cbase.blinkendroid.network.BlinkendroidClient;
 import org.cbase.blinkendroid.network.BlinkendroidListener;
 import org.cbase.blinkendroid.player.ArrowView;
 import org.cbase.blinkendroid.player.PlayerView;
@@ -56,7 +56,7 @@ public class PlayerActivity extends Activity implements BlinkendroidListener,
     private PlayerView playerView;
     private ArrowView arrowView;
     private TextView ownerView;
-    private BlinkendroidClient2 blinkendroidClient;
+    private BlinkendroidClient blinkendroidClient;
     private BLM blm;
     private boolean playing = false;
     private long arrowDuration;
@@ -96,8 +96,9 @@ public class PlayerActivity extends Activity implements BlinkendroidListener,
     }
 
     /**
-     * Gets the owner's name from the preferences or falls back to the
-     * phone's primary number
+     * Gets the owner's name from the preferences or falls back to the phone's
+     * primary number
+     * 
      * @return owner name or phone number
      */
     private String getPhoneIdentifier() {
@@ -112,13 +113,13 @@ public class PlayerActivity extends Activity implements BlinkendroidListener,
 
 	return ownerName;
     }
-    
+
     @Override
     protected void onResume() {
 
 	super.onResume();
 
-	blinkendroidClient = new BlinkendroidClient2(
+	blinkendroidClient = new BlinkendroidClient(
 		new InetSocketAddress(getIntent().getStringExtra(
 			INTENT_EXTRA_IP), getIntent().getIntExtra(
 			INTENT_EXTRA_PORT, Constants.SERVER_PORT)), this);
@@ -207,9 +208,9 @@ public class PlayerActivity extends Activity implements BlinkendroidListener,
 	});
     }
 
-    public void connectionOpened(final SocketAddress socketAddress) {
+    public void connectionOpened(final InetAddress inetAddress) {
 	Log.d(Constants.LOG_TAG, "*** connectionOpened "
-		+ socketAddress.toString());
+		+ inetAddress.toString());
 	runOnUiThread(new Runnable() {
 	    public void run() {
 		Toast.makeText(PlayerActivity.this, "connected",
@@ -218,9 +219,9 @@ public class PlayerActivity extends Activity implements BlinkendroidListener,
 	});
     }
 
-    public void connectionClosed(final SocketAddress socketAddress) {
+    public void connectionClosed(final InetAddress inetAddress) {
 	Log.d(Constants.LOG_TAG, "*** connectionClosed "
-		+ socketAddress.toString());
+		+ inetAddress.toString());
 	runOnUiThread(new Runnable() {
 	    public void run() {
 		Toast.makeText(PlayerActivity.this,
