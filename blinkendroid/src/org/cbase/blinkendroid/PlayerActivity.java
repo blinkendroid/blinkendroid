@@ -37,6 +37,7 @@ import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.telephony.TelephonyManager;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
@@ -152,6 +153,12 @@ public class PlayerActivity extends Activity implements BlinkendroidListener,
 	}
 
 	super.onPause();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+	getMenuInflater().inflate(R.menu.player_options, menu);
+	return true;
     }
 
     public void serverTime(final long serverTime) {
