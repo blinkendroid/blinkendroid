@@ -194,11 +194,7 @@ public class PlayerActivity extends Activity implements BlinkendroidListener,
 		+ endX + "," + endY);
 	runOnUiThread(new Runnable() {
 	    public void run() {
-		final int absStartX = (int) (blm.header.width * startX);
-		final int absStartY = (int) (blm.header.height * startY);
-		final int absEndX = (int) (blm.header.width * endX);
-		final int absEndY = (int) (blm.header.height * endY);
-		playerView.setClipping(absStartX, absStartY, absEndX, absEndY);
+		playerView.setClipping(startX, startY, endX, endY);
 	    }
 	});
     }

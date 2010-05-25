@@ -35,7 +35,7 @@ import android.view.View;
 public class PlayerView extends View implements Runnable {
 
     private BLM blm;
-    private int startX, startY, endX, endY;
+    private float startX = 0f, startY = 0f, endX = 1f, endY = 1f;
     private boolean playing = false;
     private long startTime;
     private long timeDelta = 0;
@@ -55,8 +55,6 @@ public class PlayerView extends View implements Runnable {
 
     public void setBLM(final BLM blm) {
 	this.blm = blm;
-	this.endX = blm.header.width;
-	this.endY = blm.header.height;
 	this.numFrames = blm.frames.size();
 	long t = 0;
 	frameTime = new long[numFrames + 1];
@@ -77,7 +75,7 @@ public class PlayerView extends View implements Runnable {
 	this.timeDelta = timeDelta;
     }
 
-    public void setClipping(int startX, int startY, int endX, int endY) {
+    public void setClipping(float startX, float startY, float endX, float endY) {
 	this.startX = startX;
 	this.startY = startY;
 	this.endX = endX;
@@ -105,16 +103,22 @@ public class PlayerView extends View implements Runnable {
 
 	    final byte[][] matrix = blm.frames.get(frame).matrix;
 
-	    final float pixelWidth = (float) getWidth() / (endX - startX);
-	    final float pixelHeight = (float) getHeight() / (endY - startY);
+	    final int absStartX = (int) (blm.header.width * startX);
+	    final int absStartY = (int) (blm.header.height * startY);
+	    final int absEndX = (int) (blm.header.width * endX);
+	    final int absEndY = (int) (blm.header.height * endY);
+
+	    final float pixelWidth = (float) getWidth() / (absEndX - absStartX);
+	    final float pixelHeight = (float) getHeight()
+		    / (absEndY - absStartY);
 
 	    // clip
-	    for (int y = startY; y < endY; y++) {
-		final int clippedY = y - startY;
+	    for (int y = absStartY; y < absEndY; y++) {
+		final int clippedY = y - absStartY;
 		final byte[] row = matrix[y];
-		for (int x = startX; x < endX; x++) {
-		    final int clippedX = x - startX;
-		    final int value = row[x] << (8-blm.header.bits);
+		for (int x = absStartX; x < absEndX; x++) {
+		    final int clippedX = x - absStartX;
+		    final int value = row[x] << (8 - blm.header.bits);
 		    if (blm.header.color) {
 			int r = ((row[x] & 48) >> 4) * 64;
 			int g = ((row[x] & 12) >> 2) * 64;
@@ -122,7 +126,7 @@ public class PlayerView extends View implements Runnable {
 			// Log.d(Constants.LOG_TAG, r+","+g+","+b+":"+
 			// row[x]+";");
 			paint.setColor(Color.argb(255, r, g, b));
-		    }else{
+		    } else {
 			paint.setColor(Color.argb(255, value, value, value));
 		    }
 		    canvas
