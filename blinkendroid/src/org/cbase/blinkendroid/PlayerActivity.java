@@ -156,7 +156,7 @@ public class PlayerActivity extends Activity implements BlinkendroidListener,
 		blm = movie;
 		if (blm == null)
 		    blm = new BBMZParser().parseBBMZ(getResources()
-			    .openRawResource(R.raw.blinkendroid6));
+			    .openRawResource(R.raw.blinkendroid1));
 		playerView.setBLM(blm);
 		playerView.setStartTime(startTime);
 		playerView.startPlaying();
