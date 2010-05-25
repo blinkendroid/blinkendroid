@@ -30,12 +30,14 @@ public class BBMZParser {
 
 	ByteArrayOutputStream baos = new ByteArrayOutputStream();
 	uncompress(new ByteArrayInputStream(os.toByteArray()), baos);
+	os=null;
 	try {
 	    ObjectInputStream objIn = new ObjectInputStream(
 		    new ByteArrayInputStream(baos.toByteArray()));
 	    Object o = objIn.readObject();
 	    System.out.println("decompression and parsing time :"
 		    + (System.currentTimeMillis() - time));
+	    baos=null;
 	    if (o instanceof BLM) {
 		return (BLM) o;
 	    } else {
@@ -45,7 +47,7 @@ public class BBMZParser {
 	    System.out.println("not valid bbmz");
 	    e.printStackTrace();
 	}
-
+	baos=null;
 	return null;
     }
 
