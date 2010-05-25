@@ -22,10 +22,18 @@ import java.util.List;
 
 public class BLM implements Serializable {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -3371857600502436099L;
     public BLMHeader header;
     public List<Frame> frames;
 
     public static class Frame implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -561025050799344726L;
 	public int duration;
 	public byte matrix[][];
     }
