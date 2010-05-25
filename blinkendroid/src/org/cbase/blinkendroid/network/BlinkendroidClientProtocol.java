@@ -45,15 +45,17 @@ public class BlinkendroidClientProtocol extends AbstractBlinkendroidProtocol
 		}
 		// else read BLM
 		else {
-		    blm = parser.parseBBMZ(in);
+		    blm = parser.parseBBMZ(in, length);
 		    // while (in.read(buffer) != -1) {
 		    // inputLine= ByteBuffer.wrap(buffer).getInt();
 		    // if (!running) // fast exit
 		    // break;
 		    // }
+		    long length2=readLong(in);
+			System.out.println("play length1 "+length+" length2:"+length2);
 		}
-		long length2=readLong(in);
-		System.out.println("play length1 "+length+" length2:"+length2);
+		
+
 		listener.serverTime(serverTime);
 		listener.play(x, y, startTime, blm);
 	    } else if (command == COMMAND_INIT) {

@@ -10,10 +10,26 @@ import java.util.zip.ZipInputStream;
 
 public class BBMZParser {
 
-    public BLM parseBBMZ(InputStream openRawResource) {
+    public BLM parseBBMZ(InputStream openRawResource, long length) {
 	long time = System.currentTimeMillis();
+
+	ByteArrayOutputStream os = new ByteArrayOutputStream();
+	byte inbuf[] = new byte[1];
+	int n;
+	try {
+	    while ((n = openRawResource.read(inbuf, 0, 1)) != -1) {
+		os.write(inbuf, 0, n);
+		length -= n;
+		if (length == 0)
+		    break;
+	    }
+	} catch (Exception e) {
+	    System.out.println("not valid bbmz");
+	    e.printStackTrace();
+	}
+
 	ByteArrayOutputStream baos = new ByteArrayOutputStream();
-	uncompress(openRawResource, baos);
+	uncompress(new ByteArrayInputStream(os.toByteArray()), baos);
 	try {
 	    ObjectInputStream objIn = new ObjectInputStream(
 		    new ByteArrayInputStream(baos.toByteArray()));
@@ -39,13 +55,13 @@ public class BBMZParser {
 	    zis.getNextEntry();
 	    final int BUFSIZ = 4096;
 	    byte inbuf[] = new byte[BUFSIZ];
-	    int length=0;
+	    int length = 0;
 	    int n;
-	    while ((n = zis.read(inbuf, 0, BUFSIZ)) != -1){
+	    while ((n = zis.read(inbuf, 0, BUFSIZ)) != -1) {
 		fos.write(inbuf, 0, n);
-		length+=n;
+		length += n;
 	    }
-	    System.out.println("BBMZParser read bytes "+length);
+	    System.out.println("BBMZParser read bytes " + length);
 	    // zis.close();
 	    // fis = null;
 	    // fos.close();
