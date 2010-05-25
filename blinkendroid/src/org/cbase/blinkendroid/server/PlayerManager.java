@@ -117,8 +117,8 @@ public class PlayerManager {
 	for (int i = 0; i < maxY; i++) {
 	    for (int j = 0; j < maxX; j++) {
 		if (null != clients[i][j]) {
-		    Log.i(Constants.LOG_TAG, "shutdown PlayerClient " + i + ":"
-			    + j);
+		    Log.i(Constants.LOG_TAG, "shutdown PlayerClient " + j + ":"
+			    + i);
 		    clients[i][j].shutdown();
 		}
 	    }
@@ -164,18 +164,15 @@ public class PlayerManager {
 	clip(true);
     }
 
-    // TODO
-
     public void switchMovie(BLMHeader blmHeader) {
 	this.filename = blmHeader.filename;
 	Log.i(Constants.LOG_TAG, "switch to movie " + blmHeader.title);
 	for (int i = 0; i < maxY; i++) {
 	    for (int j = 0; j < maxX; j++) {
 		if (null != clients[i][j]) {
-		    Log.i(Constants.LOG_TAG, "play PlayerClient " + i + ":" + j
+		    Log.i(Constants.LOG_TAG, "play PlayerClient " + j + ":" + i
 			    + " " + filename);
 		    clients[i][j].play(filename);
-		    clients[i][j].clip();
 		}
 	    }
 	}
