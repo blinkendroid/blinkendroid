@@ -136,30 +136,30 @@ public class PlayerManager {
 	Log.i(Constants.LOG_TAG, "removeClient " + playerClient.x + ":"
 		+ playerClient.y);
 	clients[playerClient.y][playerClient.x] = null;
-	// boolean newMaxX=true;
-	// for (int i = 0; i < maxY; i++) {
-	// if(clients[i][maxX]!=null){
-	// newMaxX=false;
-	// break;
-	// }
-	// }
-	// if(newMaxX){
-	// maxX--;
-	// Log.i(Constants.LOG_TAG, "newMaxX "+maxX);
-	// }
-	//	
-	// boolean newMaxY=true;
-	// for (int i = 0; i < maxX; i++) {
-	// if(clients[maxY][i]!=null){
-	// newMaxY=false;
-	// break;
-	// }
-	// }
-	// if(newMaxY){
-	// maxY--;
-	// Log.i(Constants.LOG_TAG, "newMaxY "+maxY);
-	// }
-	// clip();
+	boolean newMaxX = true;
+	for (int i = 0; i < maxY; i++) {
+	    if (clients[i][maxX-1] != null) {
+		newMaxX = false;
+		break;
+	    }
+	}
+	if (newMaxX) {
+	    maxX--;
+	    Log.i(Constants.LOG_TAG, "newMaxX " + maxX);
+	}
+
+	boolean newMaxY = true;
+	for (int i = 0; i < maxX; i++) {
+	    if (clients[maxY-1][i] != null) {
+		newMaxY = false;
+		break;
+	    }
+	}
+	if (newMaxY) {
+	    maxY--;
+	    Log.i(Constants.LOG_TAG, "newMaxY " + maxY);
+	}
+	clip(true);
     }
 
     // TODO
