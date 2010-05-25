@@ -175,10 +175,6 @@ public class PlayerActivity extends Activity implements BlinkendroidListener,
 	    final float endY) {
 	Log.i(Constants.LOG_TAG, "clip " + startX + "," + startY + "," + endX
 		+ "," + endY);
-	if(!playing){
-	    Log.i(Constants.LOG_TAG, "ignore clip !running");
-	    return;
-	}
 	
 	runOnUiThread(new Runnable() {
 	    public void run() {
