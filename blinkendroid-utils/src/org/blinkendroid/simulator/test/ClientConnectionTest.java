@@ -11,7 +11,7 @@ import org.cbase.blinkendroid.network.BlinkendroidListener;
 import org.cbase.blinkendroid.player.bml.BLM;
 
 public class ClientConnectionTest extends TestCase {
-    private static final String IP = "192.168.1.4";
+    private static final String IP = "172.16.82.39";
     private class TestBlinkendroidListener implements BlinkendroidListener{
 	int x,y;
 	float startX, startY, endX,  endY;
@@ -86,7 +86,28 @@ public class ClientConnectionTest extends TestCase {
 //	assertEquals(0,testListener3.y);
 //    }
 //    
-    public void testConnection() throws Exception{
+//    public void testConnection() throws Exception{
+//	TestBlinkendroidListener testListener =	new TestBlinkendroidListener();
+//	BlinkendroidClient2 client = new BlinkendroidClient2(new InetSocketAddress(IP,Constants.SERVER_PORT), testListener);
+//	client.start();
+//	Thread.sleep(1000);
+//	assertFalse(testListener.connectionClosed);
+//	assertTrue(testListener.startTime>0);
+//	assertTrue(testListener.serverTime>0);
+//	assertEquals(testListener.startX,(float)0.0);
+//	assertEquals(testListener.startY,(float)0.0);
+//	assertEquals(testListener.endX,(float)1.0);
+//	assertEquals(testListener.endY,(float)1.0);
+//	
+//	long serverTime=testListener.serverTime;
+//	Thread.sleep(5001);
+//	assertTrue(serverTime<testListener.serverTime);
+//	client.shutdown();
+//	Thread.sleep(1000);
+//	assertTrue(testListener.connectionClosed);
+//    }
+    
+    public void test2Connection() throws Exception{
 	TestBlinkendroidListener testListener =	new TestBlinkendroidListener();
 	BlinkendroidClient2 client = new BlinkendroidClient2(new InetSocketAddress(IP,Constants.SERVER_PORT), testListener);
 	client.start();
@@ -98,15 +119,47 @@ public class ClientConnectionTest extends TestCase {
 	assertEquals(testListener.startY,(float)0.0);
 	assertEquals(testListener.endX,(float)1.0);
 	assertEquals(testListener.endY,(float)1.0);
+	assertEquals(testListener.x,0);
+	assertEquals(testListener.y,0);
 	
 	long serverTime=testListener.serverTime;
 	Thread.sleep(5001);
 	assertTrue(serverTime<testListener.serverTime);
+
+	
+	//zweites handy dazu 
+	TestBlinkendroidListener testListener2 =	new TestBlinkendroidListener();
+	BlinkendroidClient2 client2 = new BlinkendroidClient2(new InetSocketAddress(IP,Constants.SERVER_PORT), testListener2);
+	client2.start();
+	Thread.sleep(1000);
+	assertFalse(testListener2.connectionClosed);
+	assertTrue(testListener2.startTime>0);
+	assertTrue(testListener2.serverTime>0);
+	assertEquals(testListener2.startX,(float)0.5);
+	assertEquals(testListener2.startY,(float)0.5);
+	assertEquals(testListener2.endX,(float)1.0);
+	assertEquals(testListener2.endY,(float)1.0);
+	assertEquals(testListener2.x,1);
+	assertEquals(testListener2.y,0);
+	
+	Thread.sleep(5001);
+	assertTrue(serverTime<testListener.serverTime);
+	
+	//erstes handy brauch reclip
+	assertEquals(testListener.startX,(float)0.0);
+	assertEquals(testListener.startY,(float)0.0);
+	assertEquals(testListener.endX,(float)0.5);
+	assertEquals(testListener.endY,(float)0.5);
+	
 	client.shutdown();
 	Thread.sleep(1000);
 	assertTrue(testListener.connectionClosed);
+	
+	client2.shutdown();
+	Thread.sleep(1000);
+	assertTrue(testListener2.connectionClosed);
+	
     }
-    
 //    public void test100Connections() throws Exception{
 //	int x=0;
 //	int y=0;
