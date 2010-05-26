@@ -41,6 +41,7 @@ import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
 import android.view.View.OnTouchListener;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -77,7 +78,6 @@ public class PlayerActivity extends Activity implements BlinkendroidListener,
 	playerView = (PlayerView) findViewById(R.id.player_image);
 	arrowView = (ArrowView) findViewById(R.id.player_arrow);
 	ownerView = (TextView) findViewById(R.id.player_owner);
-
 	playerView.setOnTouchListener(new OnTouchListener() {
 
 	    public boolean onTouch(View v, MotionEvent event) {
@@ -94,6 +94,10 @@ public class PlayerActivity extends Activity implements BlinkendroidListener,
 
 	String owner = getPhoneIdentifier();
 	ownerView.setText(owner);
+	//forcing the screen brightness to max out while playing
+	WindowManager.LayoutParams lp = getWindow().getAttributes();
+	lp.screenBrightness = 1.0f;
+	getWindow().setAttributes(lp);
     }
 
     /**
