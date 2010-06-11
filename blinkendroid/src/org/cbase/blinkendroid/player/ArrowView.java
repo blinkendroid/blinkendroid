@@ -20,8 +20,8 @@ public class ArrowView extends View {
 
     static {
 	path.moveTo(0f, -5f);
-	path.lineTo(-3f, 4f);
-	path.lineTo(3f, 4f);
+	path.lineTo(-2f, 1f);
+	path.lineTo(2f, 1f);
 	path.close();
 
 	arrowStroke.setStyle(Style.STROKE);
