@@ -1,5 +1,8 @@
 package org.cbase.blinkendroid.player;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -10,11 +13,13 @@ import android.util.AttributeSet;
 import android.view.View;
 
 public class ArrowView extends View {
+
     private int width;
     private int height;
-    private float angle;
-    private int color;
+    private List<Float> angles = new LinkedList<Float>();
+    private List<Integer> colors = new LinkedList<Integer>();
     private float scale = 1f;
+
     private static final Path path = new Path();
     private static final Paint arrowStroke = new Paint();
 
@@ -37,24 +42,33 @@ public class ArrowView extends View {
     @Override
     protected void onDraw(final Canvas canvas) {
 
-	final Paint arrowPaint = new Paint();
-	arrowPaint.setColor(color);
-	arrowPaint.setAntiAlias(true);
+	for (int i = 0; i < angles.size(); i++) {
 
-	canvas.translate(width / 2f, height / 2f);
-	canvas.rotate(angle);
-	canvas.scale(width / 10f * scale, height / 10f * scale);
-	canvas.drawPath(path, arrowPaint);
-	canvas.drawPath(path, arrowStroke);
+	    float angle = angles.get(i);
+	    int color = colors.get(i);
+
+	    final Paint arrowPaint = new Paint();
+	    arrowPaint.setColor(color);
+	    arrowPaint.setAntiAlias(true);
+
+	    canvas.translate(width / 2f, height / 2f);
+	    canvas.rotate(angle);
+	    canvas.scale(width / 10f * scale, height / 10f * scale);
+	    canvas.drawPath(path, arrowPaint);
+	    canvas.drawPath(path, arrowStroke);
+	}
     }
 
-    public void setAngle(final float angle) {
-	this.angle = angle;
+    public void addArrow(final float angle, final int color) {
+	angles.add(angle);
+	colors.add(color);
 	postInvalidate();
     }
 
-    public void setColor(int color) {
-	this.color = color;
+    public void removeArrow(final int color) {
+	final int i = colors.indexOf(color);
+	angles.remove(i);
+	colors.remove(i);
 	postInvalidate();
     }
 

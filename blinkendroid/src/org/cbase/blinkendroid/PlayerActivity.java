@@ -19,6 +19,9 @@ package org.cbase.blinkendroid;
 
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 import org.cbase.blinkendroid.network.BlinkendroidClient;
 import org.cbase.blinkendroid.network.BlinkendroidListener;
@@ -61,8 +64,7 @@ public class PlayerActivity extends Activity implements BlinkendroidListener,
     private BlinkendroidClient blinkendroidClient;
     private BLM blm;
     private boolean playing = false;
-    private long arrowDuration;
-
+    private Map<Integer, Long> arrowDurations = new HashMap<Integer, Long>();
     private float arrowScale = 0f;
     private final Handler handler = new Handler();
 
@@ -130,18 +132,11 @@ public class PlayerActivity extends Activity implements BlinkendroidListener,
 			INTENT_EXTRA_PORT, Constants.SERVER_PORT)), this);
 	blinkendroidClient.start();
 
-	if (blinkendroidClient != null) {
+	if (playing)
+	    playerView.startPlaying();
 
-	    if (playing)
-		playerView.startPlaying();
-
-	    if (System.currentTimeMillis() < arrowDuration) {
-		handler.post(this);
-		arrowView.setVisibility(View.VISIBLE);
-	    } else {
-		arrowView.setVisibility(View.INVISIBLE);
-	    }
-	}
+	if (!arrowDurations.isEmpty())
+	    handler.post(this);
     }
 
     @Override
@@ -207,10 +202,9 @@ public class PlayerActivity extends Activity implements BlinkendroidListener,
 	Log.d(Constants.LOG_TAG, "*** arrow " + angle + " " + duration);
 	runOnUiThread(new Runnable() {
 	    public void run() {
-		arrowView.setAngle(angle);
-		arrowView.setColor(color);
-		arrowView.setVisibility(View.VISIBLE);
-		arrowDuration = System.currentTimeMillis() + duration;
+		arrowView.addArrow(angle, color);
+		arrowDurations
+			.put(color, System.currentTimeMillis() + duration);
 		handler.post(PlayerActivity.this);
 	    }
 	});
@@ -269,9 +263,17 @@ public class PlayerActivity extends Activity implements BlinkendroidListener,
 	final float scale = 0.5f + (float) Math.sin(arrowScale) / 20;
 	arrowView.setScale(scale);
 
-	if (System.currentTimeMillis() < arrowDuration)
+	for (final Iterator<Map.Entry<Integer, Long>> i = arrowDurations
+		.entrySet().iterator(); i.hasNext();) {
+	    final Map.Entry<Integer, Long> entry = i.next();
+
+	    if (System.currentTimeMillis() > entry.getValue()) {
+		arrowView.removeArrow(entry.getKey());
+		i.remove();
+	    }
+	}
+
+	if (!arrowDurations.isEmpty())
 	    handler.postDelayed(this, 20);
-	else
-	    arrowView.setVisibility(View.INVISIBLE);
     }
 }
