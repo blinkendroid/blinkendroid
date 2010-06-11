@@ -87,6 +87,8 @@ public class PlayerManager {
 	if (pClient.y + dy >= 0 && pClient.x + dx >= 0
 		&& null != clients[pClient.y + dy][pClient.x + dx]) {
 	    clients[pClient.y + dy][pClient.x + dx].arrow(deg);
+	    final int inverseDeg = (deg + 180) % 360;
+	    clients[pClient.y][pClient.x].arrow(inverseDeg);
 	}
     }
 
