@@ -7,6 +7,8 @@ import java.net.Socket;
 import org.cbase.blinkendroid.player.bml.BBMZParser;
 import org.cbase.blinkendroid.player.bml.BLM;
 
+import android.graphics.Color;
+
 public class BlinkendroidClientProtocol extends AbstractBlinkendroidProtocol
 	implements CommandHandler {
     BlinkendroidListener listener;
@@ -29,7 +31,8 @@ public class BlinkendroidClientProtocol extends AbstractBlinkendroidProtocol
 		final float startY = readFloat(in);
 		final float endX = readFloat(in);
 		final float endY = readFloat(in);
-		System.out.println("clip: " + startX+","+startY+","+ endX+","+endY);
+		System.out.println("clip: " + startX + "," + startY + ","
+			+ endX + "," + endY);
 		listener.clip(startX, startY, endX, endY);
 	    } else if (command == COMMAND_PLAY) {
 		final int x = readInt(in);
@@ -51,16 +54,16 @@ public class BlinkendroidClientProtocol extends AbstractBlinkendroidProtocol
 		    // if (!running) // fast exit
 		    // break;
 		    // }
-		    long length2=readLong(in);
-			System.out.println("play length1 "+length+" length2:"+length2);
+		    long length2 = readLong(in);
+		    System.out.println("play length1 " + length + " length2:"
+			    + length2);
 		}
-		
 
 		listener.serverTime(serverTime);
 		listener.play(x, y, startTime, blm);
 	    } else if (command == COMMAND_INIT) {
 		final int degrees = readInt(in);
-		listener.arrow(4000, degrees);
+		listener.arrow(4000, degrees, Color.parseColor("#aa0000"));
 	    }
 	}
     }

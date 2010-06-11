@@ -13,9 +13,9 @@ public class ArrowView extends View {
     private int width;
     private int height;
     private float angle;
+    private int color;
     private float scale = 1f;
     private static final Path path = new Path();
-    private static final Paint arrowPaint = new Paint();
     private static final Paint arrowStroke = new Paint();
 
     static {
@@ -23,9 +23,6 @@ public class ArrowView extends View {
 	path.lineTo(-3f, 4f);
 	path.lineTo(3f, 4f);
 	path.close();
-
-	arrowPaint.setColor(Color.parseColor("#aa0000"));
-	arrowPaint.setAntiAlias(true);
 
 	arrowStroke.setStyle(Style.STROKE);
 	arrowStroke.setColor(Color.WHITE);
@@ -40,6 +37,10 @@ public class ArrowView extends View {
     @Override
     protected void onDraw(final Canvas canvas) {
 
+	final Paint arrowPaint = new Paint();
+	arrowPaint.setColor(color);
+	arrowPaint.setAntiAlias(true);
+
 	canvas.translate(width / 2f, height / 2f);
 	canvas.rotate(angle);
 	canvas.scale(width / 10f * scale, height / 10f * scale);
@@ -49,6 +50,11 @@ public class ArrowView extends View {
 
     public void setAngle(final float angle) {
 	this.angle = angle;
+	postInvalidate();
+    }
+
+    public void setColor(int color) {
+	this.color = color;
 	postInvalidate();
     }
 

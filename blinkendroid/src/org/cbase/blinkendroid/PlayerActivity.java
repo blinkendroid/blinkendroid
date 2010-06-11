@@ -85,7 +85,6 @@ public class PlayerActivity extends Activity implements BlinkendroidListener,
 		handler.postDelayed(new Runnable() {
 		    public void run() {
 			ownerView.setVisibility(View.INVISIBLE);
-			// blinkendroidClient.touch();
 		    }
 		}, Constants.SHOW_OWNER_DURATION);
 		return false;
@@ -94,7 +93,8 @@ public class PlayerActivity extends Activity implements BlinkendroidListener,
 
 	String owner = getPhoneIdentifier();
 	ownerView.setText(owner);
-	//forcing the screen brightness to max out while playing
+
+	// forcing the screen brightness to max out while playing
 	WindowManager.LayoutParams lp = getWindow().getAttributes();
 	lp.screenBrightness = 1.0f;
 	getWindow().setAttributes(lp);
@@ -183,7 +183,7 @@ public class PlayerActivity extends Activity implements BlinkendroidListener,
 		blm = movie;
 		if (blm == null)
 		    blm = new BBMZParser().parseBBMZ(getResources()
-			    .openRawResource(R.raw.blinkendroid1),14345);
+			    .openRawResource(R.raw.blinkendroid1), 14345);
 		playerView.setBLM(blm);
 		playerView.setStartTime(startTime);
 		playerView.startPlaying();
@@ -203,11 +203,12 @@ public class PlayerActivity extends Activity implements BlinkendroidListener,
 	});
     }
 
-    public void arrow(final long duration, final float angle) {
+    public void arrow(final long duration, final float angle, final int color) {
 	Log.d(Constants.LOG_TAG, "*** arrow " + angle + " " + duration);
 	runOnUiThread(new Runnable() {
 	    public void run() {
 		arrowView.setAngle(angle);
+		arrowView.setColor(color);
 		arrowView.setVisibility(View.VISIBLE);
 		arrowDuration = System.currentTimeMillis() + duration;
 		handler.post(PlayerActivity.this);
