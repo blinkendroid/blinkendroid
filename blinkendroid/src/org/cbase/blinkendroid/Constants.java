@@ -22,7 +22,7 @@ package org.cbase.blinkendroid;
  */
 public final class Constants {
 
-    public static final String LOG_TAG = "blinkendroids";
+    public static final String LOG_TAG = "blinkendroid";
     public static final int BROADCAST_CLIENT_PORT = 6789;
     public static final int BROADCAST_SERVER_PORT = 6790;
     public static final String MULTICAST_GROUP = "230.0.0.1";
