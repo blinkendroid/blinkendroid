@@ -1,9 +1,13 @@
 package org.cbase.blinkendroid.server;
 
+import java.util.Random;
+import java.util.concurrent.atomic.AtomicInteger;
+
 import org.cbase.blinkendroid.Constants;
 import org.cbase.blinkendroid.network.BlinkendroidServerProtocol;
 import org.cbase.blinkendroid.player.bml.BLMHeader;
 
+import android.graphics.Color;
 import android.util.Log;
 
 public class PlayerManager {
@@ -13,6 +17,11 @@ public class PlayerManager {
     private long startTime = 0;
     private boolean running = true;
     private String filename = null;
+    private AtomicInteger arrowColorIndex = new AtomicInteger(new Random()
+	    .nextInt(ARROW_COLORS.length));
+
+    private static int[] ARROW_COLORS = new int[] { Color.RED, Color.BLUE,
+	    Color.GREEN, Color.GRAY, Color.YELLOW, Color.TRANSPARENT };
 
     public synchronized void addClient(
 	    BlinkendroidServerProtocol blinkendroidProtocol) {
@@ -86,9 +95,11 @@ public class PlayerManager {
 	    final int deg) {
 	if (pClient.y + dy >= 0 && pClient.x + dx >= 0
 		&& null != clients[pClient.y + dy][pClient.x + dx]) {
-	    clients[pClient.y + dy][pClient.x + dx].arrow(deg);
+	    final int color = ARROW_COLORS[arrowColorIndex.getAndIncrement()
+		    % ARROW_COLORS.length];
+	    clients[pClient.y + dy][pClient.x + dx].arrow(deg, color);
 	    final int inverseDeg = (deg + 180) % 360;
-	    clients[pClient.y][pClient.x].arrow(inverseDeg);
+	    clients[pClient.y][pClient.x].arrow(inverseDeg, color);
 	}
     }
 

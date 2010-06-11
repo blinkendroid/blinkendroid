@@ -98,11 +98,12 @@ public class BlinkendroidServerProtocol extends AbstractBlinkendroidProtocol {
 	}
     }
 
-    public void arrow(int degrees) {
+    public void arrow(int degrees, int color) {
 	try {
 	    writeInt(out, PROTOCOL_PLAYER);
 	    writeInt(out, COMMAND_INIT);
 	    writeInt(out, degrees);
+	    writeInt(out, color);
 
 	    out.flush();
 	} catch (IOException e) {
