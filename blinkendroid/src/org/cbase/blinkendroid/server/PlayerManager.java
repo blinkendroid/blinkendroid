@@ -93,10 +93,12 @@ public class PlayerManager {
 
     private void arrow(final PlayerClient pClient, final int dx, final int dy,
 	    final int deg) {
+
+	final int color = ARROW_COLORS[arrowColorIndex.getAndIncrement()
+		% ARROW_COLORS.length];
+
 	if (pClient.y + dy >= 0 && pClient.x + dx >= 0
 		&& null != clients[pClient.y + dy][pClient.x + dx]) {
-	    final int color = ARROW_COLORS[arrowColorIndex.getAndIncrement()
-		    % ARROW_COLORS.length];
 	    clients[pClient.y + dy][pClient.x + dx].arrow(deg, color);
 	    final int inverseDeg = (deg + 180) % 360;
 	    clients[pClient.y][pClient.x].arrow(inverseDeg, color);
