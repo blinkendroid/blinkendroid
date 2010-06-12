@@ -44,6 +44,8 @@ public class ArrowView extends View {
 
 	for (int i = 0; i < angles.size(); i++) {
 
+	    canvas.save();
+
 	    float angle = angles.get(i);
 	    int color = colors.get(i);
 
@@ -56,6 +58,8 @@ public class ArrowView extends View {
 	    canvas.scale(width / 10f * scale, height / 10f * scale);
 	    canvas.drawPath(path, arrowPaint);
 	    canvas.drawPath(path, arrowStroke);
+
+	    canvas.restore();
 	}
     }
 
