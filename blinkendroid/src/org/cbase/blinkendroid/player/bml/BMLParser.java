@@ -40,11 +40,11 @@ public class BMLParser {
     private static final String FRAME = "frame";
     private static final String FRAME_ATTR_DURATION = "duration";
     private static final String ROW = "row";
-    
+
     private XmlPullParser parser;
 
     public BMLParser(XmlPullParser parser) {
-	this.parser=parser;
+	this.parser = parser;
     }
 
     public BLM parseBLM(final Reader reader) {
@@ -80,7 +80,7 @@ public class BMLParser {
 	    throws XmlPullParserException, IOException {
 
 	final BLM blm = new BLM();
-	blm.header= new BLMHeader();
+	blm.header = new BLMHeader();
 	blm.header.width = Integer.parseInt(parser.getAttributeValue(null,
 		BLM_ATTR_WIDTH));
 	blm.header.height = Integer.parseInt(parser.getAttributeValue(null,
@@ -95,9 +95,10 @@ public class BMLParser {
 	    switch (eventType) {
 	    case XmlPullParser.START_TAG:
 		if (parser.getName().equalsIgnoreCase(HEADER)) {
-		    blm.header = parseHeader(parser,blm.header);
+		    blm.header = parseHeader(parser, blm.header);
 		} else if (parser.getName().equalsIgnoreCase(FRAME)) {
-		    blm.frames.add(parseFrame(parser, blm.header.width, blm.header.height));
+		    blm.frames.add(parseFrame(parser, blm.header.width,
+			    blm.header.height));
 		}
 		break;
 	    case XmlPullParser.END_TAG:
@@ -109,7 +110,7 @@ public class BMLParser {
 	}
     }
 
-    private BLMHeader parseHeader(final XmlPullParser parser,  BLMHeader header)
+    private BLMHeader parseHeader(final XmlPullParser parser, BLMHeader header)
 	    throws XmlPullParserException, IOException {
 
 	int eventType = parser.next();
@@ -119,29 +120,29 @@ public class BMLParser {
 	    case XmlPullParser.START_TAG:
 		name = parser.getName();
 		if (name.equalsIgnoreCase(TITLE)) {
-		    if(parser.next()==XmlPullParser.TEXT){
+		    if (parser.next() == XmlPullParser.TEXT) {
 			header.title = parser.getText();
-		    	parser.next();
+			parser.next();
 		    }
-		}else if (name.equalsIgnoreCase(CREATOR)) {
-		    if(parser.next()==XmlPullParser.TEXT){
+		} else if (name.equalsIgnoreCase(CREATOR)) {
+		    if (parser.next() == XmlPullParser.TEXT) {
 			header.creator = parser.getText();
-		    	parser.next();
+			parser.next();
 		    }
-		}else if (name.equalsIgnoreCase(AUTHOR)) {
-		    if(parser.next()==XmlPullParser.TEXT){
+		} else if (name.equalsIgnoreCase(AUTHOR)) {
+		    if (parser.next() == XmlPullParser.TEXT) {
 			header.author = parser.getText();
-		    	parser.next();
+			parser.next();
 		    }
-		}else if (name.equalsIgnoreCase(EMAIL)) {
-		    if(parser.next()==XmlPullParser.TEXT){
+		} else if (name.equalsIgnoreCase(EMAIL)) {
+		    if (parser.next() == XmlPullParser.TEXT) {
 			header.email = parser.getText();
-		    	parser.next();
+			parser.next();
 		    }
-		}else if (name.equalsIgnoreCase(DESCRIPTION)) {
-		    if(parser.next()==XmlPullParser.TEXT){
+		} else if (name.equalsIgnoreCase(DESCRIPTION)) {
+		    if (parser.next() == XmlPullParser.TEXT) {
 			header.description = parser.getText();
-		    	parser.next();
+			parser.next();
 		    }
 		}
 		break;

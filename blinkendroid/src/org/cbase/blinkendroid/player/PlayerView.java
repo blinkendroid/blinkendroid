@@ -54,10 +54,10 @@ public class PlayerView extends View implements Runnable {
     }
 
     public void setBLM(final BLM blm) {
-	
+
 	// trying to free some memory first
 	System.gc();
-	
+
 	this.blm = blm;
 	this.numFrames = blm.frames.size();
 	long t = 0;

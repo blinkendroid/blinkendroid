@@ -2,7 +2,7 @@ package org.cbase.blinkendroid.player.bml;
 
 import java.io.Serializable;
 
-public class BLMHeader implements Serializable{
+public class BLMHeader implements Serializable {
     /**
      * 
      */

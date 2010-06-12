@@ -28,7 +28,7 @@ public class BlinkendroidClient extends Thread {
     private final InetSocketAddress socketAddress;
     private final BlinkendroidListener listener;
     private BlinkendroidClientProtocol protocol;
-    
+
     public BlinkendroidClient(final InetSocketAddress socketAddress,
 	    final BlinkendroidListener listener) {
 	this.socketAddress = socketAddress;
@@ -40,12 +40,12 @@ public class BlinkendroidClient extends Thread {
 	System.out.println("trying to connect to server: " + socketAddress);
 	try {
 	    final Socket socket = new Socket();
-	    long t	=	System.currentTimeMillis();
+	    long t = System.currentTimeMillis();
 	    socket.connect(socketAddress,
 		    Constants.SERVER_SOCKET_CONNECT_TIMEOUT);
 	    protocol = new BlinkendroidClientProtocol(socket, listener);
-	    System.out.println("connected "+(System.currentTimeMillis()-t));
-	   
+	    System.out.println("connected " + (System.currentTimeMillis() - t));
+
 	} catch (final IOException x) {
 	    System.out.println("connection failed");
 	    x.printStackTrace();
@@ -53,15 +53,15 @@ public class BlinkendroidClient extends Thread {
 		    + x.getMessage());
 	}
     }
-    
+
     public void shutdown() {
-	if(null!=protocol)
+	if (null != protocol)
 	    protocol.shutdown();
 	System.out.println("client shutdown completed");
     }
 
     public void locateMe() {
 	// TODO Auto-generated method stub
-	
+
     }
 }

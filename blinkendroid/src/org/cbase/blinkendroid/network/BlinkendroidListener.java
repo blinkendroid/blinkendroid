@@ -22,8 +22,8 @@ import org.cbase.blinkendroid.player.bml.BLM;
 /**
  * @author Andreas Schildbach
  */
-public interface BlinkendroidListener extends ConnectionListener{
-    
+public interface BlinkendroidListener extends ConnectionListener {
+
     void connectionFailed(String message);
 
     void serverTime(long serverTime);

@@ -16,7 +16,6 @@ import org.cbase.blinkendroid.Constants;
 
 import android.util.Log;
 
-
 public class AbstractBlinkendroidProtocol {
 
     public static final Integer PROTOCOL_PLAYER = 42;
@@ -37,13 +36,14 @@ public class AbstractBlinkendroidProtocol {
 	    throws IOException {
 	this.socket = socket;
 	this.server = server;
-	long t	=	System.currentTimeMillis();
+	long t = System.currentTimeMillis();
 	this.out = new BufferedOutputStream(socket.getOutputStream());
 	this.in = new BufferedInputStream(socket.getInputStream());
 	this.connectionListener.add(connectionListener);
 	receiverThread = new ReceiverThread();
 	receiverThread.start();
-	System.out.println("AbstractBlinkendroidProtocol constructor "+(System.currentTimeMillis()-t));
+	System.out.println("AbstractBlinkendroidProtocol constructor "
+		+ (System.currentTimeMillis() - t));
     }
 
     public void addConnectionClosedListener(
@@ -77,21 +77,21 @@ public class AbstractBlinkendroidProtocol {
 	    if (!server)// TODO ugly hack, server needs to long
 		in.close();
 	    socket.close();
-	    System.out.println( getMyName()
+	    System.out.println(getMyName()
 		    + " BlinkendroidProtocol: Socket closed.");
 	} catch (IOException e) {
-	    System.out.println( getMyName()
+	    System.out.println(getMyName()
 		    + " BlinkendroidProtocol: closed failed ");
 	    e.printStackTrace();
 	}
     }
 
     public void shutdown() {
-	if (null != receiverThread){
+	if (null != receiverThread) {
 	    receiverThread.shutdown();
 	}
-	System.out.println( getMyName() + " Protocol shutdown.");
-//	close();
+	System.out.println(getMyName() + " Protocol shutdown.");
+	// close();
     }
 
     // Inner classes:
@@ -105,51 +105,48 @@ public class AbstractBlinkendroidProtocol {
 	@Override
 	public void run() {
 	    running = true;
-	    System.out.println( getMyName() + " InputThread started");
+	    System.out.println(getMyName() + " InputThread started");
 	    int inputLine;
 	    connectionOpened(socket.getInetAddress());
 	    try {
-		byte[] buffer	=	new byte[4];
-		while (running &&  in.read(buffer) != -1) {
-		    inputLine= ByteBuffer.wrap(buffer).getInt();
+		byte[] buffer = new byte[4];
+		while (running && in.read(buffer) != -1) {
+		    inputLine = ByteBuffer.wrap(buffer).getInt();
 		    if (!running) // fast exit
 			break;
-		    
-		    System.out.println( getMyName()
-			    + " InputThread received: " + inputLine);
-		  
+
+		    System.out.println(getMyName() + " InputThread received: "
+			    + inputLine);
+
 		    CommandHandler handler = handlers.get(inputLine);
 		    if (null != handler)
 			handler.handle(in);
 		}
 	    } catch (SocketException e) {
-		 System.out.println( getMyName() + " Socket closed.");
+		System.out.println(getMyName() + " Socket closed.");
 	    } catch (IOException e) {
-		System.out.println( getMyName() + " InputThread fucked ");
+		System.out.println(getMyName() + " InputThread fucked ");
 		e.printStackTrace();
 	    }
-	    System.out.println(getMyName()
-			    + " InputThread ended!!!!!!! ");
+	    System.out.println(getMyName() + " InputThread ended!!!!!!! ");
 
-	    connectionClosed( socket.getInetAddress());
+	    connectionClosed(socket.getInetAddress());
 	    close();
 	}
 
 	public void shutdown() {
-	    System.out.println( getMyName()
-		    + " ReceiverThread shutdown start");
+	    System.out.println(getMyName() + " ReceiverThread shutdown start");
 	    running = false;
 	    interrupt();
-	    System.out.println( getMyName()
+	    System.out.println(getMyName()
 		    + " ReceiverThread shutdown interrupted");
 	    try {
 		join();
 	    } catch (InterruptedException e) {
-		 System.out.println( getMyName()
-			    + " ReceiverThread join failed");
+		System.out.println(getMyName() + " ReceiverThread join failed");
 		e.printStackTrace();
 	    }
-	    System.out.println( getMyName()
+	    System.out.println(getMyName()
 		    + " ReceiverThread shutdown joined & end");
 	}
     }
@@ -160,63 +157,66 @@ public class AbstractBlinkendroidProtocol {
 	else
 	    return "Client ";// + socket.getRemoteSocketAddress();
     }
+
     protected long readLong(BufferedInputStream in) throws IOException {
-	byte[] buffer	=	new byte[8];
-//	try {
-	    in.read(buffer);
-//	} catch (IOException e) {
-//	    Log.e(Constants.LOG_TAG,"readLong failed ",e);
-//	}
+	byte[] buffer = new byte[8];
+	// try {
+	in.read(buffer);
+	// } catch (IOException e) {
+	// Log.e(Constants.LOG_TAG,"readLong failed ",e);
+	// }
 	return ByteBuffer.wrap(buffer).getLong();
-    }    
-    
+    }
+
     protected int readInt(BufferedInputStream in) throws IOException {
-	byte[] buffer	=	new byte[4];
-//	try {
-	    in.read(buffer);
-//	} catch (IOException e) {
-//	    Log.e(Constants.LOG_TAG,"readLong failed ",e);
-//	}
+	byte[] buffer = new byte[4];
+	// try {
+	in.read(buffer);
+	// } catch (IOException e) {
+	// Log.e(Constants.LOG_TAG,"readLong failed ",e);
+	// }
 	return ByteBuffer.wrap(buffer).getInt();
-    }    
-    
+    }
+
     protected float readFloat(BufferedInputStream in) throws IOException {
-	byte[] buffer	=	new byte[16];
-//	try {
-	    in.read(buffer);
-//	} catch (IOException e) {
-//	    Log.e(Constants.LOG_TAG,"readLong failed ",e);
-//	}
+	byte[] buffer = new byte[16];
+	// try {
+	in.read(buffer);
+	// } catch (IOException e) {
+	// Log.e(Constants.LOG_TAG,"readLong failed ",e);
+	// }
 	return ByteBuffer.wrap(buffer).getFloat();
-    }  
-    
+    }
+
     protected void writeInt(BufferedOutputStream out, int i) throws IOException {
-	byte[] buffer	=	new byte[4];
+	byte[] buffer = new byte[4];
 	ByteBuffer.wrap(buffer).putInt(i);
-//	try {
-	    out.write(buffer);
-//	} catch (IOException e) {
-//	    Log.e(Constants.LOG_TAG,"writeInt failed ",e);
-//	}
-    }    
-    
-    protected void writeFloat(BufferedOutputStream out, float f) throws IOException {
-	byte[] buffer	=	new byte[16];
+	// try {
+	out.write(buffer);
+	// } catch (IOException e) {
+	// Log.e(Constants.LOG_TAG,"writeInt failed ",e);
+	// }
+    }
+
+    protected void writeFloat(BufferedOutputStream out, float f)
+	    throws IOException {
+	byte[] buffer = new byte[16];
 	ByteBuffer.wrap(buffer).putFloat(f);
-//	try {
-	    out.write(buffer);
-//	} catch (IOException e) {
-//	    Log.e(Constants.LOG_TAG,"writeFloat failed ",e);
-//	}
-    }   
-    
-    protected void writeLong(BufferedOutputStream out, long l) throws IOException {
-	byte[] buffer	=	new byte[8];
+	// try {
+	out.write(buffer);
+	// } catch (IOException e) {
+	// Log.e(Constants.LOG_TAG,"writeFloat failed ",e);
+	// }
+    }
+
+    protected void writeLong(BufferedOutputStream out, long l)
+	    throws IOException {
+	byte[] buffer = new byte[8];
 	ByteBuffer.wrap(buffer).putLong(l);
-//	try {
-	    out.write(buffer);
-//	} catch (IOException e) {
-//	    Log.e(Constants.LOG_TAG,"writeLong failed ",e);
-//	}
-    }   
+	// try {
+	out.write(buffer);
+	// } catch (IOException e) {
+	// Log.e(Constants.LOG_TAG,"writeLong failed ",e);
+	// }
+    }
 }

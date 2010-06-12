@@ -39,8 +39,13 @@ public class BLMManager {
 			if (!files[i].getName().endsWith(".info"))
 			    continue;
 			BLMHeader header = getBLMHeader(files[i]);
-			if (null != header){
-			    header.filename=files[i].getAbsolutePath().substring(0,files[i].getAbsolutePath().length()-5 )+".bbmz";
+			if (null != header) {
+			    header.filename = files[i]
+				    .getAbsolutePath()
+				    .substring(
+					    0,
+					    files[i].getAbsolutePath().length() - 5)
+				    + ".bbmz";
 			    blmHeader.add(header);
 			}
 		    }
@@ -55,9 +60,9 @@ public class BLMManager {
 	for (BLMHeader header : blmHeader) {
 	    String title = header.title + "(" + header.width + "*"
 		    + header.height + ")";
-	    if(null==header.title)
-		 title =header.filename.substring(20) + "(" + header.width + "*"
-		    + header.height + ")";
+	    if (null == header.title)
+		title = header.filename.substring(20) + "(" + header.width
+			+ "*" + header.height + ")";
 	    Log.d(Constants.LOG_TAG, "added " + title);
 	    adapter.add(title);
 	}
