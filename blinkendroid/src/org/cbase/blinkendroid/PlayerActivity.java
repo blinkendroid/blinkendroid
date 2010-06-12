@@ -231,7 +231,6 @@ public class PlayerActivity extends Activity implements BlinkendroidListener,
 		Toast.makeText(PlayerActivity.this,
 			"connection to server closed", Toast.LENGTH_LONG)
 			.show();
-		handler.removeCallbacks(this);
 		playerView.stopPlaying();
 		ownerView.setVisibility(View.VISIBLE);
 	    }
@@ -242,7 +241,6 @@ public class PlayerActivity extends Activity implements BlinkendroidListener,
 	runOnUiThread(new Runnable() {
 	    public void run() {
 		Log.w(Constants.LOG_TAG, "connection failed: " + message);
-		handler.removeCallbacks(this);
 		playerView.stopPlaying();
 		ownerView.setVisibility(View.VISIBLE);
 		new AlertDialog.Builder(PlayerActivity.this).setIcon(
