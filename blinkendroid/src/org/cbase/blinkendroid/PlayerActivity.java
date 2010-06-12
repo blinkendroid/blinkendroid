@@ -203,9 +203,11 @@ public class PlayerActivity extends Activity implements BlinkendroidListener,
 	runOnUiThread(new Runnable() {
 	    public void run() {
 		arrowView.addArrow(angle, color);
+		boolean startPost = arrowDurations.isEmpty();
 		arrowDurations
 			.put(color, System.currentTimeMillis() + duration);
-		handler.post(PlayerActivity.this);
+		if (startPost)
+		    handler.post(PlayerActivity.this);
 	    }
 	});
     }
