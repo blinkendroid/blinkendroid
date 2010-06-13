@@ -7,8 +7,6 @@ import java.net.Socket;
 import org.cbase.blinkendroid.player.bml.BBMZParser;
 import org.cbase.blinkendroid.player.bml.BLM;
 
-import android.graphics.Color;
-
 public class BlinkendroidClientProtocol extends AbstractBlinkendroidProtocol
 	implements CommandHandler {
     BlinkendroidListener listener;

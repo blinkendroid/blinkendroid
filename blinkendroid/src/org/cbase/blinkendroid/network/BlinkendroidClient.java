@@ -23,6 +23,8 @@ import java.net.Socket;
 
 import org.cbase.blinkendroid.Constants;
 
+import android.util.Log;
+
 public class BlinkendroidClient extends Thread {
 
     private final InetSocketAddress socketAddress;
@@ -37,17 +39,17 @@ public class BlinkendroidClient extends Thread {
 
     @Override
     public void run() {
-	System.out.println("trying to connect to server: " + socketAddress);
+	Log.d(Constants.LOG_TAG, "trying to connect to server: " + socketAddress);
 	try {
 	    final Socket socket = new Socket();
 	    long t = System.currentTimeMillis();
 	    socket.connect(socketAddress,
 		    Constants.SERVER_SOCKET_CONNECT_TIMEOUT);
 	    protocol = new BlinkendroidClientProtocol(socket, listener);
-	    System.out.println("connected " + (System.currentTimeMillis() - t));
+	    Log.i(Constants.LOG_TAG, "connected " + (System.currentTimeMillis() - t));
 
 	} catch (final IOException x) {
-	    System.out.println("connection failed");
+	    Log.e(Constants.LOG_TAG, "connection failed");
 	    x.printStackTrace();
 	    listener.connectionFailed(x.getClass().getName() + ": "
 		    + x.getMessage());
@@ -57,11 +59,10 @@ public class BlinkendroidClient extends Thread {
     public void shutdown() {
 	if (null != protocol)
 	    protocol.shutdown();
-	System.out.println("client shutdown completed");
+	Log.d(Constants.LOG_TAG, "client shutdown completed");
     }
 
     public void locateMe() {
 	// TODO Auto-generated method stub
-
     }
 }

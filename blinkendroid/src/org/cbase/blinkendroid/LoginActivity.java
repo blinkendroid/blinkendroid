@@ -89,12 +89,13 @@ public class LoginActivity extends Activity {
 
 	final String owner = PreferenceManager
 		.getDefaultSharedPreferences(this).getString("owner", null);
-	if (owner == null)
-	    Toast
-		    .makeText(
-			    this,
-			    "Hint: Setting an owner name in the preferences helps identifying your phone in the matrix.",
-			    Toast.LENGTH_LONG).show();
+	if (owner == null) {
+	    //TODO fix a bug here: if activity is started and ended again without entering a name
+	    //the application crashes on next start
+//	    startActivity(new Intent(getBaseContext(),
+//		    PreferencesActivity.class));
+	    Toast.makeText(this, R.string.owner_hint, Toast.LENGTH_LONG).show();
+	}
     }
 
     @Override
@@ -210,6 +211,12 @@ public class LoginActivity extends Activity {
 	    startActivity(new Intent(getBaseContext(),
 		    PreferencesActivity.class));
 	    return true;
+	}
+	case R.id.login_options_instructions: {
+	    String url = "http://code.google.com/p/blinkendroid";
+	    Intent i = new Intent(Intent.ACTION_VIEW);
+	    i.setData(Uri.parse(url));
+	    startActivity(i);
 	}
 	}
 

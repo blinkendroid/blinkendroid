@@ -29,6 +29,7 @@ public class BBMZParser {
 	}
 
 	ByteArrayOutputStream baos = new ByteArrayOutputStream();
+	System.gc();
 	uncompress(new ByteArrayInputStream(os.toByteArray()), baos);
 	os = null;
 	try {

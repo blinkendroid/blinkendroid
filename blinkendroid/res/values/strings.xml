@@ -2,4 +2,8 @@
 
 <resources>
 	<string name="app_name">Blinkendroid</string>
+<string name="instructions">Instructions</string>
+<string name="instruction_text">Hi there, if you want to learn about blinkendroid visit the homepage.</string>
+<string name="owner_hint">Hint: Setting an owner name in the preferences helps identifying your phone in the matrix.</string>
+<string name="about">About</string>
 </resources>
