@@ -216,8 +216,8 @@ public class LoginActivity extends Activity {
 	}
 
 	case R.id.login_options_instructions: {
-	    String url = "http://code.google.com/p/blinkendroid";
-	    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
+	    startActivity(new Intent(Intent.ACTION_VIEW, Uri
+		    .parse(Constants.ABOUT_URL)));
 	    return true;
 	}
 

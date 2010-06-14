@@ -32,4 +32,5 @@ public final class Constants {
     public static final int SHOW_OWNER_DURATION = 1500;
     public static final int BROADCAST_PROTOCOL_VERSION = 3;
     public static final String DOWNLOAD_URL = "market://details?id=org.cbase.blinkendroid";
+    public static final String ABOUT_URL = "http://code.google.com/p/blinkendroid";
 }
