@@ -20,16 +20,16 @@ public class BMPConverter {
 	blm.header.height = 32;
 	blm.header.bits = 6;
 	blm.header.color = true;
-	blm.header.title = "blinkendroid explosion";
+	blm.header.title = "blinkendroid final3";
 	blm.frames = new ArrayList<Frame>();
-	for (int i = 1; i < 258; i++) {
+	for (int i = 1; i < 224; i++) {
 	    String si = Integer.toString(i);
 	    if (i < 10)
 		si = "00" + i;
 	    else if (i < 100)
 		si = "0" + i;
 	    BufferedImage image = BMPDecoder.read(new File(
-		    "bmp/filmloop03/2 " + si + ".bmp"));
+		    "bmp/filmloop03/final01 " + si + ".bmp"));
 	    // System.out.print(i+" w:"+image.getWidth()+" h:"+image.getHeight());
 
 	    Frame f = new Frame();
@@ -58,17 +58,17 @@ public class BMPConverter {
 
 	}
 	ObjectOutput out = new ObjectOutputStream(new FileOutputStream(
-		"bbm/blinkendroid8.bbm"));
+		"bbm/blinkendroid7.bbm"));
 	out.writeObject(blm);
 	out.flush();
 	out.close();
 	// die infofiles für den server
 	out = new ObjectOutputStream(new FileOutputStream(
-		"bbmz/blinkendroid8.info"));
+		"bbmz/blinkendroid7.info"));
 	out.writeObject(blm.header);
 	out.flush();
 	out.close();
-	BMLConverter
-		.compress("bbm/blinkendroid8.bbm", "bbmz/blinkendroid8.bbmz");
+	BMLConverter.compress("bbm/blinkendroid7.bbm",
+		"bbmz/blinkendroid7.bbmz");
     }
 }
