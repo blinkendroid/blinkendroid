@@ -22,12 +22,11 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
 
-import org.cbase.blinkendroid.Constants;
 import org.cbase.blinkendroid.network.BlinkendroidServerProtocol;
 import org.cbase.blinkendroid.network.ConnectionListener;
 import org.cbase.blinkendroid.player.bml.BLMHeader;
 
-import android.util.Log;
+//import android.util.Log;
 
 public class BlinkendroidServer extends Thread {
 
@@ -46,21 +45,23 @@ public class BlinkendroidServer extends Thread {
     public void run() {
 
 	running = true;
-	Log.i(Constants.LOG_TAG, "BlinkendroidServer Thread started");
+	System.out.println("BlinkendroidServer Thread started");
 
 	try {
 	    serverSocket = new ServerSocket(port);
 	    playerManager = new PlayerManager();
 	    acceptLoop();
-	    Log.d(Constants.LOG_TAG, "after acceptLoop");
+	    System.out.println("after acceptLoop");
 	    playerManager.shutdown();
+	    System.out.println("close serverSocket");
 	    serverSocket.close();
 	} catch (final IOException x) {
-	    Log.e(Constants.LOG_TAG, "Could not create Socket", x);
+	    x.printStackTrace();
+	    System.out.println("Could not create Socket");
 	    throw new RuntimeException(x);
 	}
 
-	Log.i(Constants.LOG_TAG, "BlinkendroidServer Thread ended");
+	System.out.println("BlinkendroidServer Thread ended");
     }
 
     private void acceptLoop() {
@@ -70,14 +71,14 @@ public class BlinkendroidServer extends Thread {
 		final Socket clientSocket = accept();
 		if (!running) // fast exit
 		    break;
-		Log.i(Constants.LOG_TAG, "BlinkendroidServer got connection "
+		System.out.println("BlinkendroidServer got connection "
 		/* + clientSocket.getRemoteSocketAddress().toString() */);
 		final BlinkendroidServerProtocol blinkendroidProtocol = new BlinkendroidServerProtocol(
 			clientSocket, connectionListener);
 		playerManager.addClient(blinkendroidProtocol);
 	    } catch (final IOException x) {
-		Log.e(Constants.LOG_TAG, "BlinkendroidServer could not accept",
-			x);
+		x.printStackTrace();
+		System.out.println("BlinkendroidServer could not accept");
 	    }
 	}
     }
@@ -87,12 +88,14 @@ public class BlinkendroidServer extends Thread {
 	    return serverSocket.accept();
 	} catch (final SocketException x) {
 	    // swallow, this is expected after interruption by closing socket
-	    Log.e(Constants.LOG_TAG, "serverSocket.accept failed", x);
+	    x.printStackTrace();
+	    System.out.println("serverSocket.accept failed");
 	    return null;
 	}
     }
 
     public void shutdown() {
+	System.out.println("BlinkendroidServer.shutdown() initiated");
 	running = false;
 	try {
 	    serverSocket.close(); // interrupt thread blocked in accept()
@@ -102,6 +105,7 @@ public class BlinkendroidServer extends Thread {
 	} catch (final InterruptedException x) {
 	    throw new RuntimeException(x);
 	}
+	System.out.println("BlinkendroidServer.shutdown() ended");
     }
 
     public boolean isRunning() {

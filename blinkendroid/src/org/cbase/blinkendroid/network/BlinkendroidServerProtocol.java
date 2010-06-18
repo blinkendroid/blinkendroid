@@ -25,9 +25,6 @@ import java.net.Socket;
 
 import org.cbase.blinkendroid.Constants;
 
-import android.os.Environment;
-import android.util.Log;
-
 public class BlinkendroidServerProtocol extends AbstractBlinkendroidProtocol {
 
     GlobalTimerThread globalTimerThread;
@@ -47,9 +44,21 @@ public class BlinkendroidServerProtocol extends AbstractBlinkendroidProtocol {
 
     @Override
     public void shutdown() {
+	System.out.println("BlinkendroidServerProtocol.shutdown() initiated");
 	if (null != globalTimerThread)
 	    globalTimerThread.shutdown();
+	try {
+	    writeInt(out, PROTOCOL_PLAYER);
+	    writeInt(out, COMMAND_SHUTDOWN);
+	    out.flush();
+	} catch (IOException e) {
+	    e.printStackTrace();
+	    System.out.println("send shutdown failed ");
+	}
+
 	super.shutdown();
+
+	System.out.println("BlinkendroidServerProtocol.shutdown() sended");
     }
 
     public void play(int x, int y, long l, long startTime, String bbmzFileName) {
@@ -63,14 +72,14 @@ public class BlinkendroidServerProtocol extends AbstractBlinkendroidProtocol {
 
 	    if (null == bbmzFileName) {
 		writeLong(out, 0);
-		Log.i(Constants.LOG_TAG, "Play default video ");
+		System.out.println("Play default video ");
 	    } else {
 		File movie = new File(bbmzFileName);
 		if (null != movie && movie.exists()) {
 
 		    try {
 			writeLong(out, movie.length());
-			Log.i(Constants.LOG_TAG, "try to read file with bytes "
+			System.out.println("try to read file with bytes "
 				+ movie.length());
 			InputStream is = new FileInputStream(movie);
 			byte[] buffer = new byte[1024];
@@ -81,20 +90,22 @@ public class BlinkendroidServerProtocol extends AbstractBlinkendroidProtocol {
 			    allLen += len;
 			}
 			is.close();
-			Log.i(Constants.LOG_TAG, "send movie bytes "
-				+ movie.length());
+			System.out
+				.println("send movie bytes " + movie.length());
 			writeLong(out, movie.length());
 		    } catch (IOException ioe) {
-			Log.e(Constants.LOG_TAG, "sending movie failed", ioe);
+			ioe.printStackTrace();
+			System.out.println("sending movie failed");
 		    }
 		} else {
-		    Log.e(Constants.LOG_TAG, "movie not found" + bbmzFileName);
+		    System.out.println("movie not found" + bbmzFileName);
 		}
 	    }
 
 	    out.flush();
 	} catch (IOException e) {
-	    Log.e(Constants.LOG_TAG, "play failed ", e);
+	    e.printStackTrace();
+	    System.out.println("play failed ");
 	}
     }
 
@@ -107,7 +118,8 @@ public class BlinkendroidServerProtocol extends AbstractBlinkendroidProtocol {
 
 	    out.flush();
 	} catch (IOException e) {
-	    Log.e(Constants.LOG_TAG, "arrow failed ", e);
+	    e.printStackTrace();
+	    System.out.println("arrow failed ");
 	}
     }
 
@@ -120,9 +132,10 @@ public class BlinkendroidServerProtocol extends AbstractBlinkendroidProtocol {
 	    writeFloat(out, endX);
 	    writeFloat(out, endY);
 	    out.flush();
-	    Log.d(Constants.LOG_TAG, "clip flushed ");
+	    System.out.println("clip flushed ");
 	} catch (IOException e) {
-	    Log.e(Constants.LOG_TAG, "clip failed ", e);
+	    e.printStackTrace();
+	    System.out.println("clip failed ");
 	}
     }
 
@@ -135,7 +148,7 @@ public class BlinkendroidServerProtocol extends AbstractBlinkendroidProtocol {
 
 	@Override
 	public void run() {
-	    Log.i(Constants.LOG_TAG, "GlobalTimerThread started");
+	    System.out.println("GlobalTimerThread started");
 	    while (running) {
 		try {
 		    GlobalTimerThread.sleep(100);
@@ -152,16 +165,17 @@ public class BlinkendroidServerProtocol extends AbstractBlinkendroidProtocol {
 		    writeLong(out, t);
 		    out.flush();
 		} catch (IOException e) {
-		    Log.e(Constants.LOG_TAG, "GlobalTimerThread failed ", e);
+		    e.printStackTrace();
+		    System.out.println("GlobalTimerThread failed ");
 		}
 	    }
-	    Log.d(Constants.LOG_TAG, "GlobalTimerThread stopped");
+	    System.out.println("GlobalTimerThread stopped");
 	}
 
 	public void shutdown() {
 	    running = false;
 	    interrupt();
-	    Log.d(Constants.LOG_TAG, "GlobalTimerThread initiating shutdown");
+	    System.out.println("GlobalTimerThread initiating shutdown");
 	}
     }
 }

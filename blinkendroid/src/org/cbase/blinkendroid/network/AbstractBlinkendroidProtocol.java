@@ -23,6 +23,8 @@ public class AbstractBlinkendroidProtocol {
     public static final Integer COMMAND_CLIP = 17;
     public static final Integer COMMAND_PLAY = 11;
     public static final Integer COMMAND_INIT = 77;
+    public static final Integer COMMAND_SHUTDOWN = 69;
+
     protected BufferedOutputStream out;
     protected BufferedInputStream in;
     protected Socket socket;
@@ -72,10 +74,15 @@ public class AbstractBlinkendroidProtocol {
     }
 
     public void close() {
+	System.out.println(getMyName() + " BlinkendroidProtocol: Start close");
 	try {
 	    out.close();
-	    if (!server)// TODO ugly hack, server needs to long
-		in.close();
+	    System.out.println(getMyName()
+		    + " BlinkendroidProtocol: out closed.");
+	    // if (!server)// ugly hack, server needs to long
+	    // in.close();// also client needs to long
+	    System.out.println(getMyName()
+		    + " BlinkendroidProtocol: in closed.");
 	    socket.close();
 	    System.out.println(getMyName()
 		    + " BlinkendroidProtocol: Socket closed.");
@@ -87,11 +94,11 @@ public class AbstractBlinkendroidProtocol {
     }
 
     public void shutdown() {
+	close();
 	if (null != receiverThread) {
 	    receiverThread.shutdown();
 	}
 	System.out.println(getMyName() + " Protocol shutdown.");
-	// close();
     }
 
     // Inner classes:
@@ -115,8 +122,9 @@ public class AbstractBlinkendroidProtocol {
 		    if (!running) // fast exit
 			break;
 
-		    System.out.println(getMyName() + " InputThread received: "
-			    + inputLine);
+		    // System.out.println(getMyName() +
+		    // " InputThread received: "
+		    // + inputLine);
 
 		    CommandHandler handler = handlers.get(inputLine);
 		    if (null != handler)
@@ -140,14 +148,13 @@ public class AbstractBlinkendroidProtocol {
 	    interrupt();
 	    System.out.println(getMyName()
 		    + " ReceiverThread shutdown interrupted");
-	    try {
-		join();
-	    } catch (InterruptedException e) {
-		System.out.println(getMyName() + " ReceiverThread join failed");
-		e.printStackTrace();
-	    }
-	    System.out.println(getMyName()
-		    + " ReceiverThread shutdown joined & end");
+	    // try {
+	    // join();
+	    // } catch (InterruptedException e) {
+	    // System.out.println(getMyName() + " ReceiverThread join failed");
+	    // e.printStackTrace();
+	    // }
+	    System.out.println(getMyName() + " ReceiverThread shutdown end");
 	}
     }
 

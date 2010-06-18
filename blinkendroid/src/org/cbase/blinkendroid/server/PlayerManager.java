@@ -3,12 +3,10 @@ package org.cbase.blinkendroid.server;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.cbase.blinkendroid.Constants;
 import org.cbase.blinkendroid.network.BlinkendroidServerProtocol;
 import org.cbase.blinkendroid.player.bml.BLMHeader;
 
 import android.graphics.Color;
-import android.util.Log;
 
 public class PlayerManager {
 
@@ -26,8 +24,7 @@ public class PlayerManager {
     public synchronized void addClient(
 	    BlinkendroidServerProtocol blinkendroidProtocol) {
 	if (!running) {
-	    Log.e(Constants.LOG_TAG,
-		    "PlayerManager not running ignore addClient ");
+	    System.out.println("PlayerManager not running ignore addClient ");
 	    return;
 	}
 	if (startTime == 0)
@@ -35,7 +32,7 @@ public class PlayerManager {
 	PlayerClient pClient = new PlayerClient(this, blinkendroidProtocol,
 		startTime);
 
-	// TODO finde freien Platz in der Matrix
+	// finde freien Platz in der Matrix
 	boolean found = false;
 	for (int i = 0; i < maxY; i++) {
 	    for (int j = 0; j < maxY; j++) {
@@ -64,8 +61,8 @@ public class PlayerManager {
 		maxX++;
 	    }
 	}
-	Log.i(Constants.LOG_TAG, "added Client at pos " + pClient.x + ":"
-		+ pClient.y);
+	System.out
+		.println("added Client at pos " + pClient.x + ":" + pClient.y);
 	clients[pClient.y][pClient.x] = pClient;
 
 	pClient.play(filename);
@@ -128,28 +125,26 @@ public class PlayerManager {
 
     public synchronized void shutdown() {
 	running = false;
-	Log.i(Constants.LOG_TAG, "PlayerManager.shutdown() start");
+	System.out.println("PlayerManager.shutdown() start");
 	for (int i = 0; i < maxY; i++) {
 	    for (int j = 0; j < maxX; j++) {
 		if (null != clients[i][j]) {
-		    Log.i(Constants.LOG_TAG, "shutdown PlayerClient " + j + ":"
-			    + i);
+		    System.out.println("shutdown PlayerClient " + j + ":" + i);
 		    clients[i][j].shutdown();
 		}
 	    }
 	}
-	Log.i(Constants.LOG_TAG, "PlayerManager.shutdown() end!!!");
+	System.out.println("PlayerManager.shutdown() end!!!");
 
     }
 
     public synchronized void removeClient(PlayerClient playerClient) {
 	if (!running) {
-	    Log.e(Constants.LOG_TAG,
-		    "PlayerManager not running ignore removeClient");
+	    System.out.println("PlayerManager not running ignore removeClient");
 	    return;
 	}
 
-	Log.i(Constants.LOG_TAG, "removeClient " + playerClient.x + ":"
+	System.out.println("removeClient " + playerClient.x + ":"
 		+ playerClient.y);
 	clients[playerClient.y][playerClient.x] = null;
 
@@ -162,7 +157,7 @@ public class PlayerManager {
 	}
 	if (newMaxX && maxX > 1) {
 	    maxX--;
-	    Log.i(Constants.LOG_TAG, "newMaxX " + maxX);
+	    System.out.println("newMaxX " + maxX);
 	}
 
 	boolean newMaxY = true;
@@ -174,19 +169,19 @@ public class PlayerManager {
 	}
 	if (newMaxY && maxY > 1) {
 	    maxY--;
-	    Log.i(Constants.LOG_TAG, "newMaxY " + maxY);
+	    System.out.println("newMaxY " + maxY);
 	}
 	clip(true);
     }
 
     public void switchMovie(BLMHeader blmHeader) {
 	this.filename = blmHeader.filename;
-	Log.i(Constants.LOG_TAG, "switch to movie " + blmHeader.title);
+	System.out.println("switch to movie " + blmHeader.title);
 	for (int i = 0; i < maxY; i++) {
 	    for (int j = 0; j < maxX; j++) {
 		if (null != clients[i][j]) {
-		    Log.i(Constants.LOG_TAG, "play PlayerClient " + j + ":" + i
-			    + " " + filename);
+		    System.out.println("play PlayerClient " + j + ":" + i + " "
+			    + filename);
 		    clients[i][j].play(filename);
 		}
 	    }

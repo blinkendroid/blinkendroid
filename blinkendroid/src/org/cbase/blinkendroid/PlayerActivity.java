@@ -212,6 +212,23 @@ public class PlayerActivity extends Activity implements BlinkendroidListener,
 	});
     }
 
+    public void shutdown() {
+	Log.d(Constants.LOG_TAG, "*** shutdown");
+	runOnUiThread(new Runnable() {
+	    public void run() {
+		handler.removeCallbacks(this);
+
+		playerView.stopPlaying();
+
+		if (blinkendroidClient != null) {
+		    blinkendroidClient.shutdown();
+		    blinkendroidClient = null;
+		}
+
+	    }
+	});
+    }
+
     public void connectionOpened(final InetAddress inetAddress) {
 	Log.d(Constants.LOG_TAG, "*** connectionOpened "
 		+ inetAddress.toString());

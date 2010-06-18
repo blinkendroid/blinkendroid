@@ -85,7 +85,8 @@ public class SenderThread extends Thread {
 	try {
 	    join();
 	} catch (final InterruptedException x) {
-	    throw new RuntimeException(x);
+	    Log.e(Constants.LOG_TAG, "SenderThread: shutdown interrupted");
 	}
+	Log.d(Constants.LOG_TAG, "SenderThread: shutdown completed");
     }
 }

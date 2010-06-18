@@ -20,7 +20,7 @@ public class BlinkendroidClientProtocol extends AbstractBlinkendroidProtocol
 
     public void handle(BufferedInputStream in) throws IOException {
 	Integer command = readInt(in);
-	System.out.println("received: " + command);
+	// System.out.println("received: " + command);
 	if (listener != null) {
 	    if (command == COMMAND_PLAYER_TIME) {
 		listener.serverTime(readLong(in));
@@ -63,6 +63,8 @@ public class BlinkendroidClientProtocol extends AbstractBlinkendroidProtocol
 		final int degrees = readInt(in);
 		final int color = readInt(in);
 		listener.arrow(4000, degrees, color);
+	    } else if (command == COMMAND_SHUTDOWN) {
+		listener.shutdown();
 	    }
 	}
     }
