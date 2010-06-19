@@ -18,6 +18,7 @@
 package org.cbase.blinkendroid;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.cbase.blinkendroid.network.broadcast.IServerHandler;
@@ -32,6 +33,7 @@ import android.content.Intent;
 import android.content.DialogInterface.OnClickListener;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -51,12 +53,13 @@ import android.widget.TextView.OnEditorActionListener;
 /**
  * @author Andreas Schildbach
  */
-public class LoginActivity extends Activity {
+public class LoginActivity extends Activity implements Runnable {
 
     private final List<ListEntry> serverList = new ArrayList<ListEntry>();
     private ServerListAdapter serverListAdapter;
     private ListView serverListView;
     private ReceiverThread receiverThread;
+    private Handler handler = new Handler();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,14 +112,17 @@ public class LoginActivity extends Activity {
 		    final String serverIp, final int protocolVersion) {
 		runOnUiThread(new Runnable() {
 		    public void run() {
-			final ListEntry entry = new ListEntry(serverName,
-				serverIp);
-			if (!serverList.contains(entry)) {
+			ListEntry entry = findServerEntry(serverList,
+				serverName, serverIp);
+			if (entry == null) {
+			    entry = new ListEntry(serverName, serverIp, System
+				    .currentTimeMillis());
 			    serverList.add(entry);
 			    serverListAdapter.notifyDataSetChanged();
 			    serverListView.setVisibility(View.VISIBLE);
+			} else {
+			    entry.lastFound = System.currentTimeMillis();
 			}
-
 		    }
 		});
 	    }
@@ -155,10 +161,29 @@ public class LoginActivity extends Activity {
 	    }
 	});
 	receiverThread.start();
+
+	handler.post(this);
+    }
+
+    public void run() {
+
+	// remove timed-out servers
+	for (final Iterator<ListEntry> i = serverList.iterator(); i.hasNext();) {
+	    final ListEntry entry = i.next();
+	    if (entry.lastFound + Constants.BROADCAST_IDLE_THRESHOLD < System
+		    .currentTimeMillis()) {
+		i.remove();
+		serverListAdapter.notifyDataSetChanged();
+	    }
+	}
+
+	handler.postDelayed(this, 1000);
     }
 
     @Override
     protected void onPause() {
+
+	handler.removeCallbacks(this);
 
 	if (receiverThread != null) {
 	    receiverThread.shutdown();
@@ -274,10 +299,13 @@ public class LoginActivity extends Activity {
 
 	public final String name;
 	public final String ip;
+	public long lastFound;
 
-	public ListEntry(final String name, final String ip) {
+	public ListEntry(final String name, final String ip,
+		final long lastFound) {
 	    this.name = name;
 	    this.ip = ip;
+	    this.lastFound = lastFound;
 	}
 
 	@Override
@@ -290,5 +318,14 @@ public class LoginActivity extends Activity {
 	public int hashCode() {
 	    return name.hashCode() * 9 + ip.hashCode();
 	}
+    }
+
+    private static ListEntry findServerEntry(final List<ListEntry> serverList,
+	    final String name, final String ip) {
+	for (final ListEntry entry : serverList)
+	    if (entry.ip.equals(ip) && entry.name.equals(name))
+		return entry;
+
+	return null;
     }
 }
