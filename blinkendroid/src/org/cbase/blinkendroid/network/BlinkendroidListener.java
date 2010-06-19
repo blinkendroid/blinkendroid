@@ -33,6 +33,4 @@ public interface BlinkendroidListener extends ConnectionListener {
     void clip(float startX, float startY, float endX, float endY);
 
     void arrow(long duration, float angle, int color);
-
-    void shutdown();
 }

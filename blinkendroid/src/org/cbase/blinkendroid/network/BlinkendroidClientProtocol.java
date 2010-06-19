@@ -2,6 +2,7 @@ package org.cbase.blinkendroid.network;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.Socket;
 
 import org.cbase.blinkendroid.player.bml.BBMZParser;
@@ -9,12 +10,14 @@ import org.cbase.blinkendroid.player.bml.BLM;
 
 public class BlinkendroidClientProtocol extends AbstractBlinkendroidProtocol
 	implements CommandHandler {
-    BlinkendroidListener listener;
+    private BlinkendroidListener listener;
+    private InetAddress address;
 
-    protected BlinkendroidClientProtocol(Socket socket,
-	    BlinkendroidListener listener) throws IOException {
+    protected BlinkendroidClientProtocol(final Socket socket,
+	    final BlinkendroidListener listener) throws IOException {
 	super(socket, listener, false);
 	this.listener = listener;
+	this.address = socket.getInetAddress();
 	registerHandler(PROTOCOL_PLAYER, this);
     }
 
@@ -64,7 +67,7 @@ public class BlinkendroidClientProtocol extends AbstractBlinkendroidProtocol
 		final int color = readInt(in);
 		listener.arrow(4000, degrees, color);
 	    } else if (command == COMMAND_SHUTDOWN) {
-		listener.shutdown();
+		listener.connectionClosed(address);
 	    }
 	}
     }
