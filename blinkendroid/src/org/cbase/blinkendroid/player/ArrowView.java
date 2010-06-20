@@ -1,7 +1,7 @@
 package org.cbase.blinkendroid.player;
 
-import java.util.LinkedList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -16,8 +16,8 @@ public class ArrowView extends View {
 
     private int width;
     private int height;
-    private List<Float> angles = new LinkedList<Float>();
-    private List<Integer> colors = new LinkedList<Integer>();
+    private int arrowId = 0;
+    private Map<Integer, Arrow> arrows = new HashMap<Integer, Arrow>();
     private float scale = 1f;
 
     private static final Path path = new Path();
@@ -42,19 +42,16 @@ public class ArrowView extends View {
     @Override
     protected void onDraw(final Canvas canvas) {
 
-	for (int i = 0; i < angles.size(); i++) {
+	for (final Arrow arrow : arrows.values()) {
 
 	    canvas.save();
 
-	    float angle = angles.get(i);
-	    int color = colors.get(i);
-
 	    final Paint arrowPaint = new Paint();
-	    arrowPaint.setColor(color);
+	    arrowPaint.setColor(arrow.color);
 	    arrowPaint.setAntiAlias(true);
 
 	    canvas.translate(width / 2f, height / 2f);
-	    canvas.rotate(angle);
+	    canvas.rotate(arrow.angle);
 	    canvas.scale(width / 10f * scale, height / 10f * scale);
 	    canvas.drawPath(path, arrowPaint);
 	    canvas.drawPath(path, arrowStroke);
@@ -63,16 +60,18 @@ public class ArrowView extends View {
 	}
     }
 
-    public void addArrow(final float angle, final int color) {
-	angles.add(angle);
-	colors.add(color);
+    public int addArrow(final float angle, final int color) {
+	final int id = arrowId++;
+	final Arrow arrow = new Arrow();
+	arrow.angle = angle;
+	arrow.color = color;
+	arrows.put(id, arrow);
 	postInvalidate();
+	return id;
     }
 
-    public void removeArrow(final int color) {
-	final int i = colors.indexOf(color);
-	angles.remove(i);
-	colors.remove(i);
+    public void removeArrow(final int id) {
+	arrows.remove(id);
 	postInvalidate();
     }
 
@@ -100,5 +99,10 @@ public class ArrowView extends View {
 	    height = Math.min(height, hSize);
 
 	setMeasuredDimension(this.width, this.height);
+    }
+
+    private class Arrow {
+	public float angle;
+	public int color;
     }
 }
