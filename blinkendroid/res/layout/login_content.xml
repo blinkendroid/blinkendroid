@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="fill_parent"
-	android:layout_height="fill_parent" android:orientation="vertical">
+	android:background="@drawable/blinkendroid_transparent" android:layout_height="fill_parent" android:orientation="vertical">
 
 	<ListView android:id="@+id/login_server_list" android:layout_width="fill_parent" android:layout_height="fill_parent"
 		android:visibility="gone" />
 
 	<TextView android:id="@+id/login_server_list_empty" android:text="Looking for servers..." android:textSize="20sp"
 		android:layout_width="fill_parent" android:layout_height="fill_parent" android:gravity="center" />
-
 </LinearLayout>
