@@ -202,8 +202,8 @@ public class PlayerActivity extends Activity implements BlinkendroidListener,
 	Log.d(Constants.LOG_TAG, "*** arrow " + angle + " " + duration);
 	runOnUiThread(new Runnable() {
 	    public void run() {
+		final boolean startPost = arrowDurations.isEmpty();
 		final int id = arrowView.addArrow(angle, color);
-		boolean startPost = arrowDurations.isEmpty();
 		arrowDurations.put(id, System.currentTimeMillis() + duration);
 		if (startPost)
 		    handler.post(PlayerActivity.this);
