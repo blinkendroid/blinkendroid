@@ -53,6 +53,7 @@ public class SenderThread extends Thread {
     public void run() {
 	try {
 	    socket = new DatagramSocket(Constants.BROADCAST_SERVER_PORT);
+	    socket.setReuseAddress(true);
 	    group = InetAddress.getByName("255.255.255.255");
 	    Log.i(Constants.LOG_TAG, "Server ip: " + group.toString());
 

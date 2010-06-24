@@ -71,6 +71,7 @@ public class ReceiverThread extends Thread {
     public void run() {
 	try {
 	    socket = new DatagramSocket(Constants.BROADCAST_CLIENT_PORT);
+	    socket.setReuseAddress(true);
 
 	    while (running) {
 

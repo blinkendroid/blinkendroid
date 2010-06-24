@@ -49,6 +49,7 @@ public class BlinkendroidServer extends Thread {
 
 	try {
 	    serverSocket = new ServerSocket(port);
+	    serverSocket.setReuseAddress(true);
 	    playerManager = new PlayerManager();
 	    acceptLoop();
 	    System.out.println("after acceptLoop");
