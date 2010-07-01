@@ -1,4 +1,4 @@
-package org.cbase.mobilecloud.app;
+package org.cbase.mobilecloud.blinkendroid;
 
 import org.cbase.mobilecloud.CloudListener;
 import org.cbase.mobilecloud.Node;

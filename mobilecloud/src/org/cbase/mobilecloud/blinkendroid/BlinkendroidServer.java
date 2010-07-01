@@ -1,4 +1,4 @@
-package org.cbase.mobilecloud.app;
+package org.cbase.mobilecloud.blinkendroid;
 
 import java.nio.ByteBuffer;
 
