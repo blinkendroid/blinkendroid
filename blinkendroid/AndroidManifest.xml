@@ -9,7 +9,7 @@
 				<category android:name="android.intent.category.LAUNCHER" />
 			</intent-filter>
 		</activity>
-		<activity android:name=".ServerActivity" />
+		<activity android:name=".ServerActivity" android:configChanges="orientation|keyboard|keyboardHidden" />
 		<activity android:name=".PlayerActivity" android:screenOrientation="portrait"
 			android:theme="@android:style/Theme.NoTitleBar.Fullscreen" />
 		<activity android:name=".PreferencesActivity" />
