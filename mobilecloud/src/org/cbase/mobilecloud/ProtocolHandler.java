@@ -1,5 +1,7 @@
 package org.cbase.mobilecloud;
 
-public interface ProtocolHandler {
+import java.nio.ByteBuffer;
 
+public interface ProtocolHandler {
+    void handle(Node node, ByteBuffer buffer);
 }
