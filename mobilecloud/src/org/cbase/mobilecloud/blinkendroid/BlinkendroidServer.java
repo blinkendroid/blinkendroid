@@ -2,6 +2,7 @@ package org.cbase.mobilecloud.blinkendroid;
 
 import java.nio.ByteBuffer;
 
+import org.cbase.mobilecloud.Cloud;
 import org.cbase.mobilecloud.CloudFactory;
 import org.cbase.mobilecloud.CloudManager;
 import org.cbase.mobilecloud.CommunicationManager;
@@ -13,8 +14,9 @@ public class BlinkendroidServer {
     public void main(String[] args){
 	//start server thread
 	Node myServerNode=null;
-	cloudManager = CloudFactory.getInstance().getCloudManager();
-	communicationManager = CloudFactory.getInstance().getCommunicationManager();
+	Cloud myCloud = CloudFactory.getInstance().createCloud();
+	cloudManager = myCloud.getCloudManager();
+	communicationManager = myCloud.getCommunicationManager();
 	
 	//verbindet sich zur Cloud
 	cloudManager.connect(myServerNode);

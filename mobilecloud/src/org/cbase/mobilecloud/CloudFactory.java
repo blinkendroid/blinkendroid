@@ -1,19 +1,18 @@
 package org.cbase.mobilecloud;
 
+import java.util.List;
+
 public class CloudFactory {
 
     public static CloudFactory getInstance() {
-	return new CloudFactory();
+    	return new CloudFactory();
     }
 
-    public CloudManager getCloudManager() {
-	// TODO Auto-generated method stub
-	return null;
+    public List<Cloud> getClouds(){
+    	return null;
     }
 
-    public CommunicationManager getCommunicationManager() {
-	// TODO Auto-generated method stub
-	return null;
+    public Cloud createCloud(){
+    	return null;
     }
-
 }
