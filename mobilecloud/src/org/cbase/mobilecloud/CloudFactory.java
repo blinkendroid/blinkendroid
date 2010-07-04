@@ -5,14 +5,14 @@ import java.util.List;
 public class CloudFactory {
 
     public static CloudFactory getInstance() {
-    	return new CloudFactory();
+	return new CloudFactory();
     }
 
-    public List<Cloud> getClouds(){
-    	return null;
+    public List<Cloud> getClouds() {
+	return null;
     }
 
-    public Cloud createCloud(){
-    	return null;
+    public Cloud createCloud() {
+	return null;
     }
 }

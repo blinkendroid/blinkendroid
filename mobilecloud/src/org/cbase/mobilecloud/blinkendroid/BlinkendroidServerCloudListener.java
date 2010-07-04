@@ -6,10 +6,10 @@ import org.cbase.mobilecloud.Node;
 public class BlinkendroidServerCloudListener implements CloudListener {
 
     public void addNode(Node node) {
-	//starte film
+	// starte film
     }
 
-    public void removeNode(Node node) {	
+    public void removeNode(Node node) {
     }
 
 }

@@ -11,33 +11,34 @@ import org.cbase.mobilecloud.Node;
 public class BlinkendroidServer {
     CommunicationManager communicationManager;
     CloudManager cloudManager;
-    public void main(String[] args){
-	//start server thread
-	Node myServerNode=null;
+
+    public void main(String[] args) {
+	// start server thread
+	Node myServerNode = null;
 	Cloud myCloud = CloudFactory.getInstance().createCloud();
 	cloudManager = myCloud.getCloudManager();
 	communicationManager = myCloud.getCommunicationManager();
-	
-	//verbindet sich zur Cloud
+
+	// verbindet sich zur Cloud
 	cloudManager.connect(myServerNode);
-	
-	//registriert keinen protocolhandler es gibt keine Nachrichten vom Client zum Server
-	//communicationManager.registerProtocolHandler(new BlinkendroidServerProtocolHandler());
-	
-	//registriert sein cloudlistener
-	cloudManager.registerCloudListener(new BlinkendroidServerCloudListener() );
-	
-	
-	//starte des timerthreads
+
+	// registriert keinen protocolhandler es gibt keine Nachrichten vom
+	// Client zum Server
+	// communicationManager.registerProtocolHandler(new
+	// BlinkendroidServerProtocolHandler());
+
+	// registriert sein cloudlistener
+	cloudManager
+		.registerCloudListener(new BlinkendroidServerCloudListener());
+
+	// starte des timerthreads
 	new Thread() {
-	    
+
 	    public void run() {
-		//send time broadcast
-		ByteBuffer data=null;
+		// send time broadcast
+		ByteBuffer data = null;
 		communicationManager.send(null, data);
 	    }
 	}.start();
-	
-	
     }
 }

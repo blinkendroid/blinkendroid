@@ -1,9 +1,7 @@
 package org.cbase.mobilecloud;
 
-public interface Cloud
-{
-	public CloudManager getCloudManager();
+public interface Cloud {
+    public CloudManager getCloudManager();
 
-
-	public CommunicationManager getCommunicationManager();
+    public CommunicationManager getCommunicationManager();
 }

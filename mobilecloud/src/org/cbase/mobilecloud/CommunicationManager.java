@@ -4,10 +4,11 @@ import java.nio.ByteBuffer;
 
 public interface CommunicationManager {
 
-    //recieving date
+    // recieving date
     void registerProtocolHandler(ProtocolHandler protocolHandler);
-    
-    //sending data
+
+    // sending data
     void broadcast(ByteBuffer buffer);
+
     void send(Node node, ByteBuffer buffer);
 }

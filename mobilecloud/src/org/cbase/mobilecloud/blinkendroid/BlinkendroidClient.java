@@ -8,31 +8,32 @@ import org.cbase.mobilecloud.CloudManager;
 import org.cbase.mobilecloud.CommunicationManager;
 import org.cbase.mobilecloud.Node;
 
-public class BlinkendroidClient
-{
+public class BlinkendroidClient {
 
-	/**
-	 * @param args
-	 */
-	public static void main(String[] args)
-	{
-		Node myNode = null;
+    /**
+     * @param args
+     */
+    public static void main(String[] args) {
+	Node myNode = null;
 
-		// alle clouds anzeigen & auswählen
-		List<Cloud> clouds	=	CloudFactory.getInstance().getClouds();
-		
-		Cloud myCloud	=	clouds.get(0);
-		CloudManager cloudManager = myCloud.getCloudManager();
-		CommunicationManager communicationManager = myCloud.getCommunicationManager();
+	// alle clouds anzeigen & auswählen
+	List<Cloud> clouds = CloudFactory.getInstance().getClouds();
 
-		// verbindet sich zur Cloud
-		cloudManager.connect(myNode);
+	Cloud myCloud = clouds.get(0);
+	CloudManager cloudManager = myCloud.getCloudManager();
+	CommunicationManager communicationManager = myCloud
+		.getCommunicationManager();
 
-		// registriert sein protocolhandler
-		communicationManager.registerProtocolHandler(new BlinkendroidClientProtocolHandler());
+	// verbindet sich zur Cloud
+	cloudManager.connect(myNode);
 
-		// registriert sein cloudlistener
-		cloudManager.registerCloudListener(new BlinkendroidClientCloudListener());
-	}
+	// registriert sein protocolhandler
+	communicationManager
+		.registerProtocolHandler(new BlinkendroidClientProtocolHandler());
+
+	// registriert sein cloudlistener
+	cloudManager
+		.registerCloudListener(new BlinkendroidClientCloudListener());
+    }
 
 }
