@@ -13,62 +13,67 @@ import net.sf.image4j.codec.bmp.BMPDecoder;
 import org.cbase.blinkendroid.player.bml.BLM.Frame;
 
 public class BMPConverter {
-    public static void main(String[] args) throws IOException {
-	BLM blm = new BLM();
-	blm.header = new BLMHeader();
-	blm.header.width = 32;
-	blm.header.height = 32;
-	blm.header.bits = 6;
-	blm.header.color = true;
-	blm.header.title = "blinkendroid final3";
-	blm.frames = new ArrayList<Frame>();
-	for (int i = 1; i < 224; i++) {
-	    String si = Integer.toString(i);
-	    if (i < 10)
-		si = "00" + i;
-	    else if (i < 100)
-		si = "0" + i;
-	    BufferedImage image = BMPDecoder.read(new File(
-		    "bmp/filmloop03/final01 " + si + ".bmp"));
-	    // System.out.print(i+" w:"+image.getWidth()+" h:"+image.getHeight());
-
-	    Frame f = new Frame();
-	    f.duration = 150;
-	    f.matrix = new byte[image.getWidth()][image.getWidth()];
-	    blm.frames.add(f);
-	    for (int y = 0; y < image.getHeight(); y++) {
-		for (int x = 0; x < image.getWidth(); x++) {
-
-		    // int pff = x + i;
-		    // if (pff >= image.getWidth())
-		    // pff -= image.getWidth();
-		    int[] rgb = new int[3];
-		    image.getRaster().getPixel(x, y, rgb);
-
-		    byte b = (byte) ((byte) ((rgb[0] / 64) << 4)
-			    + (byte) ((rgb[1] / 64) << 2) + (byte) ((rgb[2] / 64)));
-		    f.matrix[y][x] = b;
-		    if (i == 59)
-			System.out.print(rgb[0] + "," + rgb[1] + "," + rgb[2]
-				+ ":" + f.matrix[y][x] + ";");
-		}
-		if (i == 59)
-		    System.out.println("");
-	    }
-
+	public static void main(String[] args) throws IOException {
+		String name = "schrift";
+		BLM blm = new BLM();
+		blm.header = new BLMHeader();
+		blm.header.width = 30;
+		blm.header.height = 48;
+		blm.header.bits = 8;
+		blm.header.color = true;
+		blm.header.title = "ggd_record_schrift";//+name;
+		blm.frames = new ArrayList<Frame>();
+		addFrames(name,blm,192,100,true,false);
+//		addFrames(name,blm,73,150,false,true);
+		ObjectOutput out = new ObjectOutputStream(new FileOutputStream(
+				"gdd/bbm/" + name + ".bbm"));
+		out.writeObject(blm);
+		out.flush();
+		out.close();
+		// die infofiles für
+		out = new ObjectOutputStream(new FileOutputStream("gdd/bbmz/" + name
+				+ ".info"));
+		out.writeObject(blm.header);
+		out.flush();
+		out.close();
+		BMLConverter.compress("gdd/bbm/" + name + ".bbm", "gdd/bbmz/" + name
+				+ ".bbmz");
 	}
-	ObjectOutput out = new ObjectOutputStream(new FileOutputStream(
-		"bbm/blinkendroid7.bbm"));
-	out.writeObject(blm);
-	out.flush();
-	out.close();
-	// die infofiles fÃ¼r den server
-	out = new ObjectOutputStream(new FileOutputStream(
-		"bbmz/blinkendroid7.info"));
-	out.writeObject(blm.header);
-	out.flush();
-	out.close();
-	BMLConverter.compress("bbm/blinkendroid7.bbm",
-		"bbmz/blinkendroid7.bbmz");
-    }
+
+	private static void addFrames(String name, BLM blm, int size, int duration, boolean forward,boolean leadingZero) throws IOException {
+
+		for(int i=forward?1:size;forward?i<=size:i>0;i+=forward?1:-1) {
+			String si = Integer.toString(i);
+			if(leadingZero)
+			{
+				if (i < 10)
+					si = "00" + i;
+				else if (i < 100)
+					si = "0" + i;
+			}
+			BufferedImage image=null;
+			try{
+				 image = BMPDecoder.read(new File("gdd/"+name+"/"+name+" "+ si + ".bmp"));
+			}catch(Exception e){
+				System.out.println("failed"+e.getMessage());
+				continue;
+			}
+			System.out.println(i);
+			BLM.Frame f = new BLM.Frame();
+			f.duration = duration;
+			f.matrix = new byte[image.getHeight()][image.getWidth()];
+			blm.frames.add(f);
+			for (int y = 0; y < image.getHeight(); y++) {
+				for (int x = 0; x < image.getWidth(); x++) {
+					int[] rgb = new int[3];
+					image.getRaster().getPixel(x, y, rgb);
+
+					byte b = (byte) ((byte) ((rgb[0] / 32) << 5)
+							+ (byte) ((rgb[1] / 32) << 2) + (byte) ((rgb[2] / 64)));
+					f.matrix[y][x] = b;
+				}
+			}
+
+		}
+	}
 }
