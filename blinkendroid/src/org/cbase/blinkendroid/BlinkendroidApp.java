@@ -86,11 +86,13 @@ public class BlinkendroidApp extends Application {
     }
 
     public String getAboutUrl() {
-	return (aboutUrl == null) ? getString(R.string.about_url) : aboutUrl;
+	return //(aboutUrl == null) ? getString(R.string.about_url) :
+		aboutUrl;
     }
 
     public String getDownloadUrl() {
-	return (downloadUrl == null) ? getString(R.string.download_url) : downloadUrl;
+	return //(downloadUrl == null) ? getString(R.string.download_url) :
+		downloadUrl;
     }
 
     public void wantWakeLock(boolean doWant) {
