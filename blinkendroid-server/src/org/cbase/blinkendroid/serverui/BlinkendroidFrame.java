@@ -30,9 +30,13 @@ import org.cbase.blinkendroid.server.ClipAroundEffect;
 import org.cbase.blinkendroid.server.ITouchEffect;
 import org.cbase.blinkendroid.server.InverseEffect;
 import org.cbase.blinkendroid.serverui.BlinkendroidSwingServer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class BlinkendroidFrame extends JFrame implements ImageManagerListener,
 	BLMManagerListener, ConnectionListener {
+
+	private static final Logger logger = LoggerFactory.getLogger(BlinkendroidFrame.class);
 
     private static final long serialVersionUID = 1L;
     BlinkendroidSwingServer server;
@@ -256,7 +260,7 @@ public class BlinkendroidFrame extends JFrame implements ImageManagerListener,
     }
 
     protected void shutdown() {
-	System.out.println("Closing main window");
+	logger.info("Closing main window");
 	server.shutdown();
     }
 
@@ -320,12 +324,12 @@ public class BlinkendroidFrame extends JFrame implements ImageManagerListener,
 		}
 
 		if (selectedMovie instanceof BLMHeader) {
-		    System.out.println(((BLMHeader) selectedMovie).author);
+		    logger.info(((BLMHeader) selectedMovie).author);
 		    server.switchMovie((BLMHeader) selectedMovie);
 		}
 		break;
 	    case EFFECT_CHANGED:
-		System.out.println("Effect changed start");
+		logger.info("Effect changed start");
 		Object selectedEffect = ((JComboBox) e.getSource()).getModel().getSelectedItem();
 		
 		if(selectedEffect == null || !server.isRunning()) {
@@ -333,7 +337,7 @@ public class BlinkendroidFrame extends JFrame implements ImageManagerListener,
 		}
 		
 		if(selectedEffect instanceof ITouchEffect) {
-		    System.out.println("Switching effect");
+		    logger.info("Switching effect");
 		    server.switchEffect((ITouchEffect)selectedEffect);
 		}
 		break;

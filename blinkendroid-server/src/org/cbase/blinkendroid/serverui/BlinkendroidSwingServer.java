@@ -137,7 +137,7 @@ public final class BlinkendroidSwingServer {
 		try {
 			serverProps.load(propsUrl.openStream());
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.warn("load failed", e);
 		}
 
 		// Checking for JNotify libs
@@ -151,7 +151,7 @@ public final class BlinkendroidSwingServer {
 		// + ule.getMessage());
 		// JNOTIFY_FOUND = false;
 		// } catch (Exception e) {
-		// e.printStackTrace();
+		// logger.warn("failed", e);
 		// }
 
 		// setting paths
@@ -174,7 +174,7 @@ public final class BlinkendroidSwingServer {
 	// } catch (JNotifyException e) {
 	// logger.error("Unable to create JNotify watcher for movies: "
 	// + e.getMessage());
-	// e.printStackTrace();
+	// logger.warn("failed", e);
 	// } catch (UnsatisfiedLinkError ule) {
 	// logger.error(ule.getMessage());
 	// }
@@ -186,7 +186,7 @@ public final class BlinkendroidSwingServer {
 	// } catch (JNotifyException e) {
 	// logger.error("Unable to create JNotify watcher for images: "
 	// + e.getMessage());
-	// e.printStackTrace();
+	// logger.warn("failed", e);
 	// }
 	// }
 	//
@@ -270,8 +270,8 @@ public final class BlinkendroidSwingServer {
 		// // try {
 		// // removeFsWatchers();
 		// // } catch (JNotifyException e) {
-		// // e.printStackTrace();
 		// // }
+		// logger.warn("failed", e);
 		// }
 		//
 		// stopServer();
@@ -293,7 +293,7 @@ public final class BlinkendroidSwingServer {
 
 			ticketManager.reset();
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.warn("stopServer failed" + e, e);
 		}
 	}
 
@@ -365,8 +365,7 @@ public final class BlinkendroidSwingServer {
 	// }
 	// } catch (InterruptedException e) {
 	// logger
-	// .error("DeferrerThread was interrupted while sleeping");
-	// e.printStackTrace();
+	// .error("DeferrerThread was interrupted while sleeping", e);
 	// }
 	// }
 	// }.start();
