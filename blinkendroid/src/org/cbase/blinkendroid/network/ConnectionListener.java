@@ -1,10 +1,10 @@
 package org.cbase.blinkendroid.network;
 
-import java.net.InetAddress;
+import org.cbase.blinkendroid.network.udp.ClientSocket;
 
 public interface ConnectionListener {
+  // TODO ClientSocket should be replaced by SocketAddress
+  void connectionClosed(ClientSocket clientSocket);
 
-    void connectionClosed(InetAddress inetAddress);
-
-    void connectionOpened(InetAddress inetAddress);
+  void connectionOpened(ClientSocket clientSocket);
 }

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:id="@+id/pinLayout"
+	android:layout_width="fill_parent" android:layout_height="fill_parent"
+	xmlns:android="http://schemas.android.com/apk/res/android">
+
+	<TextView android:id="@+id/pinlabel" android:layout_width="fill_parent"
+		android:layout_height="wrap_content" />
+
+	<EditText android:id="@+id/pinText" android:layout_width="fill_parent"
+	 android:layout_height="wrap_content" android:singleLine="true" android:numeric="integer" android:maxLength="6" 
+	 android:layout_below="@id/pinlabel" android:background="@android:drawable/editbox_background"/>
+
+	<Button android:id="@+id/pinokButton" android:layout_width="wrap_content"
+		android:layout_height="wrap_content" android:layout_below="@id/pinText" android:minWidth="100dp"
+		android:layout_centerHorizontal="true" android:text="OK" android:layout_alignParentLeft="true"/>
+		
+	<Button android:id="@+id/pincancelButton" android:layout_width="wrap_content"
+		android:layout_height="wrap_content" android:layout_below="@id/pinText" android:minWidth="100dp"
+		android:layout_centerHorizontal="true" android:text="Cancel" android:layout_alignParentRight="true"/>
+</RelativeLayout>

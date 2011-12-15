@@ -2,8 +2,39 @@
 
 <resources>
 	<string name="app_name">Blinkendroid</string>
-<string name="instructions">Instructions</string>
-<string name="instruction_text">Hi there, if you want to learn about blinkendroid visit the homepage.</string>
-<string name="owner_hint">Hint: Setting an owner name in the preferences helps identifying your phone in the matrix.</string>
-<string name="about">About</string>
+	<string name="instructions">Instructions</string>
+	<string name="instruction_text">Hi there, if you want to learn about blinkendroid
+		visit the homepage.</string>
+	<string name="owner_hint">Hint: Setting an owner name in the preferences
+		helps identifying your phone in the matrix.</string>
+	<string name="set_owner_title">Owner Name</string>
+	<string name="set_owner_warning">You have to set an owner name!</string>
+	<string name="set_owner_positive">Ok</string>
+	<string name="about">About</string>
+	<string name="ticket_size">Tickets</string>
+	<string name="start">Start</string>
+	<string name="stop">Stop</string>
+	<string name="ticket_hint">Select the maximum number of tickets</string>
+	<string name="movie_hint">Select the movie you want to play</string>
+	<string name="look_for_servers">Looking for servers...</string>
+	<string name="select_server_to_connect">Select Server to connect to</string>
+	<string name="name_hint">Hint: Setting an owner name in the preferences
+		helps identifying your phone in the matrix.</string>
+	<string name="new_release_text">New Release available. Some servers won\'t be
+		discovered.</string>
+	<string name="warning">Warning</string>
+	<string name="check_for_update">Check for update</string>
+	<string name="ignore">Ignore</string>
+	<string name="enter_server_ip">Enter server IP:</string>
+	<string name="connection_closed">connection to server closed</string>
+	<string name="connection_failed">connection failed</string>
+	<string name="about_url">http://code.google.com/p/blinkendroid</string>
+	<string name="download_url">market://details?id=org.cbase.blinkendroid</string>
+	<string name="image_hint">Select an Image</string>
+	<string name="waiting_for_ticket">Waiting for Ticket...</string>
+	<string name="ok">OK</string>
+	<string name="pin_hint">Enter a pin if you want to</string>
+	<string name="pin_text">Set a pin for server security</string>
+		<string name="pin_title">Server PIN</string>
+	<string name="set_pin_warning">You have to enter the correct pin!</string>
 </resources>

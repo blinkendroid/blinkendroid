@@ -2,7 +2,12 @@
 
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-	<EditTextPreference android:key="owner" android:title="Owner Name"
+	<EditTextPreference android:key="owner"
+		android:title="Owner Name"
 		android:summary="In order to identify your phone in the matrix, enter your name here" />
+
+	<CheckBoxPreference android:summary="Let Blinkendroid manage your brightness settings"
+		android:title="Automatic Brightness" android:key="brightness"
+		android:selectable="true" android:enabled="true" />
 
 </PreferenceScreen>

@@ -18,95 +18,103 @@
 package org.cbase.blinkendroid.server;
 
 import java.io.IOException;
-import java.net.ServerSocket;
-import java.net.Socket;
+import java.net.DatagramSocket;
 import java.net.SocketException;
+import java.util.ArrayList;
+import java.util.List;
 
-import org.cbase.blinkendroid.network.BlinkendroidServerProtocol;
+import org.cbase.blinkendroid.BlinkendroidApp;
 import org.cbase.blinkendroid.network.ConnectionListener;
+import org.cbase.blinkendroid.network.tcp.DataServer;
+import org.cbase.blinkendroid.network.udp.UDPServerProtocolManager;
 import org.cbase.blinkendroid.player.bml.BLMHeader;
+import org.cbase.blinkendroid.player.image.ImageHeader;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-//import android.util.Log;
+public class BlinkendroidServer {
 
-public class BlinkendroidServer extends Thread {
+    private static final Logger logger = LoggerFactory.getLogger(BlinkendroidServer.class);
 
     volatile private boolean running = false;
-    volatile private ServerSocket serverSocket;
+    volatile private DatagramSocket serverSocket;
     private int port = -1;
     private PlayerManager playerManager;
-    private ConnectionListener connectionListener;
+    private List<ConnectionListener> connectionListeners;
+    private WhackaMole whackAmole;
+    private EffectManager effectManager;
+    private UDPServerProtocolManager mServerProto;
 
-    public BlinkendroidServer(ConnectionListener connectionListener, int port) {
-	this.connectionListener = connectionListener;
+    private DataServer videoSocket;
+
+    public PlayerManager getPlayerManager() {
+	return playerManager;
+    }
+    
+    public BlinkendroidServer(int port) {
+	this.connectionListeners = new ArrayList<ConnectionListener>();
 	this.port = port;
     }
 
-    @Override
-    public void run() {
+    public void addConnectionListener(ConnectionListener connectionListener) {
+	this.connectionListeners.add(connectionListener);
+    }
+
+    public void start() {
 
 	running = true;
-	System.out.println("BlinkendroidServer Thread started");
 
 	try {
-	    serverSocket = new ServerSocket(port);
+	    videoSocket = new DataServer(port);
+	    videoSocket.start();
+
+	    serverSocket = new DatagramSocket(port);
+	    serverSocket.setBroadcast(true);
 	    serverSocket.setReuseAddress(true);
-	    playerManager = new PlayerManager();
-	    acceptLoop();
-	    System.out.println("after acceptLoop");
-	    playerManager.shutdown();
-	    System.out.println("close serverSocket");
-	    serverSocket.close();
-	} catch (final IOException x) {
-	    x.printStackTrace();
-	    System.out.println("Could not create Socket");
-	    throw new RuntimeException(x);
-	}
+	    mServerProto = new UDPServerProtocolManager(serverSocket);
 
-	System.out.println("BlinkendroidServer Thread ended");
-    }
+	    playerManager = new PlayerManager(mServerProto);
+	    playerManager.setVideoServer(videoSocket);
 
-    private void acceptLoop() {
+	    mServerProto.setPlayerManager(playerManager);
 
-	while (running) {
-	    try {
-		final Socket clientSocket = accept();
-		if (!running) // fast exit
-		    break;
-		System.out.println("BlinkendroidServer got connection "
-		/* + clientSocket.getRemoteSocketAddress().toString() */);
-		final BlinkendroidServerProtocol blinkendroidProtocol = new BlinkendroidServerProtocol(
-			clientSocket, connectionListener);
-		playerManager.addClient(blinkendroidProtocol);
-	    } catch (final IOException x) {
-		x.printStackTrace();
-		System.out.println("BlinkendroidServer could not accept");
+	    // register for locateME
+	    mServerProto.registerHandler(BlinkendroidApp.PROTOCOL_CLIENT, playerManager);
+	    // register for& touch
+	    effectManager = new EffectManager(playerManager);
+	    
+	    // setting default touch effect
+	    ITouchEffect effect = new InverseEffect(playerManager);
+	    effectManager.setEffect(effect);
+	    
+	    mServerProto.registerHandler(BlinkendroidApp.PROTOCOL_CLIENT, effectManager);
+
+	    // mServerProto.registerHandler(proto, playerManager);
+	    for (ConnectionListener connectionListener : connectionListeners) {
+		mServerProto.addConnectionListener(connectionListener);
 	    }
-	}
-    }
 
-    private Socket accept() throws IOException {
-	try {
-	    return serverSocket.accept();
-	} catch (final SocketException x) {
-	    // swallow, this is expected after interruption by closing socket
-	    x.printStackTrace();
-	    System.out.println("serverSocket.accept failed");
-	    return null;
+	    mServerProto.startTimerThread();
+
+	    // how is the protocol connected to the logic ?
+	} catch (SocketException e) {
+	    logger.error("SocketException", e);
+	} catch (IOException e) {
+	    logger.error("IOException", e);
 	}
     }
 
     public void shutdown() {
-	System.out.println("BlinkendroidServer.shutdown() initiated");
-	running = false;
-	try {
-	    serverSocket.close(); // interrupt thread blocked in accept()
-	    join();
-	} catch (final IOException x) {
-	    throw new RuntimeException(x);
-	} catch (final InterruptedException x) {
-	    throw new RuntimeException(x);
-	}
-	System.out.println("BlinkendroidServer.shutdown() ended");
+	if (null != whackAmole)
+	    whackAmole.shutdown();
+	if (null != videoSocket)
+	    videoSocket.shutdown();
+	if (null != playerManager)
+	    playerManager.shutdown();
+	if (null != mServerProto)
+	    mServerProto.shutdown();
+	if (null != serverSocket)
+	    serverSocket.close();
     }
 
     public boolean isRunning() {
@@ -115,5 +123,39 @@ public class BlinkendroidServer extends Thread {
 
     public void switchMovie(BLMHeader blmHeader) {
 	playerManager.switchMovie(blmHeader);
+    }
+
+    public void switchImage(ImageHeader imageHeader) {
+	playerManager.switchImage(imageHeader);
+    }
+    
+    public void setTouchEffect(ITouchEffect effect) {
+	effectManager.setEffect(effect);
+    }
+
+    public void clip() {
+	playerManager.clip(true);
+    }
+
+    public void singleclip() {
+	playerManager.singleclip();
+    }
+
+    public void toggleTimeThread() {
+	if (mServerProto.isGlobalTimerThreadRunning())
+	    mServerProto.stopTimerThread();
+	else
+	    mServerProto.startTimerThread();
+    }
+
+    public void toggleWhackaMole() {
+	if (null != whackAmole && whackAmole.isRunning()) {
+	    mServerProto.unregisterHandler(BlinkendroidApp.PROTOCOL_CLIENT, whackAmole);
+	    whackAmole.shutdown();
+	} else {
+	    whackAmole = new WhackaMole(playerManager);
+	    mServerProto.registerHandler(BlinkendroidApp.PROTOCOL_CLIENT, whackAmole);
+	    whackAmole.start();
+	}
     }
 }

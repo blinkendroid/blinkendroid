@@ -21,4 +21,9 @@ public class BLMHeader implements Serializable {
 
     public BLMHeader() {
     }
+
+    @Override
+    public String toString() {
+	return title;
+    }
 }

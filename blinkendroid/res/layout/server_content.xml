@@ -1,22 +1,91 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="fill_parent"
-	android:layout_height="fill_parent" android:orientation="vertical">
+<TabHost xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@android:id/tabhost" android:layout_width="fill_parent"
+	android:layout_height="fill_parent">
 
-	<EditText android:id="@+id/server_name" android:singleLine="true" android:capitalize="words" android:textSize="36dp"
-		android:hint="server name" android:layout_width="fill_parent" android:layout_height="wrap_content" />
+	<LinearLayout android:orientation="vertical"
+		android:layout_width="fill_parent" android:layout_height="fill_parent"
+		android:padding="5dp">
 
-	<Spinner android:id="@+id/server_movie" android:layout_width="fill_parent" android:layout_height="wrap_content" />
+		<TabWidget android:id="@android:id/tabs"
+			android:layout_width="fill_parent" android:layout_height="wrap_content" />
 
-	<Button android:id="@+id/server_start" android:text="Start" android:layout_width="fill_parent"
-		android:layout_height="wrap_content" />
+		<FrameLayout android:id="@android:id/tabcontent"
+			android:layout_width="fill_parent" android:layout_height="fill_parent">
 
-	<Button android:id="@+id/server_stop" android:text="Stop" android:layout_width="fill_parent"
-		android:layout_height="wrap_content" android:enabled="false" />
+			<LinearLayout android:id="@+id/tabcontent_settings"
+				android:layout_width="fill_parent" android:layout_height="fill_parent"
+				android:orientation="vertical">
 
-	<Button android:id="@+id/server_client" android:text="Start client" android:layout_width="fill_parent"
-		android:layout_height="wrap_content" android:enabled="false" />
+				<LinearLayout android:orientation="horizontal"
+					android:layout_width="fill_parent" android:layout_height="wrap_content">
+					<ToggleButton android:id="@+id/server_switch"
+						android:layout_width="wrap_content" android:layout_height="fill_parent"
+						android:layout_margin="6dp" android:layout_weight="1" />
+					<EditText android:id="@+id/server_name"
+						android:singleLine="true" android:capitalize="words" android:hint="server name"
+						android:layout_width="wrap_content" android:layout_height="fill_parent"
+						android:layout_margin="6dp" android:layout_weight="100" />
+				</LinearLayout>
 
-	<ListView android:id="@+id/server_client_list" android:layout_width="fill_parent" android:layout_height="fill_parent" />
+				<TextView android:text="@+string/pin_text"
+					android:layout_width="fill_parent" android:layout_height="18dp" />
+				<EditText android:id="@+id/pin_input" android:layout_width="fill_parent"
+					android:layout_height="wrap_content" android:hint="@string/pin_hint"
+					android:singleLine="true" android:numeric="integer"
+					android:maxLength="6" />
 
-</LinearLayout>
+				<TextView android:text="@+string/movie_hint"
+					android:layout_width="fill_parent" android:layout_height="18dp" />
+				<Spinner android:id="@+id/server_movie"
+					android:layout_width="fill_parent" android:layout_height="wrap_content" />
+				<TextView android:text="@+string/image_hint"
+					android:layout_width="fill_parent" android:layout_height="18dp" />
+				<Spinner android:id="@+id/image_selector"
+					android:layout_width="fill_parent" android:layout_height="wrap_content"
+					android:hint="@string/image_hint" />
+				<LinearLayout android:layout_width="fill_parent"
+					android:layout_height="wrap_content">
+					<Button android:id="@+id/pick_image_from_gallery"
+						android:text="Pick from Gallery" android:layout_width="wrap_content"
+						android:layout_height="wrap_content" android:enabled="false" />
+					<Button android:id="@+id/server_mole_button" android:text="Whack-a-Mole"
+						android:layout_width="wrap_content" android:layout_height="wrap_content"
+						android:enabled="false" />
+				</LinearLayout>
+				<Button android:id="@+id/server_client" android:text="Start client"
+					android:layout_width="fill_parent" android:layout_height="wrap_content"
+					android:enabled="false" />
+
+			</LinearLayout>
+
+			<FrameLayout android:id="@+id/tabcontent_clients_connected"
+				android:layout_width="fill_parent" android:layout_height="fill_parent">
+
+				<ListView android:id="@+id/server_client_list"
+					android:layout_width="fill_parent" android:layout_height="fill_parent" />
+				<TextView android:id="@+id/server_client_list_empty"
+					android:text="No clients connected" android:textSize="18sp"
+					android:gravity="center" android:layout_width="wrap_content"
+					android:layout_height="wrap_content" android:layout_gravity="center" />
+
+			</FrameLayout>
+
+			<FrameLayout android:id="@+id/tabcontent_clients_waiting"
+				android:layout_width="fill_parent" android:layout_height="fill_parent">
+
+				<ListView android:id="@+id/server_client_list_waiting"
+					android:layout_width="fill_parent" android:layout_height="fill_parent" />
+				<TextView android:id="@+id/server_client_list_empty_waiting"
+					android:text="No clients in queue" android:textSize="18sp"
+					android:gravity="center" android:layout_width="wrap_content"
+					android:layout_height="wrap_content" android:layout_gravity="center" />
+
+			</FrameLayout>
+
+		</FrameLayout>
+
+	</LinearLayout>
+
+</TabHost>

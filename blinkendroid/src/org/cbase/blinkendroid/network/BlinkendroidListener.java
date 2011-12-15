@@ -19,6 +19,8 @@ package org.cbase.blinkendroid.network;
 
 import org.cbase.blinkendroid.player.bml.BLM;
 
+import android.graphics.Bitmap;
+
 /**
  * @author Andreas Schildbach
  */
@@ -28,9 +30,15 @@ public interface BlinkendroidListener extends ConnectionListener {
 
     void serverTime(long serverTime);
 
-    void play(int x, int y, long startTime, BLM blm);
+    void playBLM(long startTime, BLM blm);
 
     void clip(float startX, float startY, float endX, float endY);
 
     void arrow(long duration, float angle, int color);
+
+    void showImage(Bitmap bmp);
+
+    void mole(int type, int moleCounter, int duration, int points);
+
+    void blink(int type);
 }

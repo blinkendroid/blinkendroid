@@ -18,51 +18,82 @@
 package org.cbase.blinkendroid.network;
 
 import java.io.IOException;
+import java.net.DatagramSocket;
 import java.net.InetSocketAddress;
-import java.net.Socket;
 
-import org.cbase.blinkendroid.Constants;
-
-//import android.util.Log;
+import org.cbase.blinkendroid.BlinkendroidApp;
+import org.cbase.blinkendroid.network.udp.BlinkendroidClientProtocol;
+import org.cbase.blinkendroid.network.udp.ClientConnectionState;
+import org.cbase.blinkendroid.network.udp.ClientSocket;
+import org.cbase.blinkendroid.network.udp.UDPClientProtocolManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class BlinkendroidClient extends Thread {
 
+    private static final Logger logger = LoggerFactory.getLogger(BlinkendroidClient.class);
+
     private final InetSocketAddress socketAddress;
     private final BlinkendroidListener listener;
-    private BlinkendroidClientProtocol protocol;
+    private DatagramSocket socket;
+    private UDPClientProtocolManager protocol;
+    private ClientConnectionState mConnstate;
+    private BlinkendroidClientProtocol blinkenProto;
 
-    public BlinkendroidClient(final InetSocketAddress socketAddress,
-	    final BlinkendroidListener listener) {
+    public BlinkendroidClient(final InetSocketAddress socketAddress, final BlinkendroidListener listener) {
 	this.socketAddress = socketAddress;
 	this.listener = listener;
     }
 
     @Override
-    public void run() {
-	System.out.println("trying to connect to server: " + socketAddress);
+    public synchronized void start() {
+	logger.info("trying to connect to server: " + socketAddress);
 	try {
-	    final Socket socket = new Socket();
-	    long t = System.currentTimeMillis();
-	    socket.connect(socketAddress,
-		    Constants.SERVER_SOCKET_CONNECT_TIMEOUT);
-	    protocol = new BlinkendroidClientProtocol(socket, listener);
-	    System.out.println("connected " + (System.currentTimeMillis() - t));
+	    socket = new DatagramSocket(BlinkendroidApp.BROADCAST_CLIENT_PORT);
+	    socket.setReuseAddress(true);
+	    protocol = new UDPClientProtocolManager(socket, socketAddress);
+
+	    ClientSocket serverSocket = new ClientSocket(protocol, socketAddress);
+	    mConnstate = new ClientConnectionState(serverSocket, listener);
+	    protocol.registerHandler(BlinkendroidApp.PROTOCOL_CONNECTION, mConnstate);
+	    mConnstate.openConnection();
+
+	    blinkenProto = new BlinkendroidClientProtocol(listener, serverSocket);
+	    protocol.registerHandler(BlinkendroidApp.PROTOCOL_PLAYER, blinkenProto);
+	    logger.info("connected");
 
 	} catch (final IOException x) {
-	    System.out.println("connection failed");
+	    logger.error("connection failed");
 	    x.printStackTrace();
-	    listener.connectionFailed(x.getClass().getName() + ": "
-		    + x.getMessage());
+	    listener.connectionFailed(x.getClass().getName() + ": " + x.getMessage());
 	}
     }
 
     public void shutdown() {
+	if (null != mConnstate)
+	    mConnstate.shutdown();
 	if (null != protocol)
 	    protocol.shutdown();
-	System.out.println("client shutdown completed");
+	if (null != socket) {
+	    if (!socket.isClosed())
+		socket.close();
+	}
+	logger.info("client shutdown completed");
     }
 
     public void locateMe() {
-	// TODO Auto-generated method stub
+	blinkenProto.locateMe();
+    }
+
+    public void touch() {
+	blinkenProto.touch();
+    }
+
+    public void hitMole() {
+	blinkenProto.hitMole();
+    }
+
+    public void missedMole() {
+	blinkenProto.missedMole();
     }
 }

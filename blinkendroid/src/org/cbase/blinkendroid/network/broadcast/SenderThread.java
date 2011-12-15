@@ -22,16 +22,17 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 
-import org.cbase.blinkendroid.Constants;
-
-import android.util.Log;
+import org.cbase.blinkendroid.BlinkendroidApp;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A multicast sender that sends a server name to blinkendroid clients.
  */
 public class SenderThread extends Thread {
 
-    final private String message;
+    private static final Logger logger = LoggerFactory.getLogger(SenderThread.class);
+    private final String message;
     private InetAddress group;
     volatile private boolean running = true;
     private DatagramSocket socket;
@@ -42,31 +43,34 @@ public class SenderThread extends Thread {
      * @param serverName
      *            The server's name.
      */
-    public SenderThread(String serverName) {
+    public SenderThread(String name) {
 	// workaround: remove spaces, as those currently break the protocol
-	serverName = serverName.replaceAll("\\s", "");
-	message = Constants.BROADCAST_PROTOCOL_VERSION + " "
-		+ Constants.SERVER_BROADCAST_COMMAND + " " + serverName;
+	name = name.replaceAll("\\s", "");
+	message = BlinkendroidApp.BROADCAST_PROTOCOL_VERSION + " " + BlinkendroidApp.CLIENT_BROADCAST_COMMAND + " "
+		+ name;
     }
 
     @Override
     public void run() {
 	try {
-	    socket = new DatagramSocket(Constants.BROADCAST_SERVER_PORT);
+	    this.setName("SRV Send Annouce");
+	    socket = new DatagramSocket(BlinkendroidApp.BROADCAST_ANNOUCEMENT_CLIENT_PORT);
 	    socket.setReuseAddress(true);
-	    group = InetAddress.getByName("255.255.255.255");
-	    Log.i(Constants.LOG_TAG, "Server ip: " + group.toString());
+	    socket.setBroadcast(true);
+	    logger.info("Sender thread started.");
+	    group = InetAddress.getAllByName("255.255.255.255")[0];
+	    logger.info("Server ip: " + group.toString());
 
 	    while (running) {
 		final byte[] messageBytes = message.getBytes("UTF-8");
-		final DatagramPacket initPacket = new DatagramPacket(
-			messageBytes, messageBytes.length, group,
-			Constants.BROADCAST_CLIENT_PORT);
+		final DatagramPacket initPacket = new DatagramPacket(messageBytes, messageBytes.length, group,
+			BlinkendroidApp.BROADCAST_ANNOUCEMENT_SERVER_PORT);
+		logger.info("Broadcasting Packet");
 		socket.send(initPacket);
 
-		Log.d(Constants.LOG_TAG, "Broadcasting: '" + message + "'");
+		logger.info("Broadcasting: '" + message + "'");
 		try {
-		    Thread.sleep(5000);
+		    Thread.sleep(BlinkendroidApp.BROADCAST_RATE);
 		} catch (final InterruptedException x) {
 		    // swallow, this is expected when being interrupted
 		}
@@ -75,19 +79,22 @@ public class SenderThread extends Thread {
 	    socket.close();
 
 	} catch (final IOException x) {
-	    Log.e(Constants.LOG_TAG, "problem sending", x);
+	    logger.error("problem sending", x);
 	}
     }
 
     public void shutdown() {
-	Log.d(Constants.LOG_TAG, "SenderThread: initiating shutdown");
+	logger.info("SenderThread: initiating shutdown");
 	running = false;
+
+	if (socket != null) {
+	    socket.close();
+	}
 	interrupt();
 	try {
 	    join();
 	} catch (final InterruptedException x) {
-	    Log.e(Constants.LOG_TAG, "SenderThread: shutdown interrupted");
+	    // swallow, this is expected when being interrupted
 	}
-	Log.d(Constants.LOG_TAG, "SenderThread: shutdown completed");
     }
 }

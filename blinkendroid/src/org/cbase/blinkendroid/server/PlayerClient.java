@@ -1,60 +1,43 @@
 package org.cbase.blinkendroid.server;
 
-import java.net.InetAddress;
+import java.net.SocketAddress;
 
-import org.cbase.blinkendroid.network.BlinkendroidServerProtocol;
-import org.cbase.blinkendroid.network.ConnectionListener;
+import org.cbase.blinkendroid.network.udp.BlinkendroidServerProtocol;
+import org.cbase.blinkendroid.network.udp.ClientSocket;
+import org.cbase.blinkendroid.network.udp.ConnectionState;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-//import android.util.Log;
-
-public class PlayerClient implements ConnectionListener {
+public class PlayerClient extends ConnectionState {
 
     // position
     int x, y;
     // clipping
     float startX, endX, startY, endY;
     // protocol
-    BlinkendroidServerProtocol blinkendroidProtocol;
     long startTime;
-    PlayerManager playerManager;
+    private ClientSocket mclientSocket;
+    private BlinkendroidServerProtocol mBlinkenProtocol;
+    private static final Logger logger = LoggerFactory.getLogger(PlayerClient.class);
 
-    public PlayerClient(PlayerManager playerManager,
-	    BlinkendroidServerProtocol blinkendroidProtocol, long startTime) {
-	this.playerManager = playerManager;
-	this.blinkendroidProtocol = blinkendroidProtocol;
-	this.startTime = startTime;
-	blinkendroidProtocol.addConnectionClosedListener(this);
+    public PlayerClient(PlayerManager playerManager, ClientSocket clientSocket) {
+	super(clientSocket, playerManager);
+	logger.info("new PlayerClient");
+	this.mclientSocket = clientSocket;
+	// this.registerHandler(BlinkendroidApp.PROTOCOL_CONNECTION, this);
+	mBlinkenProtocol = new BlinkendroidServerProtocol(clientSocket);
     }
 
-    public void shutdown() {
-	blinkendroidProtocol.shutdown();
+    public SocketAddress getClientSocketAddress() {
+	return mclientSocket.getInetSocketAddress();
     }
 
-    public void clip() {
-	System.out.println("PlayerClient clip " + x + ":" + y);
-	blinkendroidProtocol.clip(startX, startY, endX, endY);
+    public BlinkendroidServerProtocol getBlinkenProtocol() {
+	return mBlinkenProtocol;
     }
 
-    public void play(String filename) {
-	System.out.println("PlayerClient play  " + x + ":" + y + " filename "
-		+ filename);
-	blinkendroidProtocol.play(x, y, System.currentTimeMillis(), startTime,
-		filename);
-    }
-
-    public void arrow(int degrees, int color) {
-	System.out.println("PlayerClient arrow  " + x + ":" + y + " degrees "
-		+ degrees + " color " + color);
-	blinkendroidProtocol.arrow(degrees, color);
-    }
-
-    public void connectionClosed(InetAddress inetAddress) {
-	shutdown();
-	playerManager.removeClient(this);
-	System.out.println("PlayerClient connectionClosed  " + x + ":" + y);
-    }
-
-    public void connectionOpened(InetAddress inetAddress) {
-	System.out.println("PlayerClient connectionOpened  " + x + ":" + y);
+    @Override
+    public String toString() {
+	return x + ":" + y;
     }
 }

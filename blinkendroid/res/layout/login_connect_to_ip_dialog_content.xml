@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<EditText xmlns:android="http://schemas.android.com/apk/res/android" android:id="@+id/login_connect_to_ip_dialog_ip"
-	android:inputType="number" android:imeOptions="actionGo" android:singleLine="true" android:textSize="20dp"
-	android:hint="server ip" android:text="192.168.1." android:layout_width="fill_parent" android:layout_height="wrap_content" />
+<EditText xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/login_connect_to_ip_dialog_ip" android:inputType="number"
+	android:imeOptions="actionGo" android:singleLine="true"
+	android:textSize="20dp" android:hint="server ip" android:text="192.168.1."
+	android:layout_width="fill_parent" android:layout_height="wrap_content" />
