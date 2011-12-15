@@ -40,7 +40,7 @@ public class TicketManager implements IPeerHandler, ConnectionListener {
 	    return true;
 	} catch (SocketException e) {
 	    logger.error("new DatagramSocket(Constants.BROADCAST_ANNOUCEMENT_SERVER_TICKET_PORT) failed "
-		    + e.getMessage());
+		    + e.getMessage(), e);
 	    return false;
 	}
     }

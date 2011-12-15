@@ -118,6 +118,7 @@ public class ReceiverThread extends Thread {
 	    // swallow, this is expected when being interrupted by
 	    // socket.close()
 	    // x.printStackTrace();
+	    logger.warn("receive failed" + x, x);
 	}
     }
 

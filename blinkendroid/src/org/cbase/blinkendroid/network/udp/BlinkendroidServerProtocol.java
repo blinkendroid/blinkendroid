@@ -29,7 +29,6 @@ public class BlinkendroidServerProtocol extends BlinkendroidProtocol {
 	    out.putLong(startTime);
 	    send(out);
 	} catch (IOException e) {
-	    e.printStackTrace();
 	    logger.error("play failed", e);
 	}
     }
