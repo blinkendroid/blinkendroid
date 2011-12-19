@@ -59,7 +59,7 @@ public class BLMConverter {
     }
 
     public static BLM convert(String blmfile, String bbmfile) throws IOException {
-    	BMLParser p = new BMLParser();
+	BMLParser p = new BMLParser(new MXParser());
 	BLM blm = p.parseBLM(new FileReader(blmfile));
 	if(null==blm.header.title)
 	    blm.header.title="orig"+blmfile.substring(4,blmfile.length()-4);
