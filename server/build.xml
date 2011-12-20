@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<project name="blinkendroid-utils" default="all" basedir=".">
+	<path id="classpath">
+		<fileset dir="lib">
+			<include name="*.jar" />
+		</fileset>
+		<pathelement path="classes" />
+		<pathelement path="/home/mdt/Downloads/android-sdk-linux_x86/platforms/android-13/android.jar" />
+	</path>
+	<target name="all" depends="jarfile" />
+	<target name="compile">
+		<mkdir dir="classes" />
+		<copy todir="classes/org/cbase/blinkendroid/serverui">
+			<fileset dir="src/org/cbase/blinkendroid/serverui" includes="server.properties" />
+		</copy>
+		<javac
+			srcdir="src"
+			destdir="classes"
+			debug="yes"
+			optimize="no"
+			deprecation="yes"
+			includeantruntime=""
+			encoding="iso8859-15"
+			>
+			<classpath refid="classpath" />
+		</javac>
+	</target>
+	<target name="jarfile" depends="compile" description="Creates a raw, unobfuscated jarfile from the compiled classes">
+		<mkdir dir="bin" />
+		<jar destfile="bin/blinkenserver.jar" index="true" compress="true">
+			<zipfileset dir="classes"/>
+			<zipgroupfileset dir="lib" includes="*.jar"/>
+			<manifest>
+				<attribute name="Main-Class" value="org.cbase.blinkendroid.serverui.BlinkendroidSwingServer"/>
+				<attribute name="Version" value="1.0"/>
+			</manifest>
+		</jar>
+	</target>
+	<target name="run" depends="compile">
+		<java classname="org.cbase.blinkendroid.serverui.BlinkendroidSwingServer" fork="yes">
+			<classpath refid="classpath" />
+			<arg value="" />
+		</java>
+	</target>
+	<target name="clean">
+		<delete dir="classes" />
+		<delete dir="javadoc" />
+	</target>
+</project>

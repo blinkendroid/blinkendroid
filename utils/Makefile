@@ -15,7 +15,6 @@ dbg:
 	ant -emacs dbg
 
 gen:
-	find src -type l | xargs rm -vf
 	mkdir -p src/org/cbase/blinkendroid/player/bml
 	cd src/org/cbase/blinkendroid/player/bml && ln -fs ../../../../../../../blinkendroid/src/org/cbase/blinkendroid/player/bml/BLM.java .
 	cd src/org/cbase/blinkendroid/player/bml && ln -fs ../../../../../../../blinkendroid/src/org/cbase/blinkendroid/player/bml/BLMHeader.java .

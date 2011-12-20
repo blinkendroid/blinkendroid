@@ -12,7 +12,6 @@ import org.cbase.blinkendroid.player.bml.BLM.Frame;
 public class GenerateRandomSnakesWhite {
 	public static void main(String[] args) throws IOException {
 		for (int r = 4; r < 18; r++) {
-
 			String name = "gdd_snake_random_bw" + r;
 			Random random = new Random(System.currentTimeMillis());
 			BLM blm = new BLM();
@@ -40,7 +39,8 @@ public class GenerateRandomSnakesWhite {
 							else
 								f.matrix[y][x] = (byte) (Math.round((255.0/(r*r))*(y*x))+r*r%255);
 						}
-					}else{
+					}
+					else {
 						for (int x = blm.header.width-1; x >= 0; x--) {
 							int endY = i / r;
 							int endX = r-(i % r);
@@ -49,24 +49,21 @@ public class GenerateRandomSnakesWhite {
 							else if (y == endY && x > endX)
 								f.matrix[y][x] = (byte) 0;
 							else
-								f.matrix[y][x] =  (byte) (Math.round((255.0/(r*r))*(y*x))+r*r%255);
+								f.matrix[y][x] = (byte) (Math.round((255.0/(r*r))*(y*x))+r*r%255);
 						}
 					}
 				}
 			}
-			ObjectOutput out = new ObjectOutputStream(new FileOutputStream(
-					"gdd/bbm/" + name + ".bbm"));
+			ObjectOutput out = new ObjectOutputStream(new FileOutputStream("gdd/bbm/" + name + ".bbm"));
 			out.writeObject(blm);
 			out.flush();
 			out.close();
 			// die infofiles für
-			out = new ObjectOutputStream(new FileOutputStream("gdd/bbmz/"
-					+ name + ".info"));
+			out = new ObjectOutputStream(new FileOutputStream("gdd/bbmz/" + name + ".info"));
 			out.writeObject(blm.header);
 			out.flush();
 			out.close();
-			BMLConverter.compress("gdd/bbm/" + name + ".bbm", "gdd/bbmz/"
-					+ name + ".bbmz");
+			BMLConverter.compress("gdd/bbm/" + name + ".bbm", "gdd/bbmz/" + name + ".bbmz");
 		}
 	}
 }

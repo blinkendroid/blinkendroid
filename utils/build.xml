@@ -25,12 +25,15 @@
 		</javac>
 	</target>
 	<target name="run" depends="compile">
-		<java classname="org" fork="yes">
+		<mkdir dir="gdd/bbm" />
+		<mkdir dir="gdd/bbmz" />
+		<java classname="org.cbase.blinkendroid.player.bml.GenerateRandomSnakes" fork="yes">
 			<classpath refid="classpath" />
 			<arg value="" />
 		</java>
 	</target>
 	<target name="clean">
+		<mkdir dir="gdd" />
 		<delete dir="classes" />
 		<delete dir="javadoc" />
 	</target>

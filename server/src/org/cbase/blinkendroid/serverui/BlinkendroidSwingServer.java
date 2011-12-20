@@ -22,8 +22,7 @@ import org.slf4j.LoggerFactory;
 
 public final class BlinkendroidSwingServer {
 
-	private static final Logger logger = LoggerFactory
-			.getLogger(BlinkendroidSwingServer.class);
+	private static final Logger logger = LoggerFactory.getLogger(BlinkendroidSwingServer.class);
 
 	// private static boolean JNOTIFY_FOUND = true;
 	private ReceiverThread receiverThread;
@@ -53,10 +52,8 @@ public final class BlinkendroidSwingServer {
 	}
 
 	public PlayerManager getPlayerManager() {
-		if (blinkendroidServer != null) {
+		if (blinkendroidServer != null)
 			return blinkendroidServer.getPlayerManager();
-		}
-
 		return null;
 	}
 
@@ -64,7 +61,6 @@ public final class BlinkendroidSwingServer {
 		if (pin < 0) {
 			return;
 		}
-
 		ticketManager.setPin(pin);
 		logger.info("Pin changed to " + pin);
 	}
@@ -78,33 +74,35 @@ public final class BlinkendroidSwingServer {
 	}
 
 	public boolean isRunning() {
-		if (blinkendroidServer != null) {
+		if (blinkendroidServer != null)
 			return blinkendroidServer.isRunning();
-		} else {
-			return false;
-		}
+		return false;
 	}
 
 	/**
-	 * @param args
-	 */
+	* @param args
+	*/
 	public static void main(String[] args) {
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
-				JFrame.setDefaultLookAndFeelDecorated(true);
-				BlinkendroidSwingServer server = new BlinkendroidSwingServer();
-
-				JFrame.setDefaultLookAndFeelDecorated(true);
-				BlinkendroidFrame frame = new BlinkendroidFrame(server);
-				server.setUI(frame);
-				frame.setVisible(true);
-
-				server.loadMedia();
+				try {
+					JFrame.setDefaultLookAndFeelDecorated(true);
+					BlinkendroidSwingServer server = new BlinkendroidSwingServer();
+					BlinkendroidFrame frame = new BlinkendroidFrame(server);
+					server.setUI(frame);
+					frame.setVisible(true);
+					server.loadMedia();
+				}
+				catch (Exception e)
+				{
+					logger.error("error " + e);
+					System.exit(1);
+				}
 			}
 		});
 	}
 
-	public BlinkendroidSwingServer() {
+	public BlinkendroidSwingServer() throws Exception {
 		super();
 
 		loadConfiguration();
@@ -121,25 +119,17 @@ public final class BlinkendroidSwingServer {
 	}
 
 	/**
-	 * Loads server.properties, sets configured image and movie dir and checks
-	 * for presence of JNotify native libraries
-	 */
-	private void loadConfiguration() {
+	* Loads server.properties, sets configured image and movie dir and checks
+	* for presence of JNotify native libraries
+	*/
+	private void loadConfiguration() throws Exception {
 		Properties serverProps = new Properties();
-		URL propsUrl = ClassLoader
-				.getSystemResource("org/cbase/blinkendroid/serverui/server.properties");
-
+		URL propsUrl = ClassLoader.getSystemResource("org/cbase/blinkendroid/serverui/server.properties");
 		if (propsUrl == null) {
 			logger.error("Loading config failed");
-			System.exit(1);
+			throw new Exception("could not load config");
 		}
-
-		try {
-			serverProps.load(propsUrl.openStream());
-		} catch (IOException e) {
-			logger.warn("load failed", e);
-		}
-
+		serverProps.load(propsUrl.openStream());
 		// Checking for JNotify libs
 		// try {
 		// int testId = JNotify.addWatch(".", JNotify.FILE_ANY, false, new
@@ -153,19 +143,16 @@ public final class BlinkendroidSwingServer {
 		// } catch (Exception e) {
 		// logger.warn("failed", e);
 		// }
-
 		// setting paths
-		logger.debug("Configured Images path:"
-				+ serverProps.getProperty("blinkendroid.images.path"));
-		logger.debug("Configured Movies path:"
-				+ serverProps.getProperty("blinkendroid.movies.path"));
+		logger.debug("Configured Images path:" + serverProps.getProperty("blinkendroid.images.path"));
+		logger.debug("Configured Movies path:" + serverProps.getProperty("blinkendroid.movies.path"));
 		this.imagesPath = serverProps.getProperty("blinkendroid.images.path");
 		this.moviesPath = serverProps.getProperty("blinkendroid.movies.path");
 	}
 
 	/**
-	 * Creates JNotify listeners for movies and images directories
-	 */
+	* Creates JNotify listeners for movies and images directories
+	*/
 	// public void createFsWatchers() {
 	// try {
 	// MediaDirListener moviesListener = new MediaDirListener();
@@ -226,81 +213,56 @@ public final class BlinkendroidSwingServer {
 		if (null == blinkendroidServer) {
 			ticketManager.start();
 			// start recieverthread
-			receiverThread = new ReceiverThread(
-					BlinkendroidApp.BROADCAST_ANNOUCEMENT_SERVER_PORT,
-					BlinkendroidApp.CLIENT_BROADCAST_COMMAND);
+			receiverThread = new ReceiverThread( BlinkendroidApp.BROADCAST_ANNOUCEMENT_SERVER_PORT, BlinkendroidApp.CLIENT_BROADCAST_COMMAND);
 			receiverThread.addHandler(ticketManager);
 			receiverThread.start();
-
-			blinkendroidServer = new BlinkendroidServer(
-					BlinkendroidApp.BROADCAST_SERVER_PORT);
+			blinkendroidServer = new BlinkendroidServer( BlinkendroidApp.BROADCAST_SERVER_PORT);
 			blinkendroidServer.addConnectionListener(ticketManager);
 			blinkendroidServer.addConnectionListener(getUI());
-
 			blinkendroidServer.start();
-		} else {
-			stopServer();
 		}
 	}
 
 	public void clip() {
-		if (null != blinkendroidServer) {
+		if (null != blinkendroidServer)
 			blinkendroidServer.clip();
-		}
 	}
 
 	public void singleclip() {
-		if (null != blinkendroidServer) {
+		if (null != blinkendroidServer)
 			blinkendroidServer.singleclip();
-		}
 	}
 
-	public void globalTimer() {
-		if (null != blinkendroidServer)
-			blinkendroidServer.toggleTimeThread();
+	public boolean globalTimer() {
+		return null != blinkendroidServer && blinkendroidServer.toggleTimeThread();
 	}
 
-	public void mole() {
-		if (null != blinkendroidServer)
-			blinkendroidServer.toggleWhackaMole();
+	public boolean mole() {
+		return null != blinkendroidServer && blinkendroidServer.toggleWhackaMole();
 	}
 
-	public void shutdown() {
-		// // if (JNOTIFY_FOUND) {
-		// // try {
-		// // removeFsWatchers();
-		// // } catch (JNotifyException e) {
-		// // }
-		// logger.warn("failed", e);
-		// }
-		//
-		// stopServer();
-	}
-
-	private void stopServer() {
+	void stopServer() {
 		logger.info("Shutting down");
-
 		try {
 			if (receiverThread != null) {
 				receiverThread.shutdown();
 				receiverThread = null;
 			}
-
 			if (blinkendroidServer != null) {
 				blinkendroidServer.shutdown();
 				blinkendroidServer = null;
 			}
-
 			ticketManager.reset();
-		} catch (Exception e) {
+		}
+		catch (Exception e) {
 			logger.warn("stopServer failed" + e, e);
 		}
 	}
 
 	/**
-	 * Recieves and handles Filesystem update notifications and triggers reload
-	 * of media
-	 */
+	* Recieves and handles Filesystem update notifications and triggers reload
+	* of media
+	*/
 	// private class MediaDirListener implements JNotifyListener {
 	//
 	// public long lastChange = 0;
