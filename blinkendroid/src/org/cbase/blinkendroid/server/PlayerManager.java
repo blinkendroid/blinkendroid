@@ -32,11 +32,12 @@ public class PlayerManager implements ConnectionListener, CommandHandler {
 	private List<PlayerClient> mClients = Collections.synchronizedList(new ArrayList<PlayerClient>());
 	private ConnectionListener connectionListenerManager;
 	/*
-	 * mMatrixClient are active Clients in the matrix mClients are all Clients
-	 * which are connected
-	 */
+	* mMatrixClient are active Clients in the matrix mClients are all Clients
+	* which are connected
+	*/
 
-	private int maxX = 1, maxY = 1;
+	private int maxX = 1;
+	private int maxY = 1;
 	private long startTime = System.currentTimeMillis();
 	private boolean running = true;
 	private String filename = null;
@@ -80,12 +81,9 @@ public class PlayerManager implements ConnectionListener, CommandHandler {
 
 	public synchronized PlayerClient addClientToMatrix(ClientSocket clientSocket) {
 		PlayerClient newPlayer = getPlayerClientByClientSocket(clientSocket);
-		if (newPlayer == null) {
+		if (newPlayer == null)
 			return null;
-		}
-		else {
-			return addClientToMatrix(newPlayer);
-		}
+		return addClientToMatrix(newPlayer);
 	}
 
 	public synchronized PlayerClient addClientToMatrix(PlayerClient playerClient) {
@@ -97,35 +95,26 @@ public class PlayerManager implements ConnectionListener, CommandHandler {
 			startTime = System.currentTimeMillis();
 
 		boolean found = false;
-		for (int i = 0; i < maxY; i++) {
-			for (int j = 0; j < maxY; j++) {
-				// wenn freier platz dann nehmen
+		for (int i = 0; i < maxY && !found; i++)
+			for (int j = 0; j < maxY && !found; j++)
 				if (mMatrixClients[i][j] == null) {
-					playerClient.y = i;
-					playerClient.x = j;
+					// wenn freier platz dann nehmen
+					playerClient.setXY(j, i);
 					found = true;
-					break;
 				}
-				if (found)
-					break;
-			}
-		}
-		// wenn nicht gefunden dann erweitern, erst dann y
-		if (!found) {
+		// wenn nicht gefunden dann erweitern, erst x, dann y
+		if (!found)
 			// wenn maxX>maxY -> neuen client an maxY+1
 			if (maxX > maxY) {
-				playerClient.y = maxY;
-				playerClient.x = 0;
+				playerClient.setXY(0, maxY);
 				maxY++;
 			}
 			else {
 				// else -> neuen client an maxX+1
-				playerClient.y = 0;
-				playerClient.x = maxX;
+				playerClient.setXY(maxX, 0);
 				maxX++;
 			}
-		}
-		logger.info("added client at pos " + playerClient);
+		logger.info("added client at pos " + playerClient + " found=" + found);
 		mMatrixClients[playerClient.y][playerClient.x] = playerClient;
 
 		playerClient.getBlinkenProtocol().play(startTime, runningMediaType);
@@ -141,9 +130,9 @@ public class PlayerManager implements ConnectionListener, CommandHandler {
 
 		return playerClient;
 		/*
-		 * playerClient.play(filename); arrow(pClient); if (!found) clip(true);
-		 * else { clip(false); pClient.clip(); }
-		 */
+		* playerClient.play(filename); arrow(pClient); if (!found) clip(true);
+		* else { clip(false); pClient.clip(); }
+		*/
 		// server starts thread to send globaltime
 	}
 
@@ -192,27 +181,23 @@ public class PlayerManager implements ConnectionListener, CommandHandler {
 	}
 
 	public void singleclip() {
-		for (int i = 0; i < maxY; i++) {
-			for (int j = 0; j < maxX; j++) {
+		for (int i = 0; i < maxY; i++)
+			for (int j = 0; j < maxX; j++)
 				if (mMatrixClients[i][j] != null) {
 					PlayerClient playerClient = mMatrixClients[i][j];
 					playerClient.getBlinkenProtocol().clip((float) 0.0, (float) 0.0, (float) 1.0, (float) 1.0);
 				}
-			}
-		}
 	}
 
 	public synchronized void shutdown() {
 		running = false;
 		logger.info("PlayerManager.shutdown() start");
-		for (int i = 0; i < maxY; i++) {
-			for (int j = 0; j < maxX; j++) {
+		for (int i = 0; i < maxY; i++)
+			for (int j = 0; j < maxX; j++)
 				if (null != mMatrixClients[i][j]) {
 					logger.info("shutdown PlayerClient " + mMatrixClients[i][j]);
 					mMatrixClients[i][j].shutdown();
 				}
-			}
-		}
 		timeouter.shutdown();
 		logger.info("PlayerManager.shutdown() end!!!");
 
@@ -228,24 +213,18 @@ public class PlayerManager implements ConnectionListener, CommandHandler {
 		mMatrixClients[playerClient.y][playerClient.x] = null;
 
 		boolean newMaxX = true;
-		for (int i = 0; i < maxY; i++) {
-			if (mMatrixClients[i][maxX - 1] != null) {
+		for (int i = 0; i < maxY && newMaxX; i++)
+			if (mMatrixClients[i][maxX - 1] != null)
 				newMaxX = false;
-				break;
-			}
-		}
 		if (newMaxX && maxX > 1) {
 			maxX--;
 			logger.info("newMaxX " + maxX);
 		}
 
 		boolean newMaxY = true;
-		for (int i = 0; i < maxX; i++) {
-			if (mMatrixClients[maxY - 1][i] != null) {
+		for (int i = 0; i < maxX && newMaxX; i++)
+			if (mMatrixClients[maxY - 1][i] != null)
 				newMaxY = false;
-				break;
-			}
-		}
 		if (newMaxY && maxY > 1) {
 			maxY--;
 			logger.info("newMaxY " + maxY);
@@ -299,8 +278,7 @@ public class PlayerManager implements ConnectionListener, CommandHandler {
 	public PlayerClient getPlayerClientByClientSocket(ClientSocket clientSocket) {
 		PlayerClient resultPlayer = null;
 		synchronized (mClients) {
-			for (PlayerClient clientPlayer : mClients) {// TODO schtief use
-				// hashmap
+			for (PlayerClient clientPlayer : mClients) {// TODO schtief use hashmap
 				if (clientPlayer.getClientSocketAddress().equals(clientSocket.getInetSocketAddress())) {
 					resultPlayer = clientPlayer;
 					break;
@@ -321,15 +299,14 @@ public class PlayerManager implements ConnectionListener, CommandHandler {
 	}
 
 	public void connectionClosed(ClientSocket clientSocket) {
-		// search for the client
-		// remove it
+		// search for the client remove it
 		PlayerClient pClient = getPlayerClientByClientSocket(clientSocket);
 		if (pClient == null) {
 			return;
 		}
 		removeClientFromMatrix(pClient);
+		connectionListenerManager.connectionClosed(clientSocket); // TODO: mdt: order changed...
 		mClients.remove(pClient);
-		connectionListenerManager.connectionClosed(clientSocket);
 	}
 
 	public void connectionOpened(ClientSocket clientSocket) {
@@ -383,8 +360,8 @@ public class PlayerManager implements ConnectionListener, CommandHandler {
 	}
 
 	/**
-	 * Checks for timeouts
-	 */
+	* Checks for timeouts
+	*/
 	class TimeouterThread extends Thread {
 
 		volatile private boolean running = true;
@@ -452,7 +429,6 @@ public class PlayerManager implements ConnectionListener, CommandHandler {
 		if ((x < maxX && y < maxY) && (x >= 0 && y >= 0)) {
 			return mMatrixClients[y][x];
 		}
-
 		return null;
 	}
 
@@ -462,5 +438,9 @@ public class PlayerManager implements ConnectionListener, CommandHandler {
 			return all;
 		}
 
+	}
+
+	public int getClientCount() {
+		return mClients == null ? 0 : mClients.size();
 	}
 }

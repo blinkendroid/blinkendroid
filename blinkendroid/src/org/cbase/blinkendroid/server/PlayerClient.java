@@ -10,24 +10,36 @@ import org.slf4j.LoggerFactory;
 
 public class PlayerClient extends ConnectionState {
 
-	String name;
+	private String name = ""; // TODO where to get the name?
 	// position
-	int x, y;
+	int x;
+	int y;
 	// clipping
-	float startX, endX, startY, endY;
+	float startX;
+	float endX;
+	float startY;
+	float endY;
 	// protocol
-	long startTime;
+	private long startTime;
 	private ClientSocket mclientSocket;
 	private BlinkendroidServerProtocol mBlinkenProtocol;
 	private static final Logger logger = LoggerFactory.getLogger(PlayerClient.class);
 
 	public PlayerClient(PlayerManager playerManager, ClientSocket clientSocket) {
 		super(clientSocket, playerManager);
-		this.name = ""; // TODO where to get the name here?
 		logger.info("new PlayerClient");
 		this.mclientSocket = clientSocket;
 		// this.registerHandler(BlinkendroidApp.PROTOCOL_CONNECTION, this);
 		mBlinkenProtocol = new BlinkendroidServerProtocol(clientSocket);
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public void setXY(int x, int y) {
+		this.x = x;
+		this.y = y;
 	}
 
 	public SocketAddress getClientSocketAddress() {

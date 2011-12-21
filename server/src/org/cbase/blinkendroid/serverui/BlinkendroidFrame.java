@@ -38,6 +38,10 @@ public class BlinkendroidFrame extends JFrame implements ImageManagerListener, B
 
 	private static final Logger logger = LoggerFactory.getLogger(BlinkendroidFrame.class);
 
+	private enum Commands {
+		START_STOP, MOVIES_SELECTION, IMAGES_SELECTION, REMOVE_CLIENT, CLIP, SINGLECLIP, GLOBALTIMER, MOLE, EFFECT_CHANGED, REFRESH_TICKET;
+	}
+
 	private static final long serialVersionUID = 1L;
 	BlinkendroidSwingServer server = null;
 
@@ -83,7 +87,8 @@ public class BlinkendroidFrame extends JFrame implements ImageManagerListener, B
 	public void connectionClosed(ClientSocket clientSocket) {
 		synchronized (clientListModel) {
 			PlayerClient p = server.getPlayerManager().getPlayerClientByClientSocket(clientSocket);
-			clientListModel.removeElement(p);
+			logger.info("removed p=" + p + " " + clientListModel.removeElement(p));
+			clientsLbl = new JLabel("Clients: " + 0);
 		}
 	}
 
@@ -91,6 +96,8 @@ public class BlinkendroidFrame extends JFrame implements ImageManagerListener, B
 		synchronized (clientListModel) {
 			PlayerClient p = server.getPlayerManager().getPlayerClientByClientSocket(clientSocket);
 			clientListModel.addElement(p);
+			logger.info("added p=" + p);
+			clientsLbl = new JLabel("Clients: " + server.getPlayerManager().getClientCount());
 		}
 	}
 
@@ -138,7 +145,7 @@ public class BlinkendroidFrame extends JFrame implements ImageManagerListener, B
 
 		ActionListener actionListener = new FormActionListener();
 
-		clientsLbl = new JLabel("Clients: ");
+		clientsLbl = new JLabel("Clients: " + 0);
 		clientsLbl.setLocation(10, 120);
 		clientsLbl.setSize(100, 20);
 		clientsList = new JList(clientListModel);
@@ -249,10 +256,6 @@ public class BlinkendroidFrame extends JFrame implements ImageManagerListener, B
 			c.setEnabled(false);
 	}
 
-	private enum Commands {
-		START_STOP, MOVIES_SELECTION, IMAGES_SELECTION, REMOVE_CLIENT, CLIP, SINGLECLIP, GLOBALTIMER, MOLE, EFFECT_CHANGED, REFRESH_TICKET;
-	}
-
 	private class TicketFocusListener implements FocusListener {
 		public void focusLost(FocusEvent e) {
 			int pin = -1;
@@ -298,7 +301,7 @@ public class BlinkendroidFrame extends JFrame implements ImageManagerListener, B
 					Object selectedImage = ((JComboBox) e.getSource()).getModel().getSelectedItem();
 					if (selectedImage != null && server.isRunning() && selectedImage instanceof ImageHeader) {
 						server.switchImage((ImageHeader) selectedImage);
-						logger.info("image switched");
+						logger.info("image switched to " + selectedImage);
 					}
 
 				break;
@@ -307,14 +310,14 @@ public class BlinkendroidFrame extends JFrame implements ImageManagerListener, B
 					if (selectedMovie != null && server.isRunning() && selectedMovie instanceof BLMHeader) {
 						logger.info(((BLMHeader) selectedMovie).author);
 						server.switchMovie((BLMHeader) selectedMovie);
-						logger.info("movie switched");
+						logger.info("movie switched to " + selectedMovie);
 					}
 				break;
 				case EFFECT_CHANGED:
 					Object selectedEffect = ((JComboBox) e.getSource()).getModel().getSelectedItem();
 					if (selectedEffect != null && server.isRunning() && selectedEffect instanceof ITouchEffect) {
 						server.switchEffect((ITouchEffect)selectedEffect);
-						logger.info("effect switched");
+						logger.info("effect switched to " + selectedEffect);
 					}
 				break;
 				case REMOVE_CLIENT:
