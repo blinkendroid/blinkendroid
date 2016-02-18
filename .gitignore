@@ -3,3 +3,7 @@ local.properties
 gen
 .svn
 blinkendroid-CD
+.idea/
+.gradle/
+build
+*.iml
